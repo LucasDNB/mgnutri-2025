@@ -1,0 +1,109 @@
+server:
+  port: ${PORT:8080}
+  forward-headers-strategy: framework
+  error:
+    include-message: never
+
+spring:
+  application:
+    name: mgnutri
+  profiles:
+    default: local
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:15}
+  flyway:
+    enabled: true
+    url: ${DB_MIGRATION_URL:${DB_URL}}
+    user: ${DB_MIGRATION_USER:${DB_USER}}
+    password: ${DB_MIGRATION_PASSWORD:${DB_PASSWORD}}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.SQLServerDialect
+        jdbc.time_zone: UTC
+        type.preferred_instant_jdbc_type: TIMESTAMP
+        use_nationalized_character_data: true
+        jdbc.batch_size: 50
+  jackson:
+    default-property-inclusion: non_absent
+    serialization:
+      write-dates-as-timestamps: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+  cache:
+    type: simple
+
+management:
+  endpoints.web.exposure.include: health,info
+  endpoint.health.show-details: never
+
+springdoc:
+  api-docs.enabled: ${SWAGGER_ENABLED:false}
+  swagger-ui.enabled: ${SWAGGER_ENABLED:false}
+
+mgnutri:
+  version: '@project.version@'
+  zona-horaria: America/Argentina/Buenos_Aires
+  cors:
+    allowed-origins: ${FRONTEND_URL:http://localhost:8080}
+  frontend:
+    # Si se define, el backend sirve el frontend estático desde esta carpeta (útil en local y demo)
+    ruta: ${FRONTEND_PATH:}
+  jwt:
+    secret: ${JWT_SECRET}
+    expiracion-horas: 8
+  crypto:
+    key: ${DATA_KEY_BASE64}
+  admin-inicial:
+    username: ${ADMIN_USERNAME:admin}
+    password: ${ADMIN_PASSWORD_INICIAL:}
+  seguridad:
+    max-intentos: 5
+    bloqueo-minutos: 15
+    recupero-horas: 24
+    recupero-max-por-hora: 3
+    recupero-mensaje-neutro: false
+    rate-limit-por-minuto: ${RATE_LIMIT_AUTH:10}
+  whatsapp:
+    habilitado: ${WA_ENABLED:false}
+    phone-number-id: ${WA_PHONE_ID:}
+    token: ${WA_TOKEN:}
+    api-version: v21.0
+    idioma-plantillas: es_AR
+    credenciales-modo: ${WA_CREDENCIALES_MODO:PASSWORD}
+  jobs:
+    habilitados: ${JOBS_ENABLED:true}
+    despacho-cron: '0 * * * * *'
+    recordatorio-turnos-cron: '0 0 9 * * *'
+    recordatorio-deuda-cron: '0 0 10 * * SAT'
+    finalizar-vencidos-cron: '0 30 0 * * *'
+    limpieza-tokens-cron: '0 0 3 * * *'
+  backup:
+    proveedor: ${BACKUP_PROVIDER:local}
+    local:
+      directorio-servidor: ${BACKUP_DIR_SERVIDOR:/var/opt/mssql/backup}
+      directorio-descarga: ${BACKUP_DIR_DESCARGA:}
+      base-de-datos: ${BACKUP_DB_NAME:mgnutri}
+    azure:
+      subscription-id: ${AZ_SUBSCRIPTION_ID:}
+      resource-group: ${AZ_RESOURCE_GROUP:}
+      server: ${AZ_SQL_SERVER:}
+      database: ${AZ_SQL_DATABASE:}
+      admin-user: ${AZ_SQL_ADMIN_USER:}
+      admin-password: ${AZ_SQL_ADMIN_PASSWORD:}
+      storage-account: ${AZ_STORAGE_ACCOUNT:}
+      storage-key: ${AZ_STORAGE_KEY:}
+      container: ${AZ_STORAGE_CONTAINER:backups}
+
+logging:
+  level:
+    root: INFO
+    ar.edu.usal.mgnutri: INFO

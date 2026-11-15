@@ -1,0 +1,26 @@
+# Perfil local: SQL Server en Docker (docker compose up -d) y adaptadores "log" / backup local.
+# Los valores por defecto de este archivo son SÓLO para desarrollo; nunca se usan en Azure.
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:sqlserver://localhost:14333;databaseName=mgnutri;encrypt=true;trustServerCertificate=true}
+    username: ${DB_USER:sa}
+    password: ${DB_PASSWORD:MgNutri_Local_2025!}
+
+springdoc:
+  api-docs.enabled: true
+  swagger-ui.enabled: true
+
+mgnutri:
+  cors:
+    allowed-origins: ${FRONTEND_URL:http://localhost:8080,http://localhost:5500,http://127.0.0.1:5500}
+  frontend:
+    ruta: ${FRONTEND_PATH:../frontend}
+  jwt:
+    secret: ${JWT_SECRET:bG9jYWwtZGV2LWp3dC1zZWNyZXQtbWdudXRyaS0yMDI1LTMyYnl0ZXMhIQ==}
+  crypto:
+    key: ${DATA_KEY_BASE64:ZGV2LWtleS1tZ251dHJpLWFlczI1Ni0zMmJ5dGVzISE=}
+  admin-inicial:
+    password: ${ADMIN_PASSWORD_INICIAL:Admin2025!}
+  backup:
+    local:
+      directorio-descarga: ${BACKUP_DIR_DESCARGA:}

@@ -1,0 +1,7 @@
+# Perfil dev (Azure): todos los valores vienen de App Settings.
+springdoc:
+  api-docs.enabled: true
+  swagger-ui.enabled: true
+mgnutri:
+  backup:
+    proveedor: ${BACKUP_PROVIDER:azure}

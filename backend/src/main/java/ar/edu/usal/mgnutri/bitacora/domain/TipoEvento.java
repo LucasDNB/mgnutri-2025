@@ -1,0 +1,6 @@
+package ar.edu.usal.mgnutri.bitacora.domain;
+
+public enum TipoEvento {
+    ALTA, BAJA, MODIFICACION, CONSULTA_SENSIBLE, REPORTE, DESCARGA, CAMBIO_PASSWORD, CONFIGURACION, NOTIFICACION,
+    BACKUP, ERROR
+}

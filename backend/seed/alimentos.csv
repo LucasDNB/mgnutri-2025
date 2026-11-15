@@ -1,0 +1,164 @@
+nombre,grupo,kcal,hc,prot,grasas,fibra,unidad,gramos,aptitud
+Leche entera,Lácteos,61,4.8,3.2,3.3,0,1 taza,200,DC
+Leche descremada,Lácteos,35,5,3.4,0.1,0,1 taza,200,DC
+Leche parcialmente descremada,Lácteos,46,4.9,3.3,1.5,0,1 taza,200,DC
+Yogur entero natural,Lácteos,61,4.7,3.5,3.3,0,1 pote,190,DC
+Yogur descremado natural,Lácteos,40,5.5,4,0.2,0,1 pote,190,DC
+Yogur griego natural,Lácteos,97,3.9,9,5,0,1 pote,170,DC
+Yogur bebible descremado,Lácteos,45,7,3,0.5,0,1 vaso,200,DC
+Queso untable descremado,Lácteos,85,4,12,2.5,0,1 cucharada,15,D
+Queso untable entero,Lácteos,250,4,6,23,0,1 cucharada,15,D
+Queso cremoso,Lácteos,300,1,21,23.5,0,1 porción tipo cajita de fósforos,30,DA
+Queso port salut light,Lácteos,210,1,22,13,0,1 feta gruesa,30,DA
+Queso rallado,Lácteos,390,3.5,36,26,0,1 cucharada,5,A
+Queso fresco tipo ricota,Lácteos,138,3,11,9,0,2 cucharadas,40,DA
+Ricota descremada,Lácteos,90,4,12,3,0,2 cucharadas,40,DA
+Queso de máquina,Lácteos,350,1,26,27,0,1 feta,15,D
+Queso cottage,Lácteos,98,3.4,11,4.3,0,2 cucharadas,40,DA
+Leche en polvo descremada,Lácteos,362,52,36,1,0,1 cucharada,10,D
+Postre lácteo light,Lácteos,70,11,3.5,1.2,0,1 pote,120,C
+Kéfir,Lácteos,55,4.5,3.3,2.5,0,1 vaso,200,DC
+Bife de nalga,Carnes y huevos,150,0,21,7,0,1 bife mediano,150,A
+Carne vacuna magra (lomo),Carnes y huevos,143,0,22,6,0,1 porción,150,A
+Carne picada común,Carnes y huevos,254,0,17,20,0,1 hamburguesa casera,120,A
+Carne picada especial,Carnes y huevos,176,0,20,10,0,1 hamburguesa casera,120,A
+Peceto,Carnes y huevos,127,0,22,4,0,1 porción,150,A
+Cuadril,Carnes y huevos,160,0,21,8,0,1 porción,150,A
+Pechuga de pollo sin piel,Carnes y huevos,120,0,22.5,2.6,0,1 pechuga chica,150,A
+Muslo de pollo sin piel,Carnes y huevos,135,0,19,6,0,1 muslo,120,A
+Pata muslo de pollo con piel,Carnes y huevos,215,0,17,16,0,1 presa,180,A
+Carne de cerdo magra (solomillo),Carnes y huevos,143,0,21,6,0,1 porción,150,A
+Bondiola de cerdo,Carnes y huevos,240,0,17,19,0,1 porción,150,A
+Merluza,Carnes y huevos,82,0,17,1.3,0,1 filet,150,A
+Salmón rosado,Carnes y huevos,142,0,20,6.3,0,1 porción,150,A
+Atún al natural,Carnes y huevos,116,0,26,1,0,1 lata escurrida,120,A
+Atún en aceite escurrido,Carnes y huevos,198,0,29,8,0,1 lata escurrida,120,A
+Sardinas en aceite escurridas,Carnes y huevos,208,0,25,11,0,1 lata,90,A
+Abadejo,Carnes y huevos,90,0,19,1,0,1 filet,150,A
+Pavita (pechuga),Carnes y huevos,114,0,24,1.5,0,1 porción,150,A
+Huevo,Carnes y huevos,143,0.7,12.6,9.5,0,1 unidad,55,DA
+Clara de huevo,Carnes y huevos,52,0.7,11,0.2,0,1 clara,33,DA
+Jamón cocido,Carnes y huevos,120,1.5,18,4.5,0,1 feta,20,D
+Jamón crudo,Carnes y huevos,250,0,26,16,0,1 feta,15,D
+Lomito ahumado,Carnes y huevos,110,1,20,3,0,1 feta,15,D
+Hígado vacuno,Carnes y huevos,135,3.9,20,3.6,0,1 bife,120,A
+Calamar,Carnes y huevos,92,3,15.6,1.4,0,1 porción,150,A
+Langostinos,Carnes y huevos,99,0.2,24,0.3,0,1 porción,120,A
+Arroz blanco cocido,"Cereales, legumbres y derivados",130,28,2.7,0.3,0.4,1 taza,160,A
+Arroz integral cocido,"Cereales, legumbres y derivados",123,25.6,2.7,1,1.6,1 taza,160,A
+Fideos secos cocidos,"Cereales, legumbres y derivados",158,31,5.8,0.9,1.8,1 plato,200,A
+Fideos integrales cocidos,"Cereales, legumbres y derivados",149,30,6,0.8,3.9,1 plato,200,A
+Ñoquis de papa,"Cereales, legumbres y derivados",133,28,3.4,0.5,1.5,1 plato,200,A
+Polenta cocida,"Cereales, legumbres y derivados",70,15,1.6,0.3,0.9,1 plato,250,A
+Avena arrollada,"Cereales, legumbres y derivados",379,67.7,13.2,6.5,10,1 cucharada,10,DC
+Pan francés,"Cereales, legumbres y derivados",270,57,9,1,2.4,1 mignon,40,DA
+Pan integral,"Cereales, legumbres y derivados",250,43,10,3.4,7,1 rebanada,25,DA
+Pan de salvado,"Cereales, legumbres y derivados",240,40,11,3,7.5,1 rebanada,25,DA
+Tostadas de arroz,"Cereales, legumbres y derivados",387,81,8,3,4,1 unidad,9,DC
+Galletas de agua,"Cereales, legumbres y derivados",420,72,10,10,3,1 unidad,6,DC
+Galletas integrales,"Cereales, legumbres y derivados",430,64,10,14,8,1 unidad,8,DC
+Cereal de maíz sin azúcar,"Cereales, legumbres y derivados",357,84,7.5,0.4,3.3,1 taza,30,D
+Granola sin azúcar,"Cereales, legumbres y derivados",430,60,11,16,8,2 cucharadas,30,DC
+Quinoa cocida,"Cereales, legumbres y derivados",120,21.3,4.4,1.9,2.8,1 taza,180,A
+Cuscús cocido,"Cereales, legumbres y derivados",112,23,3.8,0.2,1.4,1 taza,160,A
+Lentejas cocidas,"Cereales, legumbres y derivados",116,20,9,0.4,7.9,1 taza,200,A
+Garbanzos cocidos,"Cereales, legumbres y derivados",164,27.4,8.9,2.6,7.6,1 taza,160,A
+Porotos negros cocidos,"Cereales, legumbres y derivados",132,23.7,8.9,0.5,8.7,1 taza,170,A
+Porotos alubia cocidos,"Cereales, legumbres y derivados",139,25,9.7,0.4,6.3,1 taza,170,A
+Arvejas secas cocidas,"Cereales, legumbres y derivados",118,21,8.3,0.4,8.3,1 taza,160,A
+Choclo amarillo,"Cereales, legumbres y derivados",86,19,3.3,1.4,2,1 choclo,150,A
+Papa hervida,"Cereales, legumbres y derivados",87,20,1.9,0.1,1.8,1 papa mediana,150,A
+Batata hervida,"Cereales, legumbres y derivados",76,17.7,1.4,0.1,2.5,1 batata chica,150,A
+Mandioca hervida,"Cereales, legumbres y derivados",112,27,1,0.2,1.4,1 porción,150,A
+Tapa de empanada,"Cereales, legumbres y derivados",300,48,7,8.5,2,1 tapa,30,A
+Tapa de tarta,"Cereales, legumbres y derivados",320,46,6.5,12,2,1/4 tapa,60,A
+Harina de trigo,"Cereales, legumbres y derivados",364,76,10,1,2.7,1 cucharada,10,A
+Bizcochos de arroz,"Cereales, legumbres y derivados",387,81,8,3,4,1 unidad,9,C
+Banana,Frutas,89,22.8,1.1,0.3,2.6,1 unidad mediana,120,DC
+Manzana,Frutas,52,13.8,0.3,0.2,2.4,1 unidad mediana,150,DC
+Naranja,Frutas,47,11.8,0.9,0.1,2.4,1 unidad mediana,180,DC
+Mandarina,Frutas,53,13.3,0.8,0.3,1.8,1 unidad,100,DC
+Pera,Frutas,57,15.2,0.4,0.1,3.1,1 unidad mediana,160,DC
+Durazno,Frutas,39,9.5,0.9,0.3,1.5,1 unidad mediana,150,DC
+Ciruela,Frutas,46,11.4,0.7,0.3,1.4,2 unidades,120,DC
+Frutillas,Frutas,32,7.7,0.7,0.3,2,1 taza,150,DC
+Kiwi,Frutas,61,14.7,1.1,0.5,3,1 unidad,75,DC
+Uvas,Frutas,69,18,0.7,0.2,0.9,1 racimo chico,120,DC
+Ananá,Frutas,50,13,0.5,0.1,1.4,1 rodaja,100,DC
+Melón,Frutas,34,8.2,0.8,0.2,0.9,1 tajada,200,DC
+Sandía,Frutas,30,7.6,0.6,0.2,0.4,1 tajada,250,DC
+Mango,Frutas,60,15,0.8,0.4,1.6,1/2 unidad,150,DC
+Pomelo,Frutas,42,10.7,0.8,0.1,1.6,1/2 unidad,150,DC
+Arándanos,Frutas,57,14.5,0.7,0.3,2.4,1 taza,140,DC
+Cerezas,Frutas,63,16,1.1,0.2,2.1,1 taza,140,DC
+Damasco,Frutas,48,11.1,1.4,0.4,2,2 unidades,100,DC
+Higo,Frutas,74,19.2,0.8,0.3,2.9,2 unidades,100,DC
+Pasas de uva,Frutas,299,79,3.1,0.5,3.7,1 cucharada,15,DC
+Ciruelas desecadas,Frutas,240,64,2.2,0.4,7.1,3 unidades,30,DC
+Dátiles,Frutas,282,75,2.5,0.4,8,2 unidades,20,C
+Acelga,Verduras,19,3.7,1.8,0.2,1.6,1 taza cocida,150,A
+Espinaca,Verduras,23,3.6,2.9,0.4,2.2,1 taza cocida,150,A
+Lechuga,Verduras,15,2.9,1.4,0.2,1.3,1 plato,80,A
+Rúcula,Verduras,25,3.7,2.6,0.7,1.6,1 plato,50,A
+Tomate,Verduras,18,3.9,0.9,0.2,1.2,1 unidad mediana,150,DA
+Zanahoria,Verduras,41,9.6,0.9,0.2,2.8,1 unidad mediana,100,A
+Zapallo,Verduras,26,6.5,1,0.1,0.5,1 porción,150,A
+Zapallito,Verduras,17,3.1,1.2,0.3,1,1 unidad,150,A
+Berenjena,Verduras,25,5.9,1,0.2,3,1 unidad chica,150,A
+Brócoli,Verduras,34,6.6,2.8,0.4,2.6,1 taza,150,A
+Coliflor,Verduras,25,5,1.9,0.3,2,1 taza,150,A
+Cebolla,Verduras,40,9.3,1.1,0.1,1.7,1 unidad chica,100,A
+Morrón rojo,Verduras,31,6,1,0.3,2.1,1 unidad,120,A
+Pepino,Verduras,15,3.6,0.7,0.1,0.5,1 unidad,150,A
+Remolacha,Verduras,43,9.6,1.6,0.2,2.8,1 unidad,100,A
+Chauchas,Verduras,31,7,1.8,0.2,2.7,1 taza,125,A
+Champiñones,Verduras,22,3.3,3.1,0.3,1,1 taza,100,A
+Repollo,Verduras,25,5.8,1.3,0.1,2.5,1 taza,100,A
+Apio,Verduras,16,3,0.7,0.2,1.6,1 tallo,40,A
+Puerro,Verduras,61,14,1.5,0.3,1.8,1 unidad,90,A
+Espárragos,Verduras,20,3.9,2.2,0.1,2.1,6 unidades,100,A
+Radicheta,Verduras,23,4.7,1.7,0.3,4,1 plato,80,A
+Palmitos,Verduras,28,4.6,2.5,0.6,2.4,2 unidades,80,A
+Verduras de hoja mixtas,Verduras,20,3.5,1.8,0.3,2,1 plato,80,A
+Aceite de oliva,Aceites y grasas,884,0,0,100,0,1 cucharada,10,DA
+Aceite de girasol,Aceites y grasas,884,0,0,100,0,1 cucharada,10,A
+Aceite de canola,Aceites y grasas,884,0,0,100,0,1 cucharada,10,A
+Manteca,Aceites y grasas,717,0.1,0.9,81,0,1 cucharadita,5,D
+Palta,Aceites y grasas,160,8.5,2,14.7,6.7,1/2 unidad,80,DA
+Aceitunas verdes,Aceites y grasas,145,3.8,1,15,3.3,5 unidades,20,CA
+Mayonesa light,Aceites y grasas,300,10,1,28,0,1 cucharada,15,A
+Crema de leche,Aceites y grasas,340,2.8,2.1,36,0,1 cucharada,15,A
+Nueces,Frutos secos y semillas,654,7,15.2,65.2,6.7,4 mariposas,15,DC
+Almendras,Frutos secos y semillas,579,9.1,21.2,49.9,12.5,10 unidades,12,DC
+Maní tostado sin sal,Frutos secos y semillas,585,13.5,24.4,49.7,8,1 puñado,25,C
+Castañas de cajú,Frutos secos y semillas,553,30,18,44,3.3,10 unidades,15,C
+Avellanas,Frutos secos y semillas,628,7,15,60.8,9.7,10 unidades,15,C
+Pistachos,Frutos secos y semillas,560,16.6,20.2,45.3,10.6,1 puñado,25,C
+Semillas de chía,Frutos secos y semillas,486,7.7,16.5,30.7,34.4,1 cucharada,10,DC
+Semillas de lino,Frutos secos y semillas,534,1.6,18.3,42.2,27.3,1 cucharada,10,DC
+Semillas de girasol,Frutos secos y semillas,584,11.4,20.8,51.5,8.6,1 cucharada,10,DCA
+Semillas de sésamo,Frutos secos y semillas,573,11.7,17.7,49.7,11.8,1 cucharada,10,DCA
+Pasta de maní,Frutos secos y semillas,588,14,25,50,6,1 cucharada,15,DC
+Azúcar,Azúcares y dulces,387,100,0,0,0,1 cucharadita,5,D
+Miel,Azúcares y dulces,304,82.4,0.3,0,0.2,1 cucharadita,7,DC
+Mermelada común,Azúcares y dulces,250,62,0.4,0.1,1,1 cucharada,20,D
+Mermelada light,Azúcares y dulces,110,27,0.4,0.1,1,1 cucharada,20,D
+Dulce de leche,Azúcares y dulces,315,55,7,7.5,0,1 cucharada,20,D
+Dulce de membrillo,Azúcares y dulces,280,70,0.3,0.1,1.5,1 porción,30,DC
+Chocolate amargo 70%,Azúcares y dulces,598,35,7.8,42.6,10.9,1 cuadradito,10,C
+Cacao amargo en polvo,Azúcares y dulces,228,21,19.6,13.7,37,1 cucharada,5,D
+Barra de cereal,Azúcares y dulces,400,70,6,10,4,1 barra,23,C
+Gelatina light,Azúcares y dulces,8,1,1,0,0,1 compotera,150,C
+Café negro,Bebidas e infusiones,2,0,0.3,0,0,1 taza,200,DC
+Té,Bebidas e infusiones,1,0.3,0,0,0,1 taza,200,DC
+Mate cocido,Bebidas e infusiones,3,0.5,0.1,0,0,1 taza,200,DC
+Jugo de naranja exprimido,Bebidas e infusiones,45,10.4,0.7,0.2,0.2,1 vaso,200,DC
+Agua saborizada sin azúcar,Bebidas e infusiones,2,0.4,0,0,0,1 vaso,250,C
+Bebida de soja,Bebidas e infusiones,43,3,3.3,1.8,0.5,1 vaso,200,DC
+Bebida de almendras sin azúcar,Bebidas e infusiones,15,0.6,0.6,1.1,0.4,1 vaso,200,DC
+Caldo de verduras,Bebidas e infusiones,8,1.2,0.3,0.2,0,1 taza,250,A
+Licuado de banana con leche descremada,Bebidas e infusiones,60,11,2.5,0.3,0.7,1 vaso,250,DC
+Tofu firme,Carnes y huevos,144,2.8,17.3,8.7,2.3,1 porción,100,A
+Hamburguesa de lentejas,"Cereales, legumbres y derivados",180,22,9,6,6,1 unidad,80,A
+Seitán,Carnes y huevos,120,4,24,1.5,0.5,1 porción,100,A
+Soja texturizada hidratada,"Cereales, legumbres y derivados",110,10,16,0.5,5.5,1 taza,100,A

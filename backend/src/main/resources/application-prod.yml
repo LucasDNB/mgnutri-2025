@@ -1,0 +1,10 @@
+# Perfil prod (Azure): todos los valores vienen de App Settings / Key Vault.
+springdoc:
+  api-docs.enabled: false
+  swagger-ui.enabled: false
+mgnutri:
+  backup:
+    proveedor: ${BACKUP_PROVIDER:azure}
+logging:
+  level:
+    ar.edu.usal.mgnutri: INFO
