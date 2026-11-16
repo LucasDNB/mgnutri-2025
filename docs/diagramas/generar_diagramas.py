@@ -280,7 +280,13 @@ def etiqueta_clase(nombre, c):
 def alto_clase(c):
     if c["tipo"] == "enum":
         return 40 + 14 * len(c["valores"])
-    return 44 + 14 * (len(c["atributos"]) + len(c["metodos"])) + sum(14 + 14 * (len(", ".join(v)) // 48) for v in c["enums"].values())
+    lineas = lambda texto, por_linea=46: -(-len(texto) // por_linea)  # líneas que ocupa con el ajuste de texto (≈46 car. en 300 px)
+    alto = 50 + 14 * sum(lineas(a) for a in c["atributos"])
+    if c["metodos"]:
+        alto += 18 + 14 * sum(lineas("+ " + m) for m in c["metodos"])
+    for e, vals in c["enums"].items():
+        alto += 18 + 14 * lineas(f"«enum» {e}: " + ", ".join(vals), 40)
+    return alto
 
 
 def generar_clases(clases):

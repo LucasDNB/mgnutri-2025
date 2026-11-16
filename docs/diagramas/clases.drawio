@@ -9,175 +9,175 @@
           <mxGeometry x="0" y="-90" width="1500" height="60" as="geometry" />
         </mxCell>
         <mxCell id="pkg_common" value="«paquete» common" style="shape=folder;tabWidth=140;tabHeight=26;tabPosition=left;html=1;verticalAlign=top;align=left;spacingLeft=8;fontStyle=1;fillColor=#FBF6EA;strokeColor=#7FA36B;container=1;collapsible=0;" vertex="1" parent="1">
-          <mxGeometry x="0" y="0" width="340" height="194" as="geometry" />
+          <mxGeometry x="0" y="0" width="340" height="200" as="geometry" />
         </mxCell>
         <mxCell id="c_EntidadAuditada" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«abstract»&lt;br&gt;&lt;/i&gt;&lt;b&gt;EntidadAuditada&lt;/b&gt;&lt;/div&gt;createdAt: Instant&lt;br&gt;createdBy: String&lt;br&gt;updatedAt: Instant&lt;br&gt;updatedBy: String&lt;br&gt;version: Integer" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_common">
-          <mxGeometry x="20" y="40" width="300" height="114" as="geometry" />
+          <mxGeometry x="20" y="40" width="300" height="120" as="geometry" />
         </mxCell>
         <mxCell id="pkg_seguridad" value="«paquete» seguridad" style="shape=folder;tabWidth=140;tabHeight=26;tabPosition=left;html=1;verticalAlign=top;align=left;spacingLeft=8;fontStyle=1;fillColor=#FBF6EA;strokeColor=#7FA36B;container=1;collapsible=0;" vertex="1" parent="1">
-          <mxGeometry x="400" y="0" width="660" height="650" as="geometry" />
+          <mxGeometry x="400" y="0" width="660" height="704" as="geometry" />
         </mxCell>
         <mxCell id="c_Administrador" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;Administrador&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;usuarioId: Long&lt;br&gt;nombre: String&lt;br&gt;apellido: String&lt;br&gt;telefono: String 🔒" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_seguridad">
-          <mxGeometry x="20" y="40" width="300" height="114" as="geometry" />
+          <mxGeometry x="20" y="40" width="300" height="120" as="geometry" />
         </mxCell>
         <mxCell id="c_TokenRecupero" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;TokenRecupero&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;usuarioId: Long&lt;br&gt;tokenHash: String&lt;br&gt;expiraAt: Instant&lt;br&gt;usadoAt: Instant&lt;br&gt;canal: String&lt;br&gt;createdAt: Instant" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_seguridad">
-          <mxGeometry x="20" y="184" width="300" height="142" as="geometry" />
+          <mxGeometry x="20" y="190" width="300" height="148" as="geometry" />
         </mxCell>
         <mxCell id="c_Usuario" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;Usuario&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;username: String&lt;br&gt;passwordHash: String&lt;br&gt;estado: Estado&lt;br&gt;debeCambiarPassword: boolean&lt;br&gt;intentosFallidos: int&lt;br&gt;bloqueadoHasta: Instant&lt;br&gt;terminosVersionAceptada: String&lt;br&gt;terminosAceptadosAt: Instant&lt;br&gt;ultimoAccesoAt: Instant&lt;br&gt;tokensValidosDesde: Instant&lt;br&gt;roles: Set&amp;lt;Rol&amp;gt;&lt;hr&gt;+ tieneRol(…): boolean&lt;br&gt;+ reemplazarRoles(…): void&lt;hr&gt;&lt;i&gt;«enum» Estado&lt;/i&gt;: ACTIVO, BLOQUEADO, BAJA" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_seguridad">
-          <mxGeometry x="20" y="356" width="300" height="254" as="geometry" />
+          <mxGeometry x="20" y="368" width="300" height="296" as="geometry" />
         </mxCell>
         <mxCell id="c_RegistroAcceso" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;RegistroAcceso&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;fechaHora: Instant&lt;br&gt;usuarioId: Long&lt;br&gt;usernameIntentado: String&lt;br&gt;roles: String&lt;br&gt;ip: String&lt;br&gt;userAgent: String&lt;br&gt;accion: Accion&lt;br&gt;detalle: String&lt;hr&gt;&lt;i&gt;«enum» Accion&lt;/i&gt;: LOGIN_OK, LOGIN_FALLIDO, LOGOUT, BLOQUEO, RECUPERO_SOLICITADO, PASSWORD_RESTABLECIDA, PASSWORD_CAMBIADA" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_seguridad">
-          <mxGeometry x="340" y="40" width="300" height="212" as="geometry" />
+          <mxGeometry x="340" y="40" width="300" height="236" as="geometry" />
         </mxCell>
         <mxCell id="c_TokenRevocado" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;TokenRevocado&lt;/b&gt;&lt;/div&gt;🔑 jti: String&lt;br&gt;expiraAt: Instant" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_seguridad">
-          <mxGeometry x="340" y="282" width="300" height="72" as="geometry" />
+          <mxGeometry x="340" y="306" width="300" height="78" as="geometry" />
         </mxCell>
         <mxCell id="pkg_configuracion" value="«paquete» configuracion" style="shape=folder;tabWidth=140;tabHeight=26;tabPosition=left;html=1;verticalAlign=top;align=left;spacingLeft=8;fontStyle=1;fillColor=#FBF6EA;strokeColor=#7FA36B;container=1;collapsible=0;" vertex="1" parent="1">
-          <mxGeometry x="1120" y="0" width="660" height="194" as="geometry" />
+          <mxGeometry x="1120" y="0" width="660" height="200" as="geometry" />
         </mxCell>
         <mxCell id="c_ConfiguracionSistema" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;ConfiguracionSistema&lt;/b&gt;&lt;/div&gt;🔑 clave: String&lt;br&gt;valor: String&lt;br&gt;descripcion: String&lt;br&gt;updatedAt: Instant&lt;br&gt;updatedBy: String" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_configuracion">
-          <mxGeometry x="20" y="40" width="300" height="114" as="geometry" />
+          <mxGeometry x="20" y="40" width="300" height="120" as="geometry" />
         </mxCell>
         <mxCell id="c_TerminosCondiciones" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;TerminosCondiciones&lt;/b&gt;&lt;/div&gt;🔑 version: String&lt;br&gt;texto: String&lt;br&gt;vigenteDesde: Instant" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_configuracion">
-          <mxGeometry x="340" y="40" width="300" height="86" as="geometry" />
+          <mxGeometry x="340" y="40" width="300" height="92" as="geometry" />
         </mxCell>
         <mxCell id="pkg_pacientes" value="«paquete» pacientes" style="shape=folder;tabWidth=140;tabHeight=26;tabPosition=left;html=1;verticalAlign=top;align=left;spacingLeft=8;fontStyle=1;fillColor=#FBF6EA;strokeColor=#7FA36B;container=1;collapsible=0;" vertex="1" parent="1">
-          <mxGeometry x="1840" y="0" width="660" height="418" as="geometry" />
+          <mxGeometry x="1840" y="0" width="660" height="460" as="geometry" />
         </mxCell>
         <mxCell id="c_Paciente" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;Paciente&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;usuarioId: Long&lt;br&gt;nombre: String&lt;br&gt;apellido: String&lt;br&gt;tipoDocumento: String&lt;br&gt;nroDocumento: String&lt;br&gt;fechaNacimiento: LocalDate&lt;br&gt;sexo: String&lt;br&gt;telefonoWhatsapp: String 🔒&lt;br&gt;email: String 🔒&lt;br&gt;domicilio: String 🔒&lt;br&gt;objetivo: String&lt;br&gt;antecedentesSalud: String 🔒&lt;br&gt;observaciones: String 🔒&lt;br&gt;estado: Estado&lt;br&gt;fechaBaja: LocalDate&lt;br&gt;motivoBaja: String&lt;hr&gt;+ nombreCompleto(): String&lt;br&gt;+ edad(…): int&lt;br&gt;+ activo(): boolean&lt;hr&gt;&lt;i&gt;«enum» Estado&lt;/i&gt;: ACTIVO, BAJA" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_pacientes">
-          <mxGeometry x="20" y="40" width="300" height="338" as="geometry" />
+          <mxGeometry x="20" y="40" width="300" height="380" as="geometry" />
         </mxCell>
         <mxCell id="c_PacienteProfesional" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;PacienteProfesional&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;pacienteId: Long&lt;br&gt;profesionalId: Long&lt;br&gt;area: Area&lt;br&gt;fechaAsignacion: LocalDate&lt;br&gt;activo: boolean" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_pacientes">
-          <mxGeometry x="340" y="40" width="300" height="128" as="geometry" />
+          <mxGeometry x="340" y="40" width="300" height="134" as="geometry" />
         </mxCell>
         <mxCell id="pkg_profesionales" value="«paquete» profesionales" style="shape=folder;tabWidth=140;tabHeight=26;tabPosition=left;html=1;verticalAlign=top;align=left;spacingLeft=8;fontStyle=1;fillColor=#FBF6EA;strokeColor=#7FA36B;container=1;collapsible=0;" vertex="1" parent="1">
-          <mxGeometry x="0" y="710" width="660" height="548" as="geometry" />
+          <mxGeometry x="0" y="764" width="660" height="642" as="geometry" />
         </mxCell>
         <mxCell id="c_BloqueoAgenda" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;BloqueoAgenda&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;profesionalId: Long&lt;br&gt;desde: Instant&lt;br&gt;hasta: Instant&lt;br&gt;motivo: String&lt;hr&gt;+ solapa(…): boolean" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_profesionales">
-          <mxGeometry x="20" y="40" width="300" height="128" as="geometry" />
-        </mxCell>
-        <mxCell id="c_Profesional" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;Profesional&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;usuarioId: Long&lt;br&gt;nombre: String&lt;br&gt;apellido: String&lt;br&gt;tipoDocumento: String&lt;br&gt;nroDocumento: String&lt;br&gt;matricula: String&lt;br&gt;tipo: Tipo&lt;br&gt;especialidad: String&lt;br&gt;telefonoWhatsapp: String 🔒&lt;br&gt;email: String 🔒&lt;br&gt;duracionTurnoMin: int&lt;br&gt;estado: Estado&lt;br&gt;fechaBaja: LocalDate&lt;hr&gt;+ nombreCompleto(): String&lt;br&gt;+ nombreVisible(): String&lt;br&gt;+ activo(): boolean&lt;hr&gt;&lt;i&gt;«enum» Estado&lt;/i&gt;: ACTIVO, BAJA&lt;hr&gt;&lt;i&gt;«enum» Tipo&lt;/i&gt;: NUTRICIONISTA, ENTRENADOR, INTEGRAL" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_profesionales">
-          <mxGeometry x="20" y="198" width="300" height="310" as="geometry" />
+          <mxGeometry x="20" y="40" width="300" height="152" as="geometry" />
         </mxCell>
         <mxCell id="c_Disponibilidad" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;Disponibilidad&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;profesionalId: Long&lt;br&gt;diaSemana: int&lt;br&gt;horaDesde: LocalTime&lt;br&gt;horaHasta: LocalTime&lt;br&gt;ubicacion: String&lt;br&gt;activo: boolean" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_profesionales">
-          <mxGeometry x="340" y="40" width="300" height="142" as="geometry" />
+          <mxGeometry x="340" y="40" width="300" height="148" as="geometry" />
+        </mxCell>
+        <mxCell id="c_Profesional" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;Profesional&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;usuarioId: Long&lt;br&gt;nombre: String&lt;br&gt;apellido: String&lt;br&gt;tipoDocumento: String&lt;br&gt;nroDocumento: String&lt;br&gt;matricula: String&lt;br&gt;tipo: Tipo&lt;br&gt;especialidad: String&lt;br&gt;telefonoWhatsapp: String 🔒&lt;br&gt;email: String 🔒&lt;br&gt;duracionTurnoMin: int&lt;br&gt;estado: Estado&lt;br&gt;fechaBaja: LocalDate&lt;hr&gt;+ nombreCompleto(): String&lt;br&gt;+ nombreVisible(): String&lt;br&gt;+ activo(): boolean&lt;hr&gt;&lt;i&gt;«enum» Estado&lt;/i&gt;: ACTIVO, BAJA&lt;hr&gt;&lt;i&gt;«enum» Tipo&lt;/i&gt;: NUTRICIONISTA, ENTRENADOR, INTEGRAL" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_profesionales">
+          <mxGeometry x="340" y="218" width="300" height="384" as="geometry" />
         </mxCell>
         <mxCell id="pkg_turnos" value="«paquete» turnos" style="shape=folder;tabWidth=140;tabHeight=26;tabPosition=left;html=1;verticalAlign=top;align=left;spacingLeft=8;fontStyle=1;fillColor=#FBF6EA;strokeColor=#7FA36B;container=1;collapsible=0;" vertex="1" parent="1">
-          <mxGeometry x="720" y="710" width="660" height="348" as="geometry" />
+          <mxGeometry x="720" y="764" width="660" height="404" as="geometry" />
         </mxCell>
         <mxCell id="c_Turno" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;Turno&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;pacienteId: Long&lt;br&gt;profesionalId: Long&lt;br&gt;area: Area&lt;br&gt;inicio: Instant&lt;br&gt;fin: Instant&lt;br&gt;ubicacion: String&lt;br&gt;estado: Estado&lt;br&gt;motivoCancelacion: String&lt;br&gt;canceladoPorUsuarioId: Long&lt;br&gt;canceladoPorRol: String&lt;br&gt;recordatorioEnviadoAt: Instant&lt;br&gt;creadoPorUsuarioId: Long&lt;br&gt;fueraDeAgenda: boolean&lt;hr&gt;+ solapa(…): boolean&lt;hr&gt;&lt;i&gt;«enum» Estado&lt;/i&gt;: RESERVADO, CANCELADO, ATENDIDO, AUSENTE" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_turnos">
-          <mxGeometry x="20" y="40" width="300" height="268" as="geometry" />
+          <mxGeometry x="20" y="40" width="300" height="324" as="geometry" />
         </mxCell>
         <mxCell id="c_TurnoHistorial" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;TurnoHistorial&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;turnoId: Long&lt;br&gt;inicioAnterior: Instant&lt;br&gt;finAnterior: Instant&lt;br&gt;motivo: String&lt;br&gt;cambiadoPor: String&lt;br&gt;cambiadoAt: Instant" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_turnos">
-          <mxGeometry x="340" y="40" width="300" height="142" as="geometry" />
+          <mxGeometry x="340" y="40" width="300" height="148" as="geometry" />
         </mxCell>
         <mxCell id="pkg_pagos" value="«paquete» pagos" style="shape=folder;tabWidth=140;tabHeight=26;tabPosition=left;html=1;verticalAlign=top;align=left;spacingLeft=8;fontStyle=1;fillColor=#FBF6EA;strokeColor=#7FA36B;container=1;collapsible=0;" vertex="1" parent="1">
-          <mxGeometry x="1440" y="710" width="660" height="436" as="geometry" />
+          <mxGeometry x="1440" y="764" width="660" height="466" as="geometry" />
         </mxCell>
         <mxCell id="c_Arancel" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;Arancel&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;concepto: String&lt;br&gt;monto: BigDecimal&lt;br&gt;vigenteDesde: LocalDate&lt;br&gt;activo: boolean" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_pagos">
-          <mxGeometry x="20" y="40" width="300" height="114" as="geometry" />
+          <mxGeometry x="20" y="40" width="300" height="120" as="geometry" />
         </mxCell>
         <mxCell id="c_Pago" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;Pago&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;pacienteId: Long&lt;br&gt;fecha: LocalDate&lt;br&gt;monto: BigDecimal&lt;br&gt;medio: Medio&lt;br&gt;referencia: String&lt;br&gt;observaciones: String&lt;br&gt;nroComprobante: Long&lt;br&gt;anulado: boolean&lt;br&gt;motivoAnulacion: String&lt;hr&gt;&lt;i&gt;«enum» Medio&lt;/i&gt;: EFECTIVO, TRANSFERENCIA, DEBITO, CREDITO, MERCADO_PAGO, OTRO" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_pagos">
-          <mxGeometry x="20" y="184" width="300" height="212" as="geometry" />
+          <mxGeometry x="20" y="190" width="300" height="236" as="geometry" />
         </mxCell>
         <mxCell id="c_Cargo" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;Cargo&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;pacienteId: Long&lt;br&gt;concepto: String&lt;br&gt;periodo: String&lt;br&gt;monto: BigDecimal&lt;br&gt;fecha: LocalDate&lt;br&gt;vencimiento: LocalDate&lt;br&gt;arancelId: Long&lt;br&gt;anulado: boolean&lt;br&gt;motivoAnulacion: String" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_pagos">
-          <mxGeometry x="340" y="40" width="300" height="184" as="geometry" />
+          <mxGeometry x="340" y="40" width="300" height="190" as="geometry" />
         </mxCell>
         <mxCell id="pkg_catalogo" value="«paquete» catalogo" style="shape=folder;tabWidth=140;tabHeight=26;tabPosition=left;html=1;verticalAlign=top;align=left;spacingLeft=8;fontStyle=1;fillColor=#FBF6EA;strokeColor=#7FA36B;container=1;collapsible=0;" vertex="1" parent="1">
-          <mxGeometry x="2160" y="710" width="660" height="538" as="geometry" />
+          <mxGeometry x="2160" y="764" width="660" height="574" as="geometry" />
         </mxCell>
         <mxCell id="c_Alimento" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;Alimento&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;nombre: String&lt;br&gt;nombreNormalizado: String&lt;br&gt;grupo: GrupoAlimento&lt;br&gt;kcal: BigDecimal&lt;br&gt;hc: BigDecimal&lt;br&gt;proteinas: BigDecimal&lt;br&gt;grasas: BigDecimal&lt;br&gt;fibra: BigDecimal&lt;br&gt;sodioMg: BigDecimal&lt;br&gt;unidadCasera: String&lt;br&gt;gramosUnidadCasera: BigDecimal&lt;br&gt;aptoDesayuno: boolean&lt;br&gt;aptoColacion: boolean&lt;br&gt;aptoAlmuerzo: boolean&lt;br&gt;activo: boolean&lt;hr&gt;+ referenciaPorGramo(): double" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_catalogo">
-          <mxGeometry x="20" y="40" width="300" height="282" as="geometry" />
+          <mxGeometry x="20" y="40" width="300" height="306" as="geometry" />
         </mxCell>
         <mxCell id="c_GrupoAlimento" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;GrupoAlimento&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;nombre: String&lt;br&gt;macroReferencia: Macro&lt;br&gt;descripcion: String&lt;hr&gt;&lt;i&gt;«enum» Macro&lt;/i&gt;: HC, PROTEINAS, GRASAS, KCAL" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_catalogo">
-          <mxGeometry x="20" y="352" width="300" height="114" as="geometry" />
+          <mxGeometry x="20" y="376" width="300" height="152" as="geometry" />
         </mxCell>
         <mxCell id="c_Ejercicio" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;Ejercicio&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;nombre: String&lt;br&gt;nombreNormalizado: String&lt;br&gt;descripcion: String&lt;br&gt;grupoPrincipal: GrupoMuscular&lt;br&gt;gruposSecundarios: Set&amp;lt;GrupoMuscular&amp;gt;&lt;br&gt;dificultad: Dificultad&lt;br&gt;equipamiento: String&lt;br&gt;videoUrl: String&lt;br&gt;activo: boolean&lt;hr&gt;&lt;i&gt;«enum» Dificultad&lt;/i&gt;: BAJA, MEDIA, ALTA" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_catalogo">
-          <mxGeometry x="340" y="40" width="300" height="198" as="geometry" />
+          <mxGeometry x="340" y="40" width="300" height="222" as="geometry" />
         </mxCell>
         <mxCell id="c_EquivalenciaManual" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;EquivalenciaManual&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;alimentoId: Long&lt;br&gt;alimentoEquivalenteId: Long&lt;br&gt;gramosOrigen: BigDecimal&lt;br&gt;gramosEquivalente: BigDecimal&lt;br&gt;nota: String" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_catalogo">
-          <mxGeometry x="340" y="268" width="300" height="128" as="geometry" />
+          <mxGeometry x="340" y="292" width="300" height="134" as="geometry" />
         </mxCell>
         <mxCell id="c_GrupoMuscular" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;GrupoMuscular&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;nombre: String" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_catalogo">
-          <mxGeometry x="340" y="426" width="300" height="72" as="geometry" />
+          <mxGeometry x="340" y="456" width="300" height="78" as="geometry" />
         </mxCell>
         <mxCell id="pkg_nutricion" value="«paquete» nutricion" style="shape=folder;tabWidth=140;tabHeight=26;tabPosition=left;html=1;verticalAlign=top;align=left;spacingLeft=8;fontStyle=1;fillColor=#FBF6EA;strokeColor=#7FA36B;container=1;collapsible=0;" vertex="1" parent="1">
-          <mxGeometry x="0" y="1318" width="660" height="786" as="geometry" />
+          <mxGeometry x="0" y="1466" width="660" height="884" as="geometry" />
         </mxCell>
         <mxCell id="c_ComidaPlan" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;ComidaPlan&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;plan: PlanAlimentario&lt;br&gt;diaSemana: int&lt;br&gt;tipo: TipoComida&lt;br&gt;orden: int&lt;br&gt;descripcion: String&lt;br&gt;kcalEstimadas: BigDecimal&lt;br&gt;activo: boolean&lt;br&gt;items: List&amp;lt;ItemComida&amp;gt;&lt;hr&gt;+ itemsActivos(): List&amp;lt;ItemComida&amp;gt;&lt;br&gt;+ tieneContenido(): boolean" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_nutricion">
-          <mxGeometry x="20" y="40" width="300" height="198" as="geometry" />
+          <mxGeometry x="20" y="40" width="300" height="222" as="geometry" />
         </mxCell>
         <mxCell id="c_PlanAlimentario" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;PlanAlimentario&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;pacienteId: Long&lt;br&gt;nutricionistaId: Long&lt;br&gt;nombre: String&lt;br&gt;fechaInicio: LocalDate&lt;br&gt;duracionSemanas: int&lt;br&gt;fechaFin: LocalDate&lt;br&gt;modo: Modo&lt;br&gt;kcalObjetivo: Integer&lt;br&gt;pctHc: BigDecimal&lt;br&gt;pctProteinas: BigDecimal&lt;br&gt;pctGrasas: BigDecimal&lt;br&gt;parametrosGeneracion: String&lt;br&gt;estado: Estado&lt;br&gt;observaciones: String&lt;br&gt;comidas: List&amp;lt;ComidaPlan&amp;gt;&lt;hr&gt;+ recalcularFin(): void&lt;br&gt;+ comidasActivas(): List&amp;lt;ComidaPlan&amp;gt;&lt;hr&gt;&lt;i&gt;«enum» Estado&lt;/i&gt;: BORRADOR, ACTIVO, FINALIZADO, ELIMINADO&lt;hr&gt;&lt;i&gt;«enum» Modo&lt;/i&gt;: MANUAL, AUTOMATICO" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_nutricion">
-          <mxGeometry x="20" y="268" width="300" height="324" as="geometry" />
+          <mxGeometry x="20" y="292" width="300" height="398" as="geometry" />
         </mxCell>
         <mxCell id="c_TipoComida" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«enumeration»&lt;br&gt;&lt;/i&gt;&lt;b&gt;TipoComida&lt;/b&gt;&lt;/div&gt;DESAYUNO&lt;br&gt;COLACION_MANANA&lt;br&gt;ALMUERZO&lt;br&gt;MERIENDA&lt;br&gt;COLACION_TARDE&lt;br&gt;CENA" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_nutricion">
-          <mxGeometry x="20" y="622" width="300" height="124" as="geometry" />
+          <mxGeometry x="20" y="720" width="300" height="124" as="geometry" />
         </mxCell>
         <mxCell id="c_ItemComida" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;ItemComida&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;comida: ComidaPlan&lt;br&gt;alimentoId: Long&lt;br&gt;gramos: BigDecimal&lt;br&gt;cantidadCasera: String&lt;br&gt;orden: int&lt;br&gt;activo: boolean" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_nutricion">
-          <mxGeometry x="340" y="40" width="300" height="142" as="geometry" />
+          <mxGeometry x="340" y="40" width="300" height="148" as="geometry" />
         </mxCell>
         <mxCell id="c_ObservacionDiaria" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;ObservacionDiaria&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;pacienteId: Long&lt;br&gt;fecha: LocalDate&lt;br&gt;nivelHambre: int&lt;br&gt;nivelSaciedad: int&lt;br&gt;estadoAnimo: Integer&lt;br&gt;comentario: String" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_nutricion">
-          <mxGeometry x="340" y="212" width="300" height="142" as="geometry" />
+          <mxGeometry x="340" y="218" width="300" height="148" as="geometry" />
         </mxCell>
         <mxCell id="c_ReemplazoAlimento" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;ReemplazoAlimento&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;itemComidaId: Long&lt;br&gt;alimentoReemplazoId: Long&lt;br&gt;gramos: BigDecimal&lt;br&gt;cantidadCasera: String&lt;br&gt;pacienteId: Long&lt;br&gt;fechaDesde: LocalDate&lt;br&gt;activo: boolean" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_nutricion">
-          <mxGeometry x="340" y="384" width="300" height="156" as="geometry" />
+          <mxGeometry x="340" y="396" width="300" height="162" as="geometry" />
         </mxCell>
         <mxCell id="c_RegistroComida" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;RegistroComida&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;pacienteId: Long&lt;br&gt;comidaPlanId: Long&lt;br&gt;fecha: LocalDate&lt;br&gt;realizada: boolean&lt;br&gt;noLeGusto: boolean&lt;br&gt;leCayoMal: boolean&lt;br&gt;createdAt: Instant" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_nutricion">
-          <mxGeometry x="340" y="570" width="300" height="156" as="geometry" />
+          <mxGeometry x="340" y="588" width="300" height="162" as="geometry" />
         </mxCell>
         <mxCell id="pkg_entrenamiento" value="«paquete» entrenamiento" style="shape=folder;tabWidth=140;tabHeight=26;tabPosition=left;html=1;verticalAlign=top;align=left;spacingLeft=8;fontStyle=1;fillColor=#FBF6EA;strokeColor=#7FA36B;container=1;collapsible=0;" vertex="1" parent="1">
-          <mxGeometry x="720" y="1318" width="660" height="664" as="geometry" />
+          <mxGeometry x="720" y="1466" width="660" height="750" as="geometry" />
         </mxCell>
         <mxCell id="c_DiaRutina" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;DiaRutina&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;rutina: Rutina&lt;br&gt;diaSemana: int&lt;br&gt;nombre: String&lt;br&gt;orden: int&lt;br&gt;activo: boolean&lt;br&gt;ejercicios: List&amp;lt;EjercicioRutina&amp;gt;&lt;hr&gt;+ ejerciciosActivos(): List&amp;lt;EjercicioRutina&amp;gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_entrenamiento">
-          <mxGeometry x="20" y="40" width="300" height="156" as="geometry" />
+          <mxGeometry x="20" y="40" width="300" height="180" as="geometry" />
         </mxCell>
         <mxCell id="c_ReemplazoEjercicio" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;ReemplazoEjercicio&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;ejercicioRutinaId: Long&lt;br&gt;ejercicioReemplazoId: Long&lt;br&gt;pacienteId: Long&lt;br&gt;fecha: LocalDate&lt;br&gt;activo: boolean" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_entrenamiento">
-          <mxGeometry x="20" y="226" width="300" height="128" as="geometry" />
+          <mxGeometry x="20" y="250" width="300" height="134" as="geometry" />
         </mxCell>
         <mxCell id="c_Rutina" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;Rutina&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;pacienteId: Long&lt;br&gt;entrenadorId: Long&lt;br&gt;nombre: String&lt;br&gt;objetivo: String&lt;br&gt;fechaInicio: LocalDate&lt;br&gt;duracionSemanas: int&lt;br&gt;fechaFin: LocalDate&lt;br&gt;estado: Estado&lt;br&gt;observaciones: String&lt;br&gt;dias: List&amp;lt;DiaRutina&amp;gt;&lt;hr&gt;+ recalcularFin(): void&lt;br&gt;+ diasActivos(): List&amp;lt;DiaRutina&amp;gt;&lt;hr&gt;&lt;i&gt;«enum» Estado&lt;/i&gt;: ACTIVA, FINALIZADA, ELIMINADA" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_entrenamiento">
-          <mxGeometry x="20" y="384" width="300" height="240" as="geometry" />
+          <mxGeometry x="20" y="414" width="300" height="296" as="geometry" />
         </mxCell>
         <mxCell id="c_EjercicioRutina" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;EjercicioRutina&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;dia: DiaRutina&lt;br&gt;ejercicioId: Long&lt;br&gt;orden: int&lt;br&gt;series: int&lt;br&gt;repeticiones: String&lt;br&gt;descansoSeg: Integer&lt;br&gt;cargaSugerida: String&lt;br&gt;notas: String&lt;br&gt;activo: boolean" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_entrenamiento">
-          <mxGeometry x="340" y="40" width="300" height="184" as="geometry" />
+          <mxGeometry x="340" y="40" width="300" height="190" as="geometry" />
         </mxCell>
         <mxCell id="c_RegistroEntrenamiento" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;RegistroEntrenamiento&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;pacienteId: Long&lt;br&gt;ejercicioRutinaId: Long&lt;br&gt;ejercicioId: Long&lt;br&gt;fecha: LocalDate&lt;br&gt;completado: boolean&lt;br&gt;seriesRealizadas: Integer&lt;br&gt;repeticionesRealizadas: Integer&lt;br&gt;cargaKg: BigDecimal&lt;br&gt;createdAt: Instant" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_entrenamiento">
-          <mxGeometry x="340" y="254" width="300" height="184" as="geometry" />
+          <mxGeometry x="340" y="260" width="300" height="190" as="geometry" />
         </mxCell>
         <mxCell id="pkg_evolucion" value="«paquete» evolucion" style="shape=folder;tabWidth=140;tabHeight=26;tabPosition=left;html=1;verticalAlign=top;align=left;spacingLeft=8;fontStyle=1;fillColor=#FBF6EA;strokeColor=#7FA36B;container=1;collapsible=0;" vertex="1" parent="1">
-          <mxGeometry x="1440" y="1318" width="660" height="348" as="geometry" />
+          <mxGeometry x="1440" y="1466" width="660" height="354" as="geometry" />
         </mxCell>
         <mxCell id="c_EvaluacionFisica" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;EvaluacionFisica&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;pacienteId: Long&lt;br&gt;profesionalId: Long&lt;br&gt;fecha: LocalDate&lt;br&gt;prueba: String&lt;br&gt;ejercicioId: Long&lt;br&gt;valor: BigDecimal&lt;br&gt;unidad: String&lt;br&gt;observaciones: String" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_evolucion">
-          <mxGeometry x="20" y="40" width="300" height="170" as="geometry" />
+          <mxGeometry x="20" y="40" width="300" height="176" as="geometry" />
         </mxCell>
         <mxCell id="c_MedicionAntropometrica" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;MedicionAntropometrica&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;pacienteId: Long&lt;br&gt;profesionalId: Long&lt;br&gt;fecha: LocalDate&lt;br&gt;pesoKg: BigDecimal&lt;br&gt;tallaCm: BigDecimal&lt;br&gt;imc: BigDecimal&lt;br&gt;pctGrasa: BigDecimal&lt;br&gt;pctMusculo: BigDecimal&lt;br&gt;circCintura: BigDecimal&lt;br&gt;circCadera: BigDecimal&lt;br&gt;circBrazo: BigDecimal&lt;br&gt;circMuslo: BigDecimal&lt;br&gt;circPecho: BigDecimal&lt;br&gt;circPantorrilla: BigDecimal&lt;br&gt;observaciones: String 🔒" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_evolucion">
-          <mxGeometry x="340" y="40" width="300" height="268" as="geometry" />
+          <mxGeometry x="340" y="40" width="300" height="274" as="geometry" />
         </mxCell>
         <mxCell id="pkg_novedades" value="«paquete» novedades" style="shape=folder;tabWidth=140;tabHeight=26;tabPosition=left;html=1;verticalAlign=top;align=left;spacingLeft=8;fontStyle=1;fillColor=#FBF6EA;strokeColor=#7FA36B;container=1;collapsible=0;" vertex="1" parent="1">
-          <mxGeometry x="2160" y="1318" width="660" height="306" as="geometry" />
+          <mxGeometry x="2160" y="1466" width="660" height="330" as="geometry" />
         </mxCell>
         <mxCell id="c_Comentario" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;Comentario&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;pacienteId: Long&lt;br&gt;tipo: Tipo&lt;br&gt;planId: Long&lt;br&gt;comidaPlanId: Long&lt;br&gt;rutinaId: Long&lt;br&gt;ejercicioRutinaId: Long&lt;br&gt;fecha: LocalDate&lt;br&gt;texto: String&lt;br&gt;createdAt: Instant&lt;br&gt;leidoAt: Instant&lt;br&gt;leidoPor: String&lt;hr&gt;&lt;i&gt;«enum» Tipo&lt;/i&gt;: PLAN, RUTINA" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_novedades">
-          <mxGeometry x="20" y="40" width="300" height="226" as="geometry" />
+          <mxGeometry x="20" y="40" width="300" height="250" as="geometry" />
         </mxCell>
         <mxCell id="c_Molestia" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;Molestia&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;pacienteId: Long&lt;br&gt;fecha: LocalDate&lt;br&gt;descripcion: String&lt;br&gt;intensidad: int&lt;br&gt;ubicacionCorporal: String&lt;br&gt;ejercicioRutinaId: Long&lt;br&gt;contexto: Contexto&lt;br&gt;createdAt: Instant&lt;br&gt;revisadaAt: Instant&lt;br&gt;revisadaPor: String&lt;hr&gt;&lt;i&gt;«enum» Contexto&lt;/i&gt;: ENTRENAMIENTO, ALIMENTACION, GENERAL" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_novedades">
-          <mxGeometry x="340" y="40" width="300" height="212" as="geometry" />
+          <mxGeometry x="340" y="40" width="300" height="250" as="geometry" />
         </mxCell>
         <mxCell id="pkg_notificaciones" value="«paquete» notificaciones" style="shape=folder;tabWidth=140;tabHeight=26;tabPosition=left;html=1;verticalAlign=top;align=left;spacingLeft=8;fontStyle=1;fillColor=#FBF6EA;strokeColor=#7FA36B;container=1;collapsible=0;" vertex="1" parent="1">
-          <mxGeometry x="0" y="2164" width="660" height="474" as="geometry" />
+          <mxGeometry x="0" y="2410" width="660" height="512" as="geometry" />
         </mxCell>
         <mxCell id="c_Alerta" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;Alerta&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;destinatarioUsuarioId: Long&lt;br&gt;tipo: Tipo&lt;br&gt;mensaje: String&lt;br&gt;prioritaria: boolean&lt;br&gt;referenciaTipo: String&lt;br&gt;referenciaId: Long&lt;br&gt;createdAt: Instant&lt;br&gt;leidaAt: Instant&lt;hr&gt;&lt;i&gt;«enum» Tipo&lt;/i&gt;: NOTIFICACION_FALLIDA, MOLESTIA, COMENTARIO, BACKUP_FALLIDO, ERROR_SISTEMA, PROFESIONAL_BAJA, CREDENCIALES_MANUALES" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_notificaciones">
-          <mxGeometry x="20" y="40" width="300" height="212" as="geometry" />
+          <mxGeometry x="20" y="40" width="300" height="250" as="geometry" />
         </mxCell>
         <mxCell id="c_TipoNotificacion" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«enumeration»&lt;br&gt;&lt;/i&gt;&lt;b&gt;TipoNotificacion&lt;/b&gt;&lt;/div&gt;CREDENCIALES&lt;br&gt;TURNO_CONFIRMADO&lt;br&gt;TURNO_REPROGRAMADO&lt;br&gt;TURNO_CANCELADO&lt;br&gt;RECORDATORIO_TURNO&lt;br&gt;RECORDATORIO_DEUDA&lt;br&gt;CAMBIO_ARANCEL&lt;br&gt;RECUPERO_PASSWORD" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_notificaciones">
-          <mxGeometry x="20" y="282" width="300" height="152" as="geometry" />
+          <mxGeometry x="20" y="320" width="300" height="152" as="geometry" />
         </mxCell>
         <mxCell id="c_Notificacion" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;Notificacion&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;tipo: TipoNotificacion&lt;br&gt;usuarioId: Long&lt;br&gt;destinatario: String&lt;br&gt;telefono: String 🔒&lt;br&gt;plantilla: String&lt;br&gt;parametros: String 🔒&lt;br&gt;referenciaTipo: String&lt;br&gt;referenciaId: Long&lt;br&gt;estado: Estado&lt;br&gt;intentos: int&lt;br&gt;proximoIntentoAt: Instant&lt;br&gt;error: String&lt;br&gt;waMessageId: String&lt;br&gt;createdAt: Instant&lt;br&gt;enviadaAt: Instant&lt;hr&gt;&lt;i&gt;«enum» Estado&lt;/i&gt;: PENDIENTE, ENVIADA, FALLIDA, OMITIDA" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_notificaciones">
-          <mxGeometry x="340" y="40" width="300" height="282" as="geometry" />
+          <mxGeometry x="340" y="40" width="300" height="320" as="geometry" />
         </mxCell>
         <mxCell id="pkg_bitacora" value="«paquete» bitacora" style="shape=folder;tabWidth=140;tabHeight=26;tabPosition=left;html=1;verticalAlign=top;align=left;spacingLeft=8;fontStyle=1;fillColor=#FBF6EA;strokeColor=#7FA36B;container=1;collapsible=0;" vertex="1" parent="1">
-          <mxGeometry x="720" y="2164" width="660" height="526" as="geometry" />
+          <mxGeometry x="720" y="2410" width="660" height="526" as="geometry" />
         </mxCell>
         <mxCell id="c_BitacoraEvento" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;BitacoraEvento&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;fechaHora: Instant&lt;br&gt;usuarioId: Long&lt;br&gt;username: String&lt;br&gt;roles: String&lt;br&gt;modulo: Modulo&lt;br&gt;tipoEvento: TipoEvento&lt;br&gt;entidad: String&lt;br&gt;entidadId: String&lt;br&gt;descripcion: String&lt;br&gt;resultado: Resultado&lt;br&gt;ip: String&lt;br&gt;detalle: String&lt;hr&gt;&lt;i&gt;«enum» Resultado&lt;/i&gt;: OK, ERROR" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_bitacora">
-          <mxGeometry x="20" y="40" width="300" height="240" as="geometry" />
+          <mxGeometry x="20" y="40" width="300" height="264" as="geometry" />
         </mxCell>
         <mxCell id="c_Modulo" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«enumeration»&lt;br&gt;&lt;/i&gt;&lt;b&gt;Modulo&lt;/b&gt;&lt;/div&gt;PACIENTES&lt;br&gt;PROFESIONALES&lt;br&gt;TURNOS&lt;br&gt;NUTRICION&lt;br&gt;ENTRENAMIENTO&lt;br&gt;EVOLUCION&lt;br&gt;PAGOS&lt;br&gt;CATALOGO&lt;br&gt;NOTIFICACIONES&lt;br&gt;REPORTES&lt;br&gt;SEGURIDAD&lt;br&gt;BACKUP&lt;br&gt;CONFIGURACION" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_bitacora">
           <mxGeometry x="340" y="40" width="300" height="222" as="geometry" />
@@ -186,10 +186,10 @@
           <mxGeometry x="340" y="292" width="300" height="194" as="geometry" />
         </mxCell>
         <mxCell id="pkg_backup" value="«paquete» backup" style="shape=folder;tabWidth=140;tabHeight=26;tabPosition=left;html=1;verticalAlign=top;align=left;spacingLeft=8;fontStyle=1;fillColor=#FBF6EA;strokeColor=#7FA36B;container=1;collapsible=0;" vertex="1" parent="1">
-          <mxGeometry x="1440" y="2164" width="340" height="306" as="geometry" />
+          <mxGeometry x="1440" y="2410" width="340" height="348" as="geometry" />
         </mxCell>
         <mxCell id="c_BackupRegistro" value="&lt;div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'&gt;&lt;i&gt;«entity»&lt;br&gt;&lt;/i&gt;&lt;b&gt;BackupRegistro&lt;/b&gt;&lt;/div&gt;🔑 id: Long&lt;br&gt;tipo: Tipo&lt;br&gt;iniciadoAt: Instant&lt;br&gt;finalizadoAt: Instant&lt;br&gt;estado: Estado&lt;br&gt;archivo: String&lt;br&gt;tamanoBytes: Long&lt;br&gt;ubicacion: String&lt;br&gt;solicitadoPor: String&lt;br&gt;error: String&lt;br&gt;expirado: boolean&lt;hr&gt;&lt;i&gt;«enum» Tipo&lt;/i&gt;: MANUAL, AUTOMATICO&lt;hr&gt;&lt;i&gt;«enum» Estado&lt;/i&gt;: EN_CURSO, OK, ERROR" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;fontSize=10;fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;" vertex="1" parent="pkg_backup">
-          <mxGeometry x="20" y="40" width="300" height="226" as="geometry" />
+          <mxGeometry x="20" y="40" width="300" height="268" as="geometry" />
         </mxCell>
         <mxCell id="a0" value="usuarioId *..1" style="endArrow=open;dashed=1;html=1;strokeColor=#999999;edgeStyle=orthogonalEdgeStyle;jumpStyle=arc;fontSize=9;" edge="1" parent="1" source="c_BitacoraEvento" target="c_Usuario">
           <mxGeometry relative="1" as="geometry" />
