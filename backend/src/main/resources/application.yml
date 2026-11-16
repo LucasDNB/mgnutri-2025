@@ -17,9 +17,9 @@ spring:
       maximum-pool-size: ${DB_POOL_SIZE:15}
   flyway:
     enabled: true
-    url: ${DB_MIGRATION_URL:${DB_URL}}
-    user: ${DB_MIGRATION_USER:${DB_USER}}
-    password: ${DB_MIGRATION_PASSWORD:${DB_PASSWORD}}
+    url: ${DB_MIGRATION_URL:${spring.datasource.url}}
+    user: ${DB_MIGRATION_USER:${spring.datasource.username}}
+    password: ${DB_MIGRATION_PASSWORD:${spring.datasource.password}}
   jpa:
     open-in-view: false
     hibernate:

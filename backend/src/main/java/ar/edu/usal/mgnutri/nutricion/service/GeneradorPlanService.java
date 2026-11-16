@@ -149,11 +149,12 @@ public class GeneradorPlanService {
             if (a != null) {
                 double g = a.getKcal().doubleValue() > 0 ? kcalComida / (a.getKcal().doubleValue() / 100.0) : 100;
                 double max = FRUTOS_SECOS.equals(a.getGrupo().getNombre()) ? 40 : 300;
-                items.add(new Elegido(a, CalculadoraNutricional.redondear5(Math.min(Math.max(g, 10), max))));
+                items.add(new Elegido(a, CalculadoraNutricional.redondear5(Math.min(Math.max(g, 10), max)), false));
             } else {
                 faltante = true;
             }
         }
+        ajustarKcal(items, kcalComida);
         items.forEach(e -> recientes.add(e.alimento.getId()));
         while (recientes.size() > 8) {
             recientes.remove(0);
@@ -181,11 +182,27 @@ public class GeneradorPlanService {
 
     private enum Macro { HC, P, G }
 
+    /** Escala las porciones variables para que la comida se acerque a las kcal objetivo. */
+    private static void ajustarKcal(List<Elegido> items, double objetivo) {
+        double fijas = items.stream().filter(e -> !e.variable).mapToDouble(e -> CalculadoraNutricional.macros(e.alimento, e.gramos).kcal()).sum();
+        double variables = items.stream().filter(e -> e.variable).mapToDouble(e -> CalculadoraNutricional.macros(e.alimento, e.gramos).kcal()).sum();
+        if (variables <= 0 || objetivo <= fijas) {
+            return;
+        }
+        double factor = Math.min(2.0, Math.max(0.4, (objetivo - fijas) / variables));
+        for (int i = 0; i < items.size(); i++) {
+            Elegido e = items.get(i);
+            if (e.variable) {
+                items.set(i, new Elegido(e.alimento, CalculadoraNutricional.redondear5(e.gramos * factor), true));
+            }
+        }
+    }
+
     private static boolean fijo(List<Elegido> items, Alimento a, double gramos) {
         if (a == null) {
             return false;
         }
-        items.add(new Elegido(a, CalculadoraNutricional.redondear5(gramos)));
+        items.add(new Elegido(a, CalculadoraNutricional.redondear5(gramos), false));
         return true;
     }
 
@@ -216,7 +233,7 @@ public class GeneradorPlanService {
         if (g < 5) {
             return true; // no hace falta agregarlo
         }
-        items.add(new Elegido(a, CalculadoraNutricional.redondear5(g)));
+        items.add(new Elegido(a, CalculadoraNutricional.redondear5(g), true));
         return true;
     }
 
@@ -239,5 +256,5 @@ public class GeneradorPlanService {
         return Math.round(v * 10) / 10.0;
     }
 
-    private record Elegido(Alimento alimento, double gramos) {}
+    private record Elegido(Alimento alimento, double gramos, boolean variable) {}
 }

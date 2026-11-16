@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "mgnutri",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd backend && mvnw.cmd -q spring-boot:run"],
+      "port": 8090
+    }
+  ]
+}

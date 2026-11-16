@@ -10,5 +10,9 @@ import java.util.Optional;
 public interface MedicionAntropometricaDao extends JpaRepository<MedicionAntropometrica, Long> {
     Optional<MedicionAntropometrica> findFirstByPacienteIdOrderByFechaDescIdDesc(Long pacienteId);
 
+    Optional<MedicionAntropometrica> findByPacienteIdAndProfesionalIdAndFecha(Long pacienteId, Long profesionalId, LocalDate fecha);
+
+    Optional<MedicionAntropometrica> findFirstByPacienteIdAndFechaBeforeOrderByFechaDesc(Long pacienteId, LocalDate fecha);
+
     List<MedicionAntropometrica> findByPacienteIdAndFechaBetweenOrderByFechaAsc(Long pacienteId, LocalDate desde, LocalDate hasta);
 }
