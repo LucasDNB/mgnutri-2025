@@ -7,11 +7,13 @@ por lo que se mantienen coherentes con [`../03-modelo-de-datos.md`](../03-modelo
 |---|---|---|
 | [`er.drawio`](er.drawio) | Modelo entidad-relación agrupado por módulo (43 tablas, 59 relaciones) | draw.io / diagrams.net |
 | [`clases.drawio`](clases.drawio) | Página «Dominio»: 42 clases por paquete · Página «Capas (MVC)»: controller → service → dao por módulo | draw.io / diagrams.net |
+| [`png/`](png/) | Exportación a imagen (2x) para el informe: [`er-modelo-e-r.png`](png/er-modelo-e-r.png), [`clases-dominio.png`](png/clases-dominio.png), [`clases-capas-mvc.png`](png/clases-capas-mvc.png) | Cualquier visor de imágenes |
 
-Para regenerarlos (con la base levantada):
+Para regenerarlos (con la base levantada) y volver a exportar los PNG (usa Chrome o Edge headless):
 
 ```bash
 python -I docs/diagramas/generar_diagramas.py --password "<contraseña de sa>"
+python -I docs/diagramas/exportar_png.py
 ```
 
 ## Modelo E-R

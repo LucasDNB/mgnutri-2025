@@ -38,7 +38,8 @@ specs/     Specs por paquete de trabajo
 ## Diagramas
 
 En [`docs/diagramas/`](docs/diagramas/) están el modelo E-R ([`er.drawio`](docs/diagramas/er.drawio)) y el diagrama de
-clases del dominio con las capas por módulo ([`clases.drawio`](docs/diagramas/clases.drawio)), que se abren con draw.io / diagrams.net.
+clases del dominio con las capas por módulo ([`clases.drawio`](docs/diagramas/clases.drawio)), que se abren con draw.io / diagrams.net,
+y su exportación a PNG para el informe en [`docs/diagramas/png/`](docs/diagramas/png/).
 Las mismas vistas en Mermaid se ven directamente en GitHub en [`docs/diagramas/README.md`](docs/diagramas/README.md).
 
 ## Ejecutar en local

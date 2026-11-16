@@ -162,7 +162,7 @@ def generar_er(tablas, relaciones):
                     extra = (" 🔒" if (t, c["nombre"]) in CIFRADAS else "") + (" ᵁ" if c["unico"] and not c["pk"] else "") + (" ?" if c["nulo"] else "")
                     nombre_col = f"<u>{c['nombre']}</u>" if c["pk"] else c["nombre"]
                     filas.append(f"{icono}{nombre_col}: <font color='#666666'>{html.escape(c['tipo'])}</font>{extra}")
-                etiqueta = f"<div style='text-align:center;font-weight:bold;padding:3px;background:#2E5E3A;color:#fff'>{t}</div>" + "<br>".join(filas)
+                etiqueta = f"<div style='text-align:center;font-weight:bold;padding:3px;box-sizing:border-box;width:{ANCHO_TABLA - 6}px;background:#2E5E3A;color:#fff'>{t}</div>" + "<br>".join(filas)
                 celdas.append(vertice(f"t_{t}", etiqueta, 20 + k * (ANCHO_TABLA + 20), y, ANCHO_TABLA, h,
                                       "rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingTop=0;fontSize=10;"
                                       "fillColor=#ffffff;strokeColor=#2E5E3A;overflow=hidden;", padre=mod_id))
@@ -266,7 +266,7 @@ TITULOS = {"common": "common", "seguridad": "seguridad", "configuracion": "confi
 
 def etiqueta_clase(nombre, c):
     estereotipo = "«abstract»<br>" if c["tipo"] == "abstracta" else ("«enumeration»<br>" if c["tipo"] == "enum" else "«entity»<br>")
-    cab = f"<div style='text-align:center;padding:2px;background:#2E5E3A;color:#fff'><i>{estereotipo}</i><b>{nombre}</b></div>"
+    cab = f"<div style='text-align:center;padding:2px;box-sizing:border-box;width:294px;background:#2E5E3A;color:#fff'><i>{estereotipo}</i><b>{nombre}</b></div>"
     if c["tipo"] == "enum":
         return cab + "<br>".join(c["valores"])
     partes = [cab, "<br>".join(html.escape(a) for a in c["atributos"]) or "&nbsp;"]
@@ -419,11 +419,13 @@ por lo que se mantienen coherentes con [`../03-modelo-de-datos.md`](../03-modelo
 |---|---|---|
 | [`er.drawio`](er.drawio) | Modelo entidad-relación agrupado por módulo ({len(tablas)} tablas, {len(relaciones)} relaciones) | draw.io / diagrams.net |
 | [`clases.drawio`](clases.drawio) | Página «Dominio»: {sum(1 for c in clases.values() if c['tipo'] != 'enum')} clases por paquete · Página «Capas (MVC)»: controller → service → dao por módulo | draw.io / diagrams.net |
+| [`png/`](png/) | Exportación a imagen (2x) para el informe: [`er-modelo-e-r.png`](png/er-modelo-e-r.png), [`clases-dominio.png`](png/clases-dominio.png), [`clases-capas-mvc.png`](png/clases-capas-mvc.png) | Cualquier visor de imágenes |
 
-Para regenerarlos (con la base levantada):
+Para regenerarlos (con la base levantada) y volver a exportar los PNG (usa Chrome o Edge headless):
 
 ```bash
 python -I docs/diagramas/generar_diagramas.py --password "<contraseña de sa>"
+python -I docs/diagramas/exportar_png.py
 ```
 
 ## Modelo E-R
