@@ -1,0 +1,17 @@
+# Perfil de pruebas: la conexión la provee Testcontainers (@ServiceConnection). Claves sólo para tests.
+spring:
+  datasource:
+    url: jdbc:sqlserver://placeholder
+    username: sa
+    password: placeholder
+mgnutri:
+  jwt:
+    secret: dGVzdC1qd3Qtc2VjcmV0LW1nbnV0cmktMjAyNS0zMmJ5dGVzLW1pbmltby0hIQ==
+  crypto:
+    key: dGVzdC1rZXktbWdudXRyaS1hZXMyNTYtMzJieXRlcyE=
+  admin-inicial:
+    password: Admin2025!
+  jobs:
+    habilitados: false
+  seguridad:
+    rate-limit-por-minuto: 1000

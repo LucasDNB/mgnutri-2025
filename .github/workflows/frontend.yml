@@ -1,0 +1,33 @@
+name: frontend
+
+on:
+  push:
+    branches: [main]
+    paths: ['frontend/**', '.github/workflows/frontend.yml']
+  pull_request:
+    paths: ['frontend/**']
+
+jobs:
+  lint-deploy:
+    runs-on: ubuntu-latest
+    env:
+      API_BASE_URL: ${{ secrets.API_BASE_URL }}
+      SWA_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verificar sintaxis de los módulos JS
+        run: for f in $(find frontend/js -name '*.js'); do node --check "$f"; done
+      - name: Configurar URL del backend
+        if: env.API_BASE_URL != ''
+        run: sed -i "1i globalThis.MGNUTRI_API_BASE = '${API_BASE_URL}';" frontend/js/config.js
+      - name: Deploy a Azure Static Web Apps
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && env.SWA_TOKEN != ''
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          action: upload
+          app_location: frontend
+          skip_app_build: true

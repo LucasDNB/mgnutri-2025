@@ -124,8 +124,10 @@ public class TurnoService {
         if (inicio.isBefore(reglas.ahora().plus(ReglasTurno.MINIMO_HUECO))) {
             throw new BusinessException(ErrorCode.HORARIO_NO_DISPONIBLE, "Los turnos se piden con al menos 2 horas de anticipación.");
         }
+        // R-T1: ningún otro turno RESERVADO con el mismo profesional en la ventana de 7 días alrededor del pedido
         Instant ahora = reglas.ahora();
-        reglas.validarVentana7Dias(dao.proximoConProfesional(pac.getId(), prof.getId(), ahora, ahora.plus(ReglasTurno.VENTANA_7_DIAS)));
+        Instant desdeVentana = inicio.minus(ReglasTurno.VENTANA_7_DIAS).isBefore(ahora) ? ahora : inicio.minus(ReglasTurno.VENTANA_7_DIAS);
+        reglas.validarVentana7Dias(dao.proximoConProfesional(pac.getId(), prof.getId(), desdeVentana, inicio.plus(ReglasTurno.VENTANA_7_DIAS)));
         Turno t = nuevoTurno(pac, prof, area, inicio, false);
         return guardarYNotificar(t, pac, prof);
     }

@@ -1,0 +1,92 @@
+name: backend
+
+on:
+  push:
+    branches: [main]
+    paths: ['backend/**', '.github/workflows/backend.yml']
+  pull_request:
+    paths: ['backend/**']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Compilar y probar (unitarias + Testcontainers SQL Server)
+        run: ./mvnw -B verify
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mgnutri-jar
+          path: backend/target/mgnutri.jar
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reportes-de-pruebas
+          path: |
+            backend/target/surefire-reports
+            backend/target/failsafe-reports
+            backend/target/site/jacoco
+
+  api:
+    needs: build
+    runs-on: ubuntu-latest
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: 'Y'
+          MSSQL_SA_PASSWORD: Ci_Pass_2025!
+        ports: ['1433:1433']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/download-artifact@v4
+        with:
+          name: mgnutri-jar
+      - name: Crear base de datos
+        run: |
+          for i in $(seq 1 30); do docker exec ${{ job.services.sqlserver.id }} /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P 'Ci_Pass_2025!' -Q "CREATE DATABASE mgnutri" && break; sleep 3; done
+      - name: Levantar la API
+        env:
+          SPRING_PROFILES_ACTIVE: local
+          PORT: '8090'
+          DB_URL: jdbc:sqlserver://localhost:1433;databaseName=mgnutri;encrypt=true;trustServerCertificate=true
+          DB_PASSWORD: Ci_Pass_2025!
+          RATE_LIMIT_AUTH: '1000'
+        run: |
+          nohup java -jar mgnutri.jar > api.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf http://localhost:8090/api/v1/salud && break; sleep 3; done
+      - name: Newman
+        run: npx -y newman@6.2.1 run postman/mgnutri.postman_collection.json -e postman/local.postman_environment.json
+      - if: failure()
+        run: tail -200 api.log
+
+  deploy:
+    needs: [build, api]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: produccion
+    env:
+      PERFIL: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: mgnutri-jar
+      - name: Deploy a Azure App Service
+        if: env.PERFIL != ''
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ vars.AZURE_WEBAPP_NAME || 'app-mgnutri' }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: mgnutri.jar

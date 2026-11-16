@@ -2,3 +2,8 @@ target/
 .env
 *.log
 .idea/
+.vscode/
+*.iml
+backups/
+.claude/settings.local.json
+node_modules/

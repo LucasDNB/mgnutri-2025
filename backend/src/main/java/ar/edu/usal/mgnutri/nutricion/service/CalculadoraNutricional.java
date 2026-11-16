@@ -32,7 +32,8 @@ public final class CalculadoraNutricional {
             redondeado = 0.5;
         }
         String cantidad = redondeado == Math.floor(redondeado) ? String.valueOf((long) redondeado) : String.valueOf(redondeado).replace('.', ',');
-        return "≈ " + cantidad + " × " + a.getUnidadCasera();
+        String unidad = a.getUnidadCasera().replaceFirst("^1\\s+", "");
+        return "≈ " + cantidad + " × " + unidad;
     }
 
     /** Desvío porcentual de kcal y macros respecto del objetivo (CA-04.2.2). */

@@ -16,10 +16,9 @@ spring:
     hikari:
       maximum-pool-size: ${DB_POOL_SIZE:15}
   flyway:
+    # En Azure las migraciones corren con un usuario propietario distinto del de la aplicación:
+    # definir SPRING_FLYWAY_URL / SPRING_FLYWAY_USER / SPRING_FLYWAY_PASSWORD (ver docs/guia-despliegue.md).
     enabled: true
-    url: ${DB_MIGRATION_URL:${spring.datasource.url}}
-    user: ${DB_MIGRATION_USER:${spring.datasource.username}}
-    password: ${DB_MIGRATION_PASSWORD:${spring.datasource.password}}
   jpa:
     open-in-view: false
     hibernate:

@@ -1,0 +1,3 @@
+# Perfil demo: se combina con local o dev (SPRING_PROFILES_ACTIVE=local,demo) para cargar datos de demostración.
+# Cuentas: profesionales 20111111, 20222222, 20333333, 20444444, 20555555 y pacientes 40000000, 40001111, …
+# Contraseña de todas las cuentas demo: variable DEMO_PASSWORD (por defecto Demo2025!).

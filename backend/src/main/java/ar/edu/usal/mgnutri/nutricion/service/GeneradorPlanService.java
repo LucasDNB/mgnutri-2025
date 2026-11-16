@@ -133,7 +133,8 @@ public class GeneradorPlanService {
             faltante |= !variable(items, elegir(CEREALES, disponibles, apto, recientes, random), obj, Macro.HC, 20, 300);
             variable(items, elegir(ACEITES, disponibles, apto, recientes, random), obj, Macro.G, 0, 30);
         } else if (tipo.esDesayunoOMerienda()) {
-            faltante |= !fijo(items, elegir(LACTEOS, disponibles, apto, recientes, random), 200);
+            Alimento lacteo = elegir(LACTEOS, disponibles, apto, recientes, random);
+            faltante |= !fijo(items, lacteo, porcionLactea(lacteo));
             Alimento fruta = elegir(FRUTAS, disponibles, apto, recientes, random);
             faltante |= !fijo(items, fruta, fruta != null && fruta.getGramosUnidadCasera() != null ? fruta.getGramosUnidadCasera().doubleValue() : 150);
             faltante |= !variable(items, elegir(CEREALES, disponibles, apto, recientes, random), obj, Macro.HC, 20, 300);
@@ -181,6 +182,15 @@ public class GeneradorPlanService {
     }
 
     private enum Macro { HC, P, G }
+
+    /** Porción de lácteo: leche/yogur por unidad casera (≈ 200 g); quesos, dos unidades caseras. */
+    static double porcionLactea(Alimento a) {
+        if (a == null || a.getGramosUnidadCasera() == null) {
+            return 200;
+        }
+        double g = a.getGramosUnidadCasera().doubleValue();
+        return g < 50 ? g * 2 : Math.min(g, 250);
+    }
 
     /** Escala las porciones variables para que la comida se acerque a las kcal objetivo. */
     private static void ajustarKcal(List<Elegido> items, double objetivo) {
