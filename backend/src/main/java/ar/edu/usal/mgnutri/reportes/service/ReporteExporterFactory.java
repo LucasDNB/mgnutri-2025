@@ -40,9 +40,13 @@ public class ReporteExporterFactory {
     }
 
     public static ResponseEntity<byte[]> archivo(byte[] contenido, String contentType, String nombre) {
+        // Nombres ASCII van como filename="..." simple; con charset Spring codifica el parámetro en RFC 2047
+        // (=?UTF-8?Q?...?=), que los navegadores muestran literal. Sólo se usa filename* si hay caracteres no ASCII.
+        boolean ascii = StandardCharsets.US_ASCII.newEncoder().canEncode(nombre);
+        ContentDisposition cd = ascii ? ContentDisposition.attachment().filename(nombre).build()
+                : ContentDisposition.attachment().filename(nombre, StandardCharsets.UTF_8).build();
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment()
-                        .filename(nombre, StandardCharsets.UTF_8).build().toString())
+                .header(HttpHeaders.CONTENT_DISPOSITION, cd.toString())
                 .contentType(MediaType.parseMediaType(contentType))
                 .body(contenido);
     }

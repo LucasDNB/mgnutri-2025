@@ -65,8 +65,12 @@ export async function descargar(ruta, nombrePorDefecto = 'archivo') {
     if (datos.url) { window.open(datos.url, '_blank', 'noopener'); return; }
   }
   const disp = resp.headers.get('content-disposition') || '';
-  const m = /filename\*=UTF-8''([^;]+)|filename="?([^";]+)"?/i.exec(disp);
-  const nombre = m ? decodeURIComponent(m[1] || m[2]) : nombrePorDefecto;
+  // Se prioriza filename* (RFC 5987) y se ignora un filename codificado en RFC 2047 (=?UTF-8?Q?...?=)
+  const extendido = /filename\*\s*=\s*UTF-8''([^;]+)/i.exec(disp);
+  const simple = /filename\s*=\s*"?([^";]+)"?/i.exec(disp);
+  let nombre = nombrePorDefecto;
+  if (extendido) nombre = decodeURIComponent(extendido[1].trim());
+  else if (simple && !simple[1].startsWith('=?')) nombre = simple[1].trim();
   const blob = await resp.blob();
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
