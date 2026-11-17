@@ -113,6 +113,9 @@ public class DemoDataLoader implements ApplicationRunner {
     private final ConfiguracionService config;
     private final Clock clock;
     private final String password = System.getenv().getOrDefault("DEMO_PASSWORD", "Demo2025!");
+    /** Tamaño del dataset: 30 pacientes / 6 meses por defecto; la prueba de rendimiento (spec 16) usa 500 / 12. */
+    private final int cantidadPacientes = Integer.parseInt(System.getenv().getOrDefault("DEMO_PACIENTES", "30"));
+    private final int meses = Integer.parseInt(System.getenv().getOrDefault("DEMO_MESES", "6"));
 
     public DemoDataLoader(ProfesionalDao profesionalDao, ProfesionalService profesionales, AgendaService agenda, PacienteService pacientes,
                           PacienteDao pacienteDao, UsuarioDao usuarioDao, PasswordEncoder encoder, GeneradorPlanService generador,
@@ -167,12 +170,12 @@ public class DemoDataLoader implements ApplicationRunner {
                 franjas.add(new FranjaDto(6, LocalTime.of(9, 0), LocalTime.of(12, 0), "Sede central"));
                 agenda.reemplazarFranjas(p.getId(), franjas);
             }
-            var arancel = aranceles.crear(new ArancelRequest("Cuota mensual", new BigDecimal("25000"), LocalDate.now(clock).minusMonths(6), true, false, null));
+            var arancel = aranceles.crear(new ArancelRequest("Cuota mensual", new BigDecimal("25000"), LocalDate.now(clock).minusMonths(meses), true, false, null));
             List<Long> pacienteIds = new ArrayList<>();
-            for (int i = 0; i < 30; i++) {
+            for (int i = 0; i < cantidadPacientes; i++) {
                 Profesional nut = profs.get(i % 3 == 2 ? 4 : i % 2);
                 Profesional ent = profs.get(i % 3 == 2 ? 4 : 2 + i % 2);
-                AltaResponse a = pacientes.crear(new PacienteRequest(NOMBRES[i], APELLIDOS[i], "DNI", String.valueOf(40000000 + i * 1111), LocalDate.of(1980 + i % 25, 1 + i % 12, 1 + i % 27),
+                AltaResponse a = pacientes.crear(new PacienteRequest(NOMBRES[i % NOMBRES.length], APELLIDOS[(i + i / APELLIDOS.length * 7) % APELLIDOS.length], "DNI", String.valueOf(40000000 + i * 1111), LocalDate.of(1980 + i % 25, 1 + i % 12, 1 + i % 27),
                         i % 2 == 0 ? "F" : "M", "11" + (40000000 + i * 1234), "paciente" + i + "@demo.mgnutri", "Pilar, Buenos Aires",
                         i % 3 == 0 ? "Descenso de peso" : i % 3 == 1 ? "Ganancia de masa muscular" : "Mejorar hábitos y rendimiento", null, null,
                         List.of(new AsignacionItem(nut.getId(), Area.NUTRICION), new AsignacionItem(ent.getId(), Area.ENTRENAMIENTO)), null));
@@ -196,7 +199,7 @@ public class DemoDataLoader implements ApplicationRunner {
                 RutinaResponse r = rutina(pid, i, rnd);
                 registrosEntrenamiento(pid, r, rnd);
             }
-            log.info("Datos demo cargados: 5 profesionales y 30 pacientes. Contraseña de las cuentas demo: la definida en DEMO_PASSWORD.");
+            log.info("Datos demo cargados: 5 profesionales y " + cantidadPacientes + " pacientes (" + meses + " meses de historia). Contraseña de las cuentas demo: la definida en DEMO_PASSWORD.");
         } finally {
             SecurityContextHolder.clearContext();
         }
@@ -219,7 +222,7 @@ public class DemoDataLoader implements ApplicationRunner {
 
     private void cuentaCorriente(Long pid, Long arancelId, Random rnd, int i) {
         LocalDate hoy = LocalDate.now(clock);
-        for (int m = 5; m >= 0; m--) {
+        for (int m = meses - 1; m >= 0; m--) {
             LocalDate f = hoy.minusMonths(m).withDayOfMonth(1);
             String periodo = f.toString().substring(0, 7);
             cargos.registrar(pid, new CargoRequest("Cuota mensual", arancelId, periodo, new BigDecimal("25000"), f, f.plusDays(10), false, null, null));
@@ -233,7 +236,7 @@ public class DemoDataLoader implements ApplicationRunner {
 
     private void historialTurnos(Long pid, Profesional nut, Profesional ent, Random rnd) {
         LocalDate hoy = LocalDate.now(clock);
-        for (int s = 24; s >= 1; s -= 3) {
+        for (int s = meses * 4; s >= 1; s -= 3) {
             for (Profesional p : List.of(nut, ent)) {
                 LocalDate dia = hoy.minusWeeks(s).with(java.time.DayOfWeek.MONDAY).plusDays(rnd.nextInt(5));
                 Instant inicio = Fechas.instante(dia, LocalTime.of(9 + rnd.nextInt(4), rnd.nextBoolean() ? 0 : 30));
@@ -284,7 +287,7 @@ public class DemoDataLoader implements ApplicationRunner {
         double musculo = 30 + rnd.nextInt(8);
         double cintura = 70 + rnd.nextInt(25);
         boolean baja = i % 3 == 0;
-        for (int m = 6; m >= 0; m--) {
+        for (int m = meses; m >= 0; m--) {
             MedicionAntropometrica x = new MedicionAntropometrica();
             x.setPacienteId(pid);
             x.setProfesionalId(nut.getId());

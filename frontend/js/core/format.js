@@ -14,8 +14,8 @@ export const fmt = {
     const [a, m, d] = String(iso).substring(0, 10).split('-');
     return `${d}/${m}/${a}`;
   },
-  fechaHora: (iso) => (iso ? new Date(iso).toLocaleString('es-AR', { timeZone: ZONA, dateStyle: 'short', timeStyle: 'short' }) : ''),
-  hora: (iso) => (iso ? new Date(iso).toLocaleTimeString('es-AR', { timeZone: ZONA, hour: '2-digit', minute: '2-digit' }) : ''),
+  fechaHora: (iso) => (iso ? new Date(iso).toLocaleString('es-AR', { timeZone: ZONA, dateStyle: 'short', timeStyle: 'short', hourCycle: 'h23' }) : ''),
+  hora: (iso) => (iso ? new Date(iso).toLocaleTimeString('es-AR', { timeZone: ZONA, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }) : ''),
   diaFecha: (iso) => (iso ? new Date(iso).toLocaleDateString('es-AR', { timeZone: ZONA, weekday: 'long', day: '2-digit', month: '2-digit' }) : ''),
   porcentaje: (v) => (v === null || v === undefined ? '' : `${numero.format(v)} %`),
 };

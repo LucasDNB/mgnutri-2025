@@ -7,3 +7,4 @@ target/
 backups/
 .claude/settings.local.json
 node_modules/
+pruebas/e2e/resultados/

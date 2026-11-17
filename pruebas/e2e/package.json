@@ -1,0 +1,12 @@
+{
+  "name": "mgnutri-e2e",
+  "private": true,
+  "description": "Guiones E2E mínimos de la spec 16 automatizados con Playwright",
+  "scripts": {
+    "test": "playwright test",
+    "reporte": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.49.1"
+  }
+}
