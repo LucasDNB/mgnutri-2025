@@ -22,8 +22,9 @@ test('Guion 4 · Rutina de entrenamiento, registro de cargas y molestia priorita
     await page.getByRole('button', { name: '+ Agregar ejercicio' }).click();
     const buscador = page.getByRole('dialog', { name: new RegExp(`Agregar ejercicio al ${NOMBRES_DIA[diaHoy]}`) });
     await expect(buscador.locator('.columna button').first()).toBeVisible();
-    await buscador.locator('.columna button').filter({ hasText: '🎬' }).first().click();
-    await buscador.locator('.columna button').filter({ hasNotText: '🎬' }).first().click();
+    // Todos los ejercicios del catálogo inicial tienen video (🎬): se agregan los dos primeros.
+    await buscador.locator('.columna button').filter({ hasText: '🎬' }).nth(0).click();
+    await buscador.locator('.columna button').filter({ hasText: '🎬' }).nth(1).click();
     await buscador.getByRole('button', { name: 'Listo' }).click();
     await expect(page.locator('.ejercicio-card')).toHaveCount(2);
     await u.capturar(page, testInfo, '04-entrenador-rutina');

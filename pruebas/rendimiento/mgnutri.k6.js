@@ -1,18 +1,21 @@
 // Prueba de rendimiento (spec 16 · RNF 3.4): 50 usuarios concurrentes sobre un dataset de 500 pacientes / 1 año.
-// Criterio: p90 < 5 s en servidor para login, mi plan, mi rutina, calendario semanal y ficha de paciente.
+// Criterio: p90 < 5 s en servidor para login, mi plan, mi rutina, calendario semanal, ficha de paciente y reporte de turnos mensual.
 //
-// Dataset: backend con SPRING_PROFILES_ACTIVE=local,demo DEMO_PACIENTES=500 DEMO_MESES=12 sobre una base vacía.
+// Dataset: backend con SPRING_PROFILES_ACTIVE=local,demo DEMO_PACIENTES=500 DEMO_MESES=12 sobre una base vacía;
+// pacientes-activos.json = usuarios con plan y rutina activos (ver README.md).
 // Ejecución (Docker, sin instalar k6):
 //   docker run --rm -v "$PWD/pruebas/rendimiento:/scripts" grafana/k6:0.54.0 run \
 //     -e BASE=http://host.docker.internal:8091/api/v1 --summary-export /scripts/resultados.json /scripts/mgnutri.k6.js
 import http from 'k6/http';
 import { check, sleep } from 'k6';
+import { SharedArray } from 'k6/data';
 
 const BASE = __ENV.BASE || 'http://localhost:8090/api/v1';
 const PASSWORD = __ENV.DEMO_PASSWORD || 'Demo2025!';
-const PACIENTES = Number(__ENV.PACIENTES || 500);
+// Pacientes con plan y rutina activos (pacientes-activos.json, exportado de la base de prueba).
+const PACIENTES = new SharedArray('pacientes', () => JSON.parse(open('./pacientes-activos.json')));
 const PROFESIONALES = ['20111111', '20222222', '20333333', '20444444', '20555555'];
-const OPERACIONES = ['login', 'mi_plan', 'mi_rutina', 'calendario_semanal', 'ficha_paciente'];
+const OPERACIONES = ['login', 'mi_plan', 'mi_rutina', 'calendario_semanal', 'ficha_paciente', 'reporte_turnos_mensual'];
 
 export const options = {
   scenarios: {
@@ -35,7 +38,7 @@ let pacientesDelProfesional = [];
 function esProfesional() { return __VU % 10 < 3; } // 30 % profesionales, 70 % pacientes
 
 function usuario() {
-  return esProfesional() ? PROFESIONALES[__VU % PROFESIONALES.length] : String(40000000 + ((__VU * 37) % PACIENTES) * 1111);
+  return esProfesional() ? PROFESIONALES[__VU % PROFESIONALES.length] : PACIENTES[(__VU * 37) % PACIENTES.length];
 }
 
 function login() {
@@ -74,6 +77,10 @@ export default function () {
       const id = pacientesDelProfesional[Math.floor(Math.random() * pacientesDelProfesional.length)];
       get(`/pacientes/${id}`, 'ficha_paciente');
       get(`/pacientes/${id}/antropometria`, 'ficha_paciente_evolucion');
+    }
+    if (iteracion % 5 === 0) {
+      const hoy = new Date().toISOString().slice(0, 10);
+      get(`/reportes/turnos?desde=${hoy.slice(0, 8)}01&hasta=${hoy}&formato=json`, 'reporte_turnos_mensual');
     }
   } else {
     get('/me/plan-alimentario', 'mi_plan');

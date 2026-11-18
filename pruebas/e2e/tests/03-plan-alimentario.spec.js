@@ -42,7 +42,7 @@ test('Guion 3 · Plan alimentario automático y uso por el paciente', async ({ p
     for (let i = 0; i < Math.min(await botones.count(), 8) && !aplicado; i++) {
       await botones.nth(i).click();
       const dialogo = page.getByRole('dialog');
-      if (await dialogo.isVisible({ timeout: 3000 }).catch(() => false)) {
+      if (await dialogo.waitFor({ state: 'visible', timeout: 4000 }).then(() => true, () => false)) {
         await u.capturar(page, testInfo, '03-paciente-alternativas');
         await dialogo.locator('button.bloque').first().click();
         await u.toast(page, 'Reemplazo aplicado');

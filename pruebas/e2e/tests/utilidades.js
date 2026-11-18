@@ -75,6 +75,13 @@ async function primerIngreso(page, usuario, temporal, definitiva = PASSWORD_E2E)
   await page.waitForURL(/home\.html/);
 }
 
+/** En pantallas angostas los filtros vienen plegados en un <details>: se despliegan si hace falta. */
+async function abrirFiltros(page) {
+  const resumen = page.locator('summary', { hasText: 'Filtros' }).first();
+  if (!(await resumen.waitFor({ timeout: 5000 }).then(() => true, () => false))) return;
+  if (!(await resumen.evaluate((s) => s.parentElement.open))) await resumen.click();
+}
+
 async function toast(page, texto) {
   await expect(page.locator('.toast').filter({ hasText: texto }).first()).toBeVisible();
 }
@@ -112,4 +119,4 @@ function hoyArgentina(deltaDias = 0) {
   return d.toISOString().slice(0, 10);
 }
 
-module.exports = { ADMIN, PASSWORD_E2E, datos, leerEstado, guardarEstado, capturar, ingresar, salir, primerIngreso, toast, descarga, api, hoyArgentina };
+module.exports = { ADMIN, PASSWORD_E2E, datos, leerEstado, guardarEstado, capturar, ingresar, salir, primerIngreso, abrirFiltros, toast, descarga, api, hoyArgentina };

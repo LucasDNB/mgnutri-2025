@@ -77,6 +77,7 @@ main { padding: 1rem; max-width: 1200px; margin: 0 auto; }
 .tarjeta { background: var(--blanco); border-radius: var(--radio); box-shadow: var(--sombra); padding: 1rem; margin-bottom: 1rem; }
 .tarjeta > h2:first-child, .tarjeta > h3:first-child { margin-top: 0; }
 .grilla { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+.grilla > * { min-width: 0; } /* los hijos de la grilla pueden achicarse: sin esto un texto largo desborda la pantalla en celulares */
 @media (min-width: 700px) { .grilla.g2 { grid-template-columns: 1fr 1fr; } .grilla.g3 { grid-template-columns: repeat(3, 1fr); } .grilla.g4 { grid-template-columns: repeat(4, 1fr); } }
 .fila { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; }
 .fila.entre { justify-content: space-between; }
@@ -145,6 +146,7 @@ input[type="checkbox"], input[type="radio"] { width: 22px; height: 22px; min-hei
 .tabla-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 table { width: 100%; border-collapse: collapse; background: var(--blanco); font-size: .92rem; }
 th, td { padding: .55rem .6rem; border-bottom: 1px solid var(--crema-2); text-align: left; vertical-align: top; }
+td { overflow-wrap: anywhere; } /* emails y textos largos cortan línea en vez de ensanchar la tabla */
 th { background: var(--verde); color: #fff; font-weight: 600; white-space: nowrap; }
 th.ordenable { cursor: pointer; }
 tr:nth-child(even) td { background: #FCFAF4; }
