@@ -76,9 +76,26 @@ Incluye unitarias (reglas de turnos, generador de planes, equivalencias, FIFO de
 reglas de arquitectura (ArchUnit) e integración contra SQL Server real con Testcontainers (se omiten si no hay Docker).
 La colección [`postman/mgnutri.postman_collection.json`](postman/mgnutri.postman_collection.json) se ejecuta con Newman.
 
+| Prueba | Dónde | Último resultado |
+|---|---|---|
+| E2E: los 8 guiones de la spec 16 con Playwright en Chrome de escritorio y Chrome Android | [`pruebas/e2e`](pruebas/e2e/RESULTADOS.md) | 16/16 aprobados |
+| Rendimiento: k6 con 50 usuarios sobre 500 pacientes / 12 meses | [`pruebas/rendimiento`](pruebas/rendimiento/README.md) | p90 máximo 541 ms (criterio: < 5 s) |
+
+```bash
+cd pruebas/e2e && npm install && E2E_URL=http://localhost:8092 npx playwright test   # instancia con base propia
+```
+
+## Manuales
+
+- [Manual de usuario](docs/manuales/manual-usuario.pdf) ([fuente](docs/manuales/manual-usuario.md)): un capítulo por rol, con capturas y preguntas frecuentes.
+- [Manual del sistema](docs/manuales/manual-sistema.pdf) ([fuente](docs/manuales/manual-sistema.md)): arquitectura, modelo de datos, variables, despliegue en Azure, operación, backup y pruebas.
+
+Se regeneran con `python -I docs/manuales/generar_pdf.py` (las capturas, con [`docs/manuales/capturas.js`](docs/manuales/capturas.js) sobre una instancia con datos demo).
+
 ## Despliegue
 
-Ver [`docs/guia-despliegue.md`](docs/guia-despliegue.md). Las variables están listadas en [`.env.example`](.env.example).
+Ver [`docs/guia-despliegue.md`](docs/guia-despliegue.md) o el capítulo «Despliegue en Azure» del manual del sistema.
+Las variables están listadas en [`.env.example`](.env.example).
 
 ## Decisiones de implementación
 

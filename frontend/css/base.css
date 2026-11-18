@@ -146,7 +146,9 @@ input[type="checkbox"], input[type="radio"] { width: 22px; height: 22px; min-hei
 .tabla-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 table { width: 100%; border-collapse: collapse; background: var(--blanco); font-size: .92rem; }
 th, td { padding: .55rem .6rem; border-bottom: 1px solid var(--crema-2); text-align: left; vertical-align: top; }
-td { overflow-wrap: anywhere; } /* emails y textos largos cortan línea en vez de ensanchar la tabla */
+/* Tablas de datos (clave/valor) fuera de un contenedor con scroll: emails y textos largos cortan línea en vez de ensanchar la
+   pantalla del celular. Las tablas de listados van en .tabla-scroll y conservan fechas y montos en una línea. */
+.tarjeta > table td { overflow-wrap: anywhere; }
 th { background: var(--verde); color: #fff; font-weight: 600; white-space: nowrap; }
 th.ordenable { cursor: pointer; }
 tr:nth-child(even) td { background: #FCFAF4; }
