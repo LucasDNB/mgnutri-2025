@@ -60,7 +60,7 @@ Todo usuario entra con usuario y contraseña y ve sólo lo que su rol permite. L
 - **CA-13.7.4** Retención mínima: 6 meses (no existe depuración automática de registros con menos de 180 días).
 
 ## Reglas de seguridad (RNF 3.3, D-30)
-- Contraseñas con BCrypt cost 12; nunca se loguean ni se devuelven.
+- Contraseñas con BCrypt cost 10 (mínimo de OWASP; ver D-30); nunca se loguean ni se devuelven.
 - Datos sensibles cifrados en columna (AES-256-GCM).
 - HTTPS obligatorio; cabeceras de seguridad (HSTS, CSP, X-Content-Type-Options, X-Frame-Options).
 - Token en `sessionStorage` (no `localStorage`) para que se borre al cerrar la pestaña.

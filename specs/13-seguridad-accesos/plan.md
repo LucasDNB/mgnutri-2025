@@ -21,7 +21,7 @@ Errores: `CREDENCIALES_INVALIDAS` (401), `USUARIO_BLOQUEADO` (423, con `bloquead
 
 ## Backend
 - `config.SecurityConfig`: `SecurityFilterChain` stateless, `JwtAuthenticationFilter`, `PrimerIngresoFilter` (428), CORS, headers, `@EnableMethodSecurity`.
-- `seguridad.service.AuthService` (login con contador de intentos y bloqueo; usa `PasswordEncoder` BCrypt 12).
+- `seguridad.service.AuthService` (login con contador de intentos y bloqueo; usa `PasswordEncoder` BCrypt costo 10, calculado fuera de la transacción).
 - `seguridad.service.JwtService` (jjwt, HS256, claims `sub, roles, pacienteId, profesionalId, jti, exp`).
 - `seguridad.service.TokenRevocacionService` (+ caché en memoria de `jti` revocados con TTL).
 - `seguridad.service.RecuperoService` (token aleatorio 32 bytes Base64URL, se guarda SHA-256; envía `RECUPERO_PASSWORD` por outbox; límite 3/h).

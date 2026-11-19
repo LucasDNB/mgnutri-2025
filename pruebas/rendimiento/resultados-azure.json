@@ -1,0 +1,248 @@
+{
+    "metrics": {
+        "http_req_blocked": {
+            "avg": 1.4540293905971475,
+            "min": 0.00012,
+            "med": 0.000371,
+            "p(90)": 0.000641,
+            "p(95)": 0.0007678499999999967,
+            "max": 286.917099
+        },
+        "http_reqs": {
+            "count": 4488,
+            "rate": 19.70249956994922
+        },
+        "http_req_tls_handshaking": {
+            "avg": 0.9579034340463459,
+            "min": 0,
+            "med": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "max": 118.496052
+        },
+        "http_req_sending": {
+            "avg": 0.20679881283422502,
+            "min": -2.057486,
+            "med": 0.1905115,
+            "p(90)": 0.2906692,
+            "p(95)": 0.3339967,
+            "max": 2.153536
+        },
+        "http_req_duration": {
+            "avg": 458.41120056305675,
+            "min": 47.022375,
+            "med": 201.42159249999997,
+            "p(90)": 966.5376174000005,
+            "p(95)": 1804.2329179999988,
+            "max": 8589.525188
+        },
+        "http_req_duration{op:ficha_paciente}": {
+            "max": 8589.525188,
+            "avg": 328.2018544403671,
+            "min": 53.322188,
+            "med": 136.310686,
+            "p(90)": 399.2710152,
+            "p(95)": 821.2930687999976,
+            "thresholds": {
+                "p(90)<5000": false
+            }
+        },
+        "http_req_duration{op:mi_plan}": {
+            "p(90)": 1239.0462824000008,
+            "p(95)": 1993.0831535999996,
+            "max": 8390.711281,
+            "avg": 572.4791405933548,
+            "min": 74.086266,
+            "med": 299.821866,
+            "thresholds": {
+                "p(90)<5000": false
+            }
+        },
+        "http_req_receiving": {
+            "min": 0.02984,
+            "med": 0.5524755,
+            "p(90)": 11.006206300000006,
+            "p(95)": 25.704646449999927,
+            "max": 371.272705,
+            "avg": 6.057999924242437
+        },
+        "http_req_duration{op:calendario_semanal}": {
+            "avg": 223.47139429357793,
+            "min": 47.022375,
+            "med": 117.09356,
+            "p(90)": 348.4321628000002,
+            "p(95)": 599.3362961999985,
+            "max": 4089.750354,
+            "thresholds": {
+                "p(90)<5000": false
+            }
+        },
+        "vus_max": {
+            "value": 50,
+            "min": 50,
+            "max": 50
+        },
+        "http_req_connecting": {
+            "p(90)": 0,
+            "p(95)": 0,
+            "max": 54.075773,
+            "avg": 0.45849330481283423,
+            "min": 0,
+            "med": 0
+        },
+        "data_sent": {
+            "count": 613118,
+            "rate": 2691.6125515437
+        },
+        "checks": {
+            "passes": 4486,
+            "fails": 2,
+            "thresholds": {
+                "rate>0.99": false
+            },
+            "value": 0.999554367201426
+        },
+        "iteration_duration": {
+            "min": 1921.420755,
+            "med": 5317.057286,
+            "p(90)": 7364.238748,
+            "p(95)": 9403.862348999999,
+            "max": 24456.944143,
+            "avg": 5654.970129381006
+        },
+        "iterations": {
+            "count": 1811,
+            "rate": 7.950362460155535
+        },
+        "http_req_failed": {
+            "passes": 2,
+            "fails": 4486,
+            "thresholds": {
+                "rate<0.01": false
+            },
+            "value": 0.000445632798573975
+        },
+        "http_req_duration{op:mi_rutina}": {
+            "avg": 429.8357736661394,
+            "min": 62.61858,
+            "med": 228.012404,
+            "p(90)": 785.3367789,
+            "p(95)": 1624.8369100999973,
+            "max": 6819.609837,
+            "thresholds": {
+                "p(90)<5000": false
+            }
+        },
+        "http_req_duration{op:reporte_turnos_mensual}": {
+            "med": 231.889909,
+            "p(90)": 766.1029322000003,
+            "p(95)": 1267.8289289999993,
+            "max": 4299.419685,
+            "avg": 417.31888881904774,
+            "min": 90.990575,
+            "thresholds": {
+                "p(90)<5000": false
+            }
+        },
+        "http_req_duration{op:login}": {
+            "avg": 1301.0635618243898,
+            "min": 285.870321,
+            "med": 908.700011,
+            "p(90)": 2393.1967839999993,
+            "p(95)": 3837.582305199994,
+            "max": 7379.951992,
+            "thresholds": {
+                "p(90)<5000": false
+            }
+        },
+        "data_received": {
+            "count": 55021070,
+            "rate": 241544.69875515733
+        },
+        "vus": {
+            "max": 50,
+            "value": 1,
+            "min": 1
+        },
+        "http_req_waiting": {
+            "avg": 452.14640182598004,
+            "min": 46.646683,
+            "med": 197.404685,
+            "p(90)": 952.3392039,
+            "p(95)": 1762.6734279999994,
+            "max": 8582.806224
+        },
+        "http_req_duration{expected_response:true}": {
+            "avg": 457.9118768773961,
+            "min": 47.022375,
+            "med": 201.351154,
+            "p(90)": 965.0309075,
+            "p(95)": 1801.393516,
+            "max": 8589.525188
+        }
+    },
+    "root_group": {
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {},
+        "checks": {
+                "login 200": {
+                    "id": "48b06dc5cde7f6ebb606ad7da726a2a5",
+                    "passes": 203,
+                    "fails": 2,
+                    "name": "login 200",
+                    "path": "::login 200"
+                },
+                "calendario_semanal 200": {
+                    "name": "calendario_semanal 200",
+                    "path": "::calendario_semanal 200",
+                    "id": "2324c8c4b64cdc05928cba04e3b79e04",
+                    "passes": 545,
+                    "fails": 0
+                },
+                "mi_plan 200": {
+                    "path": "::mi_plan 200",
+                    "id": "951abe3e9c284bd0b8cc8481caaa5b12",
+                    "passes": 1264,
+                    "fails": 0,
+                    "name": "mi_plan 200"
+                },
+                "listado_pacientes 200": {
+                    "passes": 15,
+                    "fails": 0,
+                    "name": "listado_pacientes 200",
+                    "path": "::listado_pacientes 200",
+                    "id": "1ed60c5a2539bbfb5fcfbd979c88648b"
+                },
+                "ficha_paciente 200": {
+                    "id": "417dbd8814c3071afa138a9913da90f9",
+                    "passes": 545,
+                    "fails": 0,
+                    "name": "ficha_paciente 200",
+                    "path": "::ficha_paciente 200"
+                },
+                "ficha_paciente_evolucion 200": {
+                    "name": "ficha_paciente_evolucion 200",
+                    "path": "::ficha_paciente_evolucion 200",
+                    "id": "2f539ad594dc466e36da896c5fe248f6",
+                    "passes": 545,
+                    "fails": 0
+                },
+                "mi_rutina 200": {
+                    "path": "::mi_rutina 200",
+                    "id": "856ae97c253e2a6cfbb56f9f92d28c85",
+                    "passes": 1264,
+                    "fails": 0,
+                    "name": "mi_rutina 200"
+                },
+                "reporte_turnos_mensual 200": {
+                    "fails": 0,
+                    "name": "reporte_turnos_mensual 200",
+                    "path": "::reporte_turnos_mensual 200",
+                    "id": "73a7250cafc64e657a3918429000e2a4",
+                    "passes": 105
+                }
+            }
+    }
+}

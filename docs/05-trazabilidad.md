@@ -95,7 +95,7 @@ automatizados de [`pruebas/e2e`](../pruebas/e2e/RESULTADOS.md), ejecutados en Ch
 | 3.2 Tolerancia a fallos | Handler global, bitácora de errores en transacción aparte, outbox con reintentos | 14, 11 |
 | 3.2 Backup diario / RTO ≤ 2 h | PITR de Azure SQL + CU-51/52. Ensayo del 19/11/2026: PITR ≈ 8 min y BACPAC ≈ 15 min hasta la app funcionando (cumple) | 15 · manual del sistema, «Backup y restauración» |
 | 3.3 Autenticación, roles, cifrado, registro de accesos | JWT, BCrypt, AES-GCM, matriz de permisos, RF-16 | 13 |
-| 3.4 p90 < 5 s, 50 concurrentes, 500 pacientes | Índices, consultas agregadas. **Cumple** (k6, 18/11/2026): p90 máximo 541 ms (mi plan); login 405 ms, calendario 73 ms, ficha 101 ms, reporte mensual 127 ms. Repetir en `dev` de Azure | 16 · `pruebas/rendimiento/README.md` |
+| 3.4 p90 < 5 s, 50 concurrentes, 500 pacientes | Índices, consultas agregadas. **Cumple en Azure** (k6, 19/11/2026, staging B2 + SQL S2): p90 máximo 2,39 s (login); mi plan 1,24 s, mi rutina 785 ms, calendario 348 ms, ficha 399 ms, reporte mensual 766 ms. Se corrigieron 3 defectos (índices de claves foráneas V15, BCrypt fuera de la transacción, BCrypt costo 10). Local (18/11): p90 máximo 541 ms | 16 · `pruebas/rendimiento/README.md` |
 | 3.5 Modularidad, versionado, datos estables, bitácora | Módulos por dominio, tags, Flyway, RF-17 | 02-arquitectura · 14 · 17 |
 | 3.6 / 3.7 Stack y despliegue en Azure | Constitución III | 00 · 17 |
 | 3.8 Manual, ayuda en línea, guía técnica | Entregables | 17 |
