@@ -66,8 +66,23 @@
     <build>
         <finalName>mgnutri</finalName>
         <resources>
+            <!-- Las dos primeras repiten las del parent de Spring Boot (filtrado de @project.version@ en application*.yml) -->
             <resource>
                 <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/application*.yml</include>
+                    <include>**/application*.yaml</include>
+                    <include>**/application*.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**/application*.yml</exclude>
+                    <exclude>**/application*.yaml</exclude>
+                    <exclude>**/application*.properties</exclude>
+                </excludes>
             </resource>
             <!-- El frontend viaja dentro del jar (classpath:/static) y lo sirve el mismo App Service -->
             <resource>
