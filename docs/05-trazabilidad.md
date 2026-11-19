@@ -91,7 +91,7 @@ automatizados de [`pruebas/e2e`](../pruebas/e2e/RESULTADOS.md), ejecutados en Ch
 | RNF (ERS §) | Cómo se cumple | Spec / doc |
 |---|---|---|
 | 3.1 Usabilidad (≤ 30 min, responsive, multi-dispositivo) | Mobile-first, homes por rol, ayudas contextuales. Multi-dispositivo verificado: 8 guiones E2E en Chrome escritorio y Android (16/16). **Pendiente:** prueba con 3 usuarios y Safari iOS | Constitución VIII · 16 · `pruebas/e2e/RESULTADOS.md` |
-| 3.2 Disponibilidad 99 % | App Service Always On + monitoreo de disponibilidad | 17 |
+| 3.2 Disponibilidad 99 % | App Service Always On + health check; Application Insights con prueba estándar cada 5 min (São Paulo y Texas) y alerta por mail (`mgnutri-caido`) | 17 · manual del sistema, «Monitoreo» |
 | 3.2 Tolerancia a fallos | Handler global, bitácora de errores en transacción aparte, outbox con reintentos | 14, 11 |
 | 3.2 Backup diario / RTO ≤ 2 h | PITR de Azure SQL + CU-51/52 + ensayo de restauración | 15 |
 | 3.3 Autenticación, roles, cifrado, registro de accesos | JWT, BCrypt, AES-GCM, matriz de permisos, RF-16 | 13 |

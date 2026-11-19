@@ -9,7 +9,7 @@
 | App Service Plan | `asp-mgnutri` | Linux **B1** con *Always On* (necesario para los jobs, D-32) |
 | Web App | `app-mgnutri` | Java 17 SE; health check `/api/v1/salud`; sirve la API y el frontend (empaquetado en el jar) |
 | Storage Account | `stmgnutri` | Contenedor privado `backups` |
-| Application Insights | `appi-mgnutri` | Alerta de disponibilidad sobre `/api/v1/salud` cada 5 min (RNF 3.2) |
+| Application Insights | `appi-mgnutri` | Alerta de disponibilidad sobre `/api/v1/salud` cada 5 min (RNF 3.2, ver sección 11) |
 
 ## 2. Base de datos
 
@@ -103,3 +103,20 @@ Si el plan no tiene *Always On*, programar un cron externo que invoque esos endp
 ## 10. Mantenimiento programado
 
 Cargar el texto en `mantenimiento.mensaje` (Configuración): se muestra como banner en todas las pantallas (RNF 3.5).
+
+## 11. Monitoreo y alerta de disponibilidad (RNF 3.2)
+
+Recursos (grupo `rg-mgnutri`):
+
+| Recurso | Nombre | Configuración |
+|---|---|---|
+| Log Analytics | `log-mgnutri` | Retención 30 días, tope diario 0,2 GB |
+| Application Insights | `appi-mgnutri` | Basado en el workspace; el backend envía telemetría con el agente Java de App Service (`APPLICATIONINSIGHTS_CONNECTION_STRING`, `ApplicationInsightsAgent_EXTENSION_VERSION=~3`), sin cambios de código |
+| Prueba estándar | `salud-mgnutri` | `GET /api/v1/salud` cada 5 min desde São Paulo y Texas; exige HTTP 200 (la salud responde 503 si la base no conecta), reintento y certificado TLS con ≥ 7 días de vigencia |
+| Grupo de acción | `ag-mgnutri` | Mail al administrador del sistema |
+| Alerta de métrica | `mgnutri-caido` | Severidad 1; se dispara si la prueba falla en las 2 ubicaciones dentro de 5 min y se resuelve sola al recuperarse |
+
+- El porcentaje mensual de disponibilidad (evidencia del 99 % del RNF 3.2) se ve en *appi-mgnutri › Disponibilidad*.
+- Costo: cada ejecución de la prueba cuesta ~USD 0,0007, unos USD 6 por mes por ubicación (~USD 12 con dos).
+- La CLI no admite el criterio `WebtestLocationAvailabilityCriteria`: la alerta se crea con `az rest` (PUT a
+  `Microsoft.Insights/metricAlerts`, api-version 2018-03-01) o desde el portal (*Disponibilidad › prueba › Abrir reglas*).
