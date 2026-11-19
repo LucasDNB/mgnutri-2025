@@ -277,15 +277,60 @@ Si el plan de App Service no tiene *Always On*, programar un cron externo que in
 
 Objetivo: tiempo de recuperación de 2 horas o menos (spec 15).
 
-- **Automático de Azure SQL**: restauración a un punto en el tiempo desde el portal (*SQL database › Restore*): elegir
-  fecha y hora, crear una base nueva y actualizar `DB_URL` y `SPRING_FLYWAY_URL`.
+- **Automático de Azure SQL**: restauración a un punto en el tiempo (retención de 7 días en Basic); procedimiento (a).
 - **BACPAC del sistema**: *Backups › Generar backup* exporta `mgnutri-AAAAMMDD-HHmmss.bacpac` al contenedor `backups`;
-  la descarga usa un enlace temporal de 15 minutos. Para restaurar: *SQL server › Import database* con el BACPAC,
-  base nueva, y cambiar las URL de conexión.
+  la descarga usa un enlace temporal de 15 minutos. Para restaurar: procedimiento (b).
 - **Local (Docker)**: `BACKUP DATABASE` a `/var/opt/mssql/backup`; restaurar con
   `RESTORE DATABASE mgnutri FROM DISK = '/var/opt/mssql/backup/<archivo>.bak' WITH REPLACE`.
 - Los backups programados se borran automáticamente al vencer la retención configurada. Un backup fallido genera una
   alerta para el administrador.
+
+### Procedimiento (a): restauración a un punto en el tiempo
+
+1. Portal: *SQL database `mgnutri` › Restore* (o `az sql db restore -g rg-mgnutri -s <servidor> -n mgnutri
+   --dest-name mgnutri-restaurada --time <AAAA-MM-DDTHH:MM:SSZ> --edition Basic`). La hora es UTC; el punto más reciente
+   disponible suele estar entre 5 y 10 minutos atrás.
+2. La base nueva es una copia física: conserva usuarios, contraseñas y permisos.
+3. En la Web App cambiar `DB_URL` y `SPRING_FLYWAY_URL` a `databaseName=mgnutri-restaurada` (la Web App se reinicia sola).
+4. Verificar `GET /api/v1/salud` → `"bd":"OK"` y un dato conocido.
+
+### Procedimiento (b): importar un BACPAC
+
+1. Crear una base vacía: `az sql db create -g rg-mgnutri -s <servidor> -n mgnutri-restaurada --edition Basic`.
+2. Importar: portal *SQL database › Import* o `az sql db import ... -n mgnutri-restaurada --storage-uri
+   https://<cuenta>.blob.core.windows.net/backups/<archivo>.bacpac --storage-key-type StorageAccessKey --storage-key <clave>
+   -u <admin> -p <contraseña>`.
+3. **Restablecer las contraseñas de los usuarios de la base**: el BACPAC conserva los usuarios y sus roles, pero la
+   importación les asigna contraseñas al azar. Sin este paso Flyway falla con *Login failed for user
+   'mgnutri_migracion'* y la aplicación no arranca:
+
+```sql
+ALTER USER mgnutri_migracion WITH PASSWORD = '<SPRING_FLYWAY_PASSWORD>';
+ALTER USER mgnutri_app_user  WITH PASSWORD = '<DB_PASSWORD>';
+```
+
+4. Cambiar `DB_URL` y `SPRING_FLYWAY_URL` como en (a) y verificar la salud.
+
+### Ensayo del 19/11/2026 (CA-15.3.1)
+
+Se cargó un dato testigo en `configuracion_sistema`, se lo borró (incidente simulado) y se lo recuperó por los dos caminos.
+
+| Paso | Duración |
+|---|---|
+| (a) Restauración a un punto en el tiempo (02:55:30 UTC, antes del borrado) | 4 min 42 s |
+| (a) Cambio de cadena de conexión hasta salud OK con conexiones en la base restaurada | 2 min 52 s |
+| (b) Exportación BACPAC (43 KB) | 5 min 22 s |
+| (b) Creación de la base + importación | 6 min 29 s |
+| (b) Restablecer contraseñas + reinicio hasta salud OK | 2 min 17 s |
+| **Total (a)** | **≈ 8 min** |
+| **Total (b)** | **≈ 15 min** (sin contar el diagnóstico) |
+
+Resultado: en ambos casos se recuperó el testigo, las 14 migraciones, el catálogo (163 alimentos) y los usuarios;
+la aplicación funcionó contra la base restaurada y luego se volvió a la original. Objetivo de ≤ 2 h: **cumplido**.
+
+Hallazgo: en el camino (b) la aplicación no arrancó hasta restablecer las contraseñas (paso 3, agregado al
+procedimiento). Esa caída de ~14 minutos disparó la alerta `mgnutri-caido` (03:31 UTC) y se resolvió sola al
+recuperarse (03:36 UTC), lo que verificó también el monitoreo de punta a punta.
 
 ## Rotación de secretos
 

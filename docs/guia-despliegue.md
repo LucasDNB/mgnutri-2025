@@ -88,9 +88,13 @@ Si el plan no tiene *Always On*, programar un cron externo que invoque esos endp
 ## 8. Backup y restauración (spec 15, RTO ≤ 2 h)
 
 - **Automático de Azure SQL**: restauración a un punto en el tiempo desde el portal (*SQL database › Restore*), elegir
-  fecha/hora, crear base nueva y actualizar `DB_URL`.
+  fecha/hora, crear base nueva y actualizar `DB_URL` y `SPRING_FLYWAY_URL`.
 - **BACPAC del sistema**: *Backups › Generar backup* exporta a `backups/mgnutri-AAAAMMDD-HHmmss.bacpac`; la descarga usa
-  un enlace SAS de 15 minutos. Para restaurar: *SQL server › Import database* con el BACPAC → base nueva → cambiar `DB_URL`.
+  un enlace SAS de 15 minutos. Para restaurar: *SQL server › Import database* con el BACPAC → base nueva →
+  **`ALTER USER mgnutri_migracion/mgnutri_app_user WITH PASSWORD = ...`** (la importación les asigna contraseñas al azar)
+  → cambiar `DB_URL` y `SPRING_FLYWAY_URL`.
+- Procedimiento detallado y ensayo medido (a: ≈ 8 min, b: ≈ 15 min; objetivo ≤ 2 h) en el manual del sistema,
+  «Backup y restauración».
 - **Local (Docker)**: `BACKUP DATABASE` a `/var/opt/mssql/backup`; restaurar con
   `RESTORE DATABASE mgnutri FROM DISK = '/var/opt/mssql/backup/<archivo>.bak' WITH REPLACE`.
 
