@@ -77,19 +77,26 @@ public class AuthService {
      */
     public LoginResponse login(LoginRequest req) {
         String username = req.username().trim();
+        // BCrypt (costo 12) se calcula fuera de la transacción: adentro retenía una conexión del pool durante todo el
+        // cálculo y con 50 ingresos simultáneos el pool se agotaba (prueba k6 en Azure, 19/11/2026).
+        String hash = usuarioDao.findByUsername(username).map(Usuario::getPasswordHash).orElse(null);
+        boolean coincide = encoder.matches(req.password(), hash != null ? hash : HASH_TIEMPO_CONSTANTE) && hash != null;
         // La actualización de intentos debe persistir aunque el login falle: se usa una transacción explícita.
-        Resultado r = tx.execute(status -> intentar(username, req.password()));
+        Resultado r = tx.execute(status -> intentar(username, hash, coincide));
         if (r.error != null) {
             throw r.error;
         }
         return r.respuesta;
     }
 
-    private Resultado intentar(String username, String password) {
+    /** Hash de una contraseña cualquiera: se verifica igual cuando el usuario no existe, para no delatarlo por el tiempo. */
+    private static final String HASH_TIEMPO_CONSTANTE = "$2a$12$C6UzMDM.H6dfI/f/IKcEeO7FHq9aBp8.0NUIyRf4tTOR8f4CRAg8a";
+
+    /** @param hashVerificado hash contra el que se calculó {@code coincide}; si cambió mientras tanto, cuenta como fallo. */
+    private Resultado intentar(String username, String hashVerificado, boolean coincide) {
         Instant ahora = ahora();
         Usuario u = usuarioDao.findByUsername(username).orElse(null);
         if (u == null || u.getEstado() == Usuario.Estado.BAJA) {
-            encoder.matches(password, "$2a$12$C6UzMDM.H6dfI/f/IKcEeO7FHq9aBp8.0NUIyRf4tTOR8f4CRAg8a"); // tiempo constante
             accesos.registrar(RegistroAcceso.Accion.LOGIN_FALLIDO, u == null ? null : u.getId(), username, null,
                     u == null ? "Usuario inexistente" : "Usuario dado de baja");
             return Resultado.error(new BusinessException(ErrorCode.CREDENCIALES_INVALIDAS, MSJ_CREDENCIALES));
@@ -99,7 +106,7 @@ public class AuthService {
             accesos.registrar(RegistroAcceso.Accion.LOGIN_FALLIDO, u.getId(), username, roles, "Cuenta bloqueada");
             return Resultado.error(bloqueado(u.getBloqueadoHasta()));
         }
-        if (!encoder.matches(password, u.getPasswordHash())) {
+        if (!coincide || !u.getPasswordHash().equals(hashVerificado)) {
             int intentos = u.getIntentosFallidos() + 1;
             u.setIntentosFallidos(intentos);
             accesos.registrar(RegistroAcceso.Accion.LOGIN_FALLIDO, u.getId(), username, roles, "Contraseña incorrecta (" + intentos + ")");
