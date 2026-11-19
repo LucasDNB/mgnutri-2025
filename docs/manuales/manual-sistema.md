@@ -159,6 +159,7 @@ Todas están en `.env.example`. En local se cargan desde el entorno; en Azure, c
 | `FRONTEND_URL` | Origen permitido por CORS |
 | `RATE_LIMIT_AUTH` | Solicitudes a `/auth/**` por minuto e IP (10) |
 | `WA_ENABLED`, `WA_PHONE_ID`, `WA_TOKEN` | WhatsApp Cloud API |
+| `WA_API_VERSION` | Versión de la Graph API de Meta (`v25.0`); actualizarla antes de que Meta la retire |
 | `WA_CREDENCIALES_MODO` | `PASSWORD` (envía la contraseña temporal) o `ENLACE` (envía un enlace de activación) |
 | `JOBS_ENABLED` | Habilita los jobs programados |
 | `BACKUP_PROVIDER` | `local` (BACKUP DATABASE) o `azure` (BACPAC a Blob Storage) |
@@ -249,7 +250,7 @@ Cada entrega se etiqueta `vX.Y.Z` (RNF 3.5). Mientras no estén cargados los sec
 
 1. Crear la app en Meta for Developers, agregar el producto WhatsApp y un número verificado.
 2. Generar un token permanente de usuario del sistema (`WA_TOKEN`) y tomar el *phone number id* (`WA_PHONE_ID`).
-3. Enviar a aprobación las plantillas de la spec 11 (categoría *Utility*, idioma `es_AR`): `mg_credenciales`,
+3. Enviar a aprobación las plantillas de `docs/whatsapp-plantillas.md` (categoría *Utility*, idioma `es_AR`): `mg_credenciales`,
    `mg_recupero_password`, `mg_turno_confirmado`, `mg_turno_reprogramado`, `mg_turno_cancelado`,
    `mg_recordatorio_turno`, `mg_recordatorio_deuda` y `mg_cambio_arancel`.
 4. Si Meta rechaza la plantilla de credenciales con contraseña, usar `WA_CREDENCIALES_MODO=ENLACE`.

@@ -31,10 +31,12 @@ public class Notificador {
                                      String enlaceActivacion) {
         String url = config.valor("centro.url_sistema", "");
         boolean modoEnlace = "ENLACE".equalsIgnoreCase(props.whatsapp().credencialesModo()) && enlaceActivacion != null;
-        String tercero = modoEnlace ? "(usá el enlace de activación)" : password;
-        String cuarto = modoEnlace ? enlaceActivacion : url;
+        // Meta clasifica como «Autenticación» (y rechaza como Utility) una plantilla que transmite la contraseña:
+        // en modo ENLACE la plantilla aprobada tiene 3 variables (nombre, usuario, enlace de activación).
+        List<String> parametros = modoEnlace ? List.of(nombre, username, enlaceActivacion)
+                : List.of(nombre, username, password, url);
         return notificaciones.encolar(TipoNotificacion.CREDENCIALES, usuarioId, nombre, telefono,
-                List.of(nombre, username, tercero, cuarto), "Usuario", usuarioId);
+                parametros, "Usuario", usuarioId);
     }
 
     public Notificacion turnoConfirmado(Long usuarioId, String nombre, String telefono, String profesional,

@@ -75,7 +75,7 @@ mgnutri:
     habilitado: ${WA_ENABLED:false}
     phone-number-id: ${WA_PHONE_ID:}
     token: ${WA_TOKEN:}
-    api-version: v21.0
+    api-version: ${WA_API_VERSION:v25.0}
     idioma-plantillas: es_AR
     credenciales-modo: ${WA_CREDENCIALES_MODO:PASSWORD}
   jobs:

@@ -3,6 +3,7 @@ package ar.edu.usal.mgnutri.notificaciones.service;
 import ar.edu.usal.mgnutri.common.Textos;
 import ar.edu.usal.mgnutri.config.MgnutriProperties;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -24,6 +25,8 @@ public class WhatsAppCloudAdapter implements MensajeriaPort {
     private final RestClient client;
     private final MgnutriProperties.WhatsApp config;
 
+    // Hay dos constructores (el otro es para pruebas): sin @Autowired Spring busca uno sin argumentos y falla al iniciar.
+    @Autowired
     public WhatsAppCloudAdapter(MgnutriProperties props, RestClient.Builder builder) {
         this.config = props.whatsapp();
         if (config.phoneNumberId() == null || config.phoneNumberId().isBlank()

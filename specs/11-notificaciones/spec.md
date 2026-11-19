@@ -47,15 +47,18 @@ El sistema avisa por WhatsApp los eventos que importan al paciente/profesional: 
 - **CA-11.6.2** Contador de fallidas en el home del admin.
 
 ## Plantillas de WhatsApp (a aprobar en Meta, idioma es_AR, categoría *Utility*)
+
+Textos listos para cargar, con valores de ejemplo: [docs/whatsapp-plantillas.md](../../docs/whatsapp-plantillas.md). Ningún cuerpo empieza ni termina con una variable (Meta lo rechaza).
+
 | Nombre | Cuerpo propuesto | Variables |
 |---|---|---|
-| `mg_credenciales` | Hola {{1}}, te damos la bienvenida a MG Nutrición y Entrenamiento. Tu usuario es {{2}} y tu contraseña temporal es {{3}}. Ingresá en {{4}} y cambiala en tu primer acceso. | nombre, usuario, contraseña, url |
-| `mg_turno_confirmado` | Hola {{1}}, tu turno con {{2}} quedó confirmado para el {{3}} a las {{4}} en {{5}}. | nombre, profesional, fecha, hora, ubicación |
-| `mg_turno_reprogramado` | Hola {{1}}, tu turno con {{2}} del {{3}} fue reprogramado para el {{4}} a las {{5}} en {{6}}. | |
+| `mg_credenciales` | Hola {{1}}, ya estás registrado en MG Nutrición y Entrenamiento con el usuario {{2}}. Para empezar a usar el sistema completá tu alta en {{3}} (el enlace vence en 72 h). ¡Te esperamos! | nombre, usuario, enlace de activación (modo ENLACE) |
+| `mg_turno_confirmado` | Hola {{1}}, tu turno con {{2}} quedó confirmado para el {{3}} a las {{4}} en {{5}}. Si no podés asistir, cancelalo desde el sistema. | nombre, profesional, fecha, hora, ubicación |
+| `mg_turno_reprogramado` | Hola {{1}}, tu turno con {{2}} del {{3}} fue reprogramado para el {{4}} a las {{5}} en {{6}}. Podés ver el detalle en el sistema. | |
 | `mg_turno_cancelado` | Hola {{1}}, tu turno con {{2}} del {{3}} a las {{4}} fue cancelado. Motivo: {{5}}. Podés pedir uno nuevo desde el sistema. | |
-| `mg_recordatorio_turno` | Hola {{1}}, te recordamos tu turno de mañana {{2}} a las {{3}} con {{4}} en {{5}}. | |
-| `mg_recordatorio_deuda` | Hola {{1}}, registrás un saldo pendiente de {{2}} en MG Nutrición y Entrenamiento. {{3}} | nombre, monto, texto de enlace o "Acercate a la central para regularizarlo." |
-| `mg_cambio_arancel` | Hola {{1}}, te informamos que desde el {{2}} el valor de {{3}} será {{4}}. | |
-| `mg_recupero_password` | Hola {{1}}, recibimos un pedido para restablecer tu contraseña. Usá este enlace (válido 24 h): {{2}}. Si no fuiste vos, ignorá este mensaje. | |
+| `mg_recordatorio_turno` | Hola {{1}}, te recordamos tu turno de mañana {{2}} a las {{3}} con {{4}} en {{5}}. Si no podés asistir, avisanos con anticipación. | |
+| `mg_recordatorio_deuda` | Hola {{1}}, registrás un saldo pendiente de {{2}} en MG Nutrición y Entrenamiento. {{3}} Muchas gracias. | nombre, monto, texto de enlace o "Acercate a la central para regularizarlo." |
+| `mg_cambio_arancel` | Hola {{1}}, te informamos que desde el {{2}} el valor de {{3}} será de {{4}}. Ante cualquier duda, consultá en la central. | |
+| `mg_recupero_password` | Hola {{1}}, este es el enlace que pediste en MG Nutrición y Entrenamiento: {{2}}. Vence en 24 h. Si no lo pediste, ignorá este mensaje. | nombre, enlace |
 
-**Riesgo**: Meta puede rechazar plantillas que transmitan contraseñas. Alternativa preparada: `mg_credenciales` envía un **enlace de activación** de un solo uso (mismo mecanismo que el recupero, spec 13) en lugar de la contraseña. Se decide según la aprobación de la plantilla; el código soporta ambas variantes por configuración (`whatsapp.credenciales-modo: PASSWORD | ENLACE`).
+**Riesgo (ocurrió el 19/11/2026)**: Meta rechazó como «Autenticación» la plantilla con la contraseña; en producción se usa `WA_CREDENCIALES_MODO=ENLACE`. Alternativa preparada: `mg_credenciales` envía un **enlace de activación** de un solo uso (mismo mecanismo que el recupero, spec 13) en lugar de la contraseña. Se decide según la aprobación de la plantilla; el código soporta ambas variantes por configuración (`whatsapp.credenciales-modo: PASSWORD | ENLACE`).

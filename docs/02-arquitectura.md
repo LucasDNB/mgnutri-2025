@@ -164,7 +164,7 @@ mgnutri:
     habilitado: ${WA_ENABLED:false}
     phone-number-id: ${WA_PHONE_ID}
     token: ${WA_TOKEN}
-    api-version: v21.0
+    api-version: ${WA_API_VERSION:v25.0}
     idioma-plantillas: es_AR
   backup:
     proveedor: ${BACKUP_PROVIDER:local}   # local | azure

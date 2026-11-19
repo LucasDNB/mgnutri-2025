@@ -42,7 +42,7 @@ Todas las variables de [`.env.example`](../.env.example). Mínimas para producci
 | `DATA_KEY_BASE64` | `openssl rand -base64 32` (**no perderla**: cifra los datos sensibles) |
 | `ADMIN_PASSWORD_INICIAL` | contraseña temporal del primer administrador |
 | `FRONTEND_URL` | `https://<app>.azurewebsites.net` (CORS; mismo dominio que la API) |
-| `WA_ENABLED`, `WA_PHONE_ID`, `WA_TOKEN` | WhatsApp Cloud API |
+| `WA_ENABLED`, `WA_PHONE_ID`, `WA_TOKEN` (`WA_API_VERSION`, por defecto `v25.0`) | WhatsApp Cloud API (sección 6) |
 | `BACKUP_PROVIDER=azure` y `AZ_*` | exportación BACPAC (identidad administrada con rol *SQL DB Contributor*) |
 
 Además, en `configuracion_sistema` (pantalla *Opciones avanzadas › Configuración*): `centro.url_sistema` con la URL del frontend.
@@ -65,11 +65,26 @@ Etiquetar cada entrega con `vX.Y.Z` (RNF 3.5).
 
 ## 6. WhatsApp Cloud API
 
-1. Crear la app en Meta for Developers, agregar el producto WhatsApp y un número.
-2. Generar un token de usuario del sistema permanente (`WA_TOKEN`) y tomar el `phone-number-id` (`WA_PHONE_ID`).
-3. Enviar a aprobación las plantillas de [spec 11](../specs/11-notificaciones/spec.md) (categoría *Utility*, idioma `es_AR`).
-4. Si Meta rechaza `mg_credenciales` con contraseña, usar `WA_CREDENCIALES_MODO=ENLACE` (envía un enlace de activación).
-5. Con `WA_ENABLED=false` los mensajes se registran en el log y quedan `ENVIADA` con id `LOCAL-…`.
+1. En [developers.facebook.com](https://developers.facebook.com) › *Mis apps* › *Crear app* › caso de uso *Conectar
+   con clientes a través de WhatsApp*, asociada a un portfolio comercial (Business Manager). Meta crea una cuenta de
+   WhatsApp Business y un **número de prueba**.
+2. *WhatsApp › Configuración de la API*: anotar el **Identificador del número de teléfono** (`WA_PHONE_ID`). Con el
+   número de prueba solo se puede escribir a hasta 5 destinatarios verificados: agregarlos en *Para*.
+3. Token permanente: [business.facebook.com](https://business.facebook.com) › *Configuración del negocio* › *Usuarios
+   del sistema* › agregar un usuario *Administrador* → *Asignar activos*: la app (control total) y la cuenta de WhatsApp
+   → *Generar token*, caducidad *Nunca*, permisos `whatsapp_business_messaging` y `whatsapp_business_management`
+   (`WA_TOKEN`). El token temporal de la pantalla de la API dura 24 h y no sirve para producción.
+4. Cargar las 8 plantillas de [whatsapp-plantillas.md](whatsapp-plantillas.md) (categoría *Utility*, idioma `es_AR`,
+   con los ejemplos indicados). La revisión suele tardar minutos; hasta que estén *Activas* los envíos fallan con
+   «template does not exist».
+5. Si Meta rechaza `mg_credenciales` con contraseña, usar `WA_CREDENCIALES_MODO=ENLACE` (envía un enlace de activación).
+6. Configurar `WA_ENABLED=true`, `WA_PHONE_ID`, `WA_TOKEN` (y opcionalmente `WA_API_VERSION`, por defecto `v25.0`) en el
+   App Service. Ver el resultado en *Opciones avanzadas › Notificaciones*: el error de Meta queda en el detalle.
+7. Producción real: agregar un número propio (no puede estar usando la app de WhatsApp al mismo tiempo), verificarlo
+   por SMS y cargar un medio de pago en la cuenta de WhatsApp; Meta cobra cada mensaje de plantilla *Utility* enviado
+   fuera de una conversación abierta por el paciente.
+8. Con `WA_ENABLED=false` los mensajes se registran en el log y quedan `ENVIADA` con id `LOCAL-…`. Al activarlo no se
+   reenvían.
 
 ## 7. Jobs programados (zona America/Argentina/Buenos_Aires)
 
