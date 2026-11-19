@@ -65,4 +65,14 @@ Nunca contra producción: crean registros y cambian la contraseña del administr
 
 - Capturas de cada guion: `resultados/capturas/<proyecto>/` (se regeneran en cada corrida, no se versionan).
 - Reporte HTML con trazas: `npx playwright show-report resultados/reporte-html`.
-- Safari iOS no se automatiza en este entorno (requiere macOS o un dispositivo): queda como prueba manual pendiente.
+- Safari iOS no se automatiza en este entorno (requiere macOS o un dispositivo): se probó a mano (ver abajo).
+
+## Pruebas manuales en producción (19/11/2026)
+
+Sobre `app-mgnutri-1dfb81.azurewebsites.net`, con los datos demo realistas (sin crear registros de prueba):
+
+| Prueba | Resultado |
+|---|---|
+| Safari iOS (iPhone): ingreso como paciente y como profesional, menú, listados, formularios, gráficos y PDF | ✔ aprobada |
+| Usabilidad (RNF 3.1): 3 personas con poca experiencia, una tarea básica de su rol cada una | ✔ aprobada: comprendieron lo básico en ≤ 30 min |
+| Recorrido del administrador: primer ingreso, home, bitácora, reportes y opciones avanzadas | ✔ aprobada |

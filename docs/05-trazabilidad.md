@@ -90,7 +90,7 @@ automatizados de [`pruebas/e2e`](../pruebas/e2e/RESULTADOS.md), ejecutados en Ch
 
 | RNF (ERS §) | Cómo se cumple | Spec / doc |
 |---|---|---|
-| 3.1 Usabilidad (≤ 30 min, responsive, multi-dispositivo) | Mobile-first, homes por rol, ayudas contextuales. Multi-dispositivo verificado: 8 guiones E2E en Chrome escritorio y Android (16/16). **Pendiente:** prueba con 3 usuarios y Safari iOS | Constitución VIII · 16 · `pruebas/e2e/RESULTADOS.md` |
+| 3.1 Usabilidad (≤ 30 min, responsive, multi-dispositivo) | Mobile-first, homes por rol, ayudas contextuales. Multi-dispositivo verificado: 8 guiones E2E en Chrome escritorio y Android (16/16). **Cumple** (19/11/2026, en producción): Safari iOS verificado a mano en iPhone y prueba de usabilidad con 3 personas aprobada (comprendieron lo básico de su rol en ≤ 30 min) | Constitución VIII · 16 · `pruebas/e2e/RESULTADOS.md` |
 | 3.2 Disponibilidad 99 % | App Service Always On + health check; Application Insights con prueba estándar cada 5 min (São Paulo y Texas) y alerta por mail (`mgnutri-caido`) | 17 · manual del sistema, «Monitoreo» |
 | 3.2 Tolerancia a fallos | Handler global, bitácora de errores en transacción aparte, outbox con reintentos | 14, 11 |
 | 3.2 Backup diario / RTO ≤ 2 h | PITR de Azure SQL + CU-51/52. Ensayo del 19/11/2026: PITR ≈ 8 min y BACPAC ≈ 15 min hasta la app funcionando (cumple) | 15 · manual del sistema, «Backup y restauración» |
