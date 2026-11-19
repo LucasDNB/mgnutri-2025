@@ -5,7 +5,7 @@ import { validar, fortaleza } from '../core/validators.js';
 
 const app = document.getElementById('app');
 const tokenUrl = param('token');
-const caja = h('div', { class: 'caja-login' }, h('div', { class: 'logo grande' }, 'MG'));
+const caja = h('div', { class: 'caja-login' }, h('div', { class: 'logo grande' }, h('img', { src: '/assets/logo.png', alt: 'MG Nutrición y Entrenamiento' })));
 app.append(h('div', { class: 'pantalla-login' }, caja));
 
 if (!tokenUrl) {

@@ -72,7 +72,7 @@ export async function iniciarPagina({ roles, titulo }) {
   nav.appendChild(h('a', { href: '#', onclick: (e) => { e.preventDefault(); salir(); } }, 'Cerrar sesión'));
   const cabecera = h('header', { class: 'cabecera' },
     h('button', { class: 'btn-menu', 'aria-label': 'Abrir menú', 'aria-controls': 'menu', onclick: () => nav.classList.toggle('abierto') }, '☰'),
-    h('a', { class: 'marca', href: u.home }, h('span', { class: 'logo' }, 'MG'), h('span', {}, 'MG Nutrición')),
+    h('a', { class: 'marca', href: u.home }, h('span', { class: 'logo' }, h('img', { src: '/assets/logo.png', alt: 'MG Nutrición y Entrenamiento' })), h('span', {}, 'MG Nutrición')),
     h('span', { class: 'espacio' }),
     h('span', { class: 'usuario' }, u.nombre),
     h('button', { class: 'btn chico secundario', onclick: salir, style: 'border-color:#fff' }, 'Salir'));

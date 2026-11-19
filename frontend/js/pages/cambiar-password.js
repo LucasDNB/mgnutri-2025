@@ -47,4 +47,4 @@ form.addEventListener('submit', async (e) => {
 });
 
 app.append(h('div', { class: 'pantalla-login' }, h('div', { class: 'caja-login', style: 'max-width:440px' },
-  h('div', { class: 'logo grande' }, 'MG'), h('h1', {}, 'Cambiar contraseña'), form)));
+  h('div', { class: 'logo grande' }, h('img', { src: '/assets/logo.png', alt: 'MG Nutrición y Entrenamiento' })), h('h1', {}, 'Cambiar contraseña'), form)));

@@ -57,7 +57,7 @@ async function verContacto() {
 }
 
 app.append(h('div', { class: 'pantalla-login' }, h('div', { class: 'caja-login' },
-  h('div', { class: 'logo grande' }, 'MG'),
+  h('div', { class: 'logo grande' }, h('img', { src: '/assets/logo.png', alt: 'MG Nutrición y Entrenamiento' })),
   h('h1', {}, 'MG Nutrición y Entrenamiento'),
   mensaje ? h('div', { class: 'aviso advertencia' }, mensaje) : null,
   form)));

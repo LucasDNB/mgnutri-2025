@@ -8,7 +8,7 @@ const { main } = await iniciarPagina({ roles: ['PACIENTE'], titulo: 'Inicio' });
 const home = await api.get('/me/home');
 const t = home.proximoTurno;
 main.append(
-  h('div', { style: 'text-align:center' }, h('div', { class: 'logo grande' }, 'MG'), h('h1', {}, `¡Hola, ${home.nombre}!`)),
+  h('div', { style: 'text-align:center' }, h('div', { class: 'logo grande' }, h('img', { src: '/assets/logo.png', alt: 'MG Nutrición y Entrenamiento' })), h('h1', {}, `¡Hola, ${home.nombre}!`)),
   t ? h('div', { class: 'tarjeta', style: 'max-width:520px;margin:0 auto 1rem' }, h('strong', {}, 'Tu próximo turno: '),
     `${fmt.diaFecha(t.inicio)} a las ${fmt.hora(t.inicio)} con ${t.profesional.nombre}${t.ubicacion ? ' · ' + t.ubicacion : ''}`) : null,
   h('div', { class: 'botones-home' },
