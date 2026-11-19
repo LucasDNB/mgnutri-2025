@@ -41,12 +41,16 @@ main.append(
       vistas),
     cuerpo));
 
+// Cada carga lleva un número: si llega la respuesta de un pedido viejo, se descarta para no pisar el resultado más reciente.
+let pedidos = 0;
 async function cargar() {
+  const n = ++pedidos;
   vistas.querySelectorAll('button').forEach(b => b.classList.toggle('activa', modo === 'lista' ? b.dataset.v === 'lista' : b.dataset.v === vista));
   titulo.textContent = tituloVista(vista, ref);
   const [desde, hasta] = rangoVista(vista, ref);
   try {
     const turnos = await api.get(`/turnos${qs({ profesionalId: filtroProf.value, area: filtroArea.value, desde, hasta, incluirCancelados: verCancelados.checked })}`);
+    if (n !== pedidos) return;
     if (modo === 'lista') {
       const ordenados = [...turnos].sort((a, b) => ordenLista === 'paciente' ? a.paciente.nombre.localeCompare(b.paciente.nombre)
         : ordenLista === 'profesional' ? a.profesional.nombre.localeCompare(b.profesional.nombre) : a.inicio.localeCompare(b.inicio));

@@ -78,6 +78,8 @@ import java.util.Random;
  * Datos de demostración (spec 16, perfil "demo"): 2 nutricionistas, 2 entrenadores, 1 integral y 30 pacientes con
  * turnos, planes, rutinas, 6 meses de evolución, pagos y deudas. Se ejecuta una sola vez (si no hay profesionales).
  * Todas las cuentas demo usan la contraseña DEMO_PASSWORD (por defecto "Demo2025!") y ya aceptaron los T&C.
+ * Los datos imitan la realidad (DNI acorde a la edad, nombres, localidades y objetivos variados), pero los mails usan el
+ * dominio reservado example.com y los teléfonos el prefijo 11 00 (no asignado): si se activa WhatsApp no se escribe a terceros.
  */
 @Component
 @Profile("demo")
@@ -85,12 +87,24 @@ import java.util.Random;
 public class DemoDataLoader implements ApplicationRunner {
 
     private static final Logger log = LoggerFactory.getLogger(DemoDataLoader.class);
-    private static final String[] NOMBRES = {"Ana", "Bruno", "Carla", "Diego", "Elena", "Federico", "Gabriela", "Hernán", "Inés", "Julián",
-            "Karina", "Lucas", "Micaela", "Nicolás", "Olivia", "Pablo", "Quimey", "Rocío", "Santiago", "Tamara", "Ulises", "Valentina",
-            "Walter", "Ximena", "Yamila", "Zoe", "Agustín", "Belén", "Camilo", "Daniela"};
     private static final String[] APELLIDOS = {"Gómez", "Fernández", "Rodríguez", "López", "Martínez", "Pérez", "García", "Sánchez", "Romero",
             "Sosa", "Torres", "Álvarez", "Ruiz", "Ramírez", "Flores", "Acosta", "Benítez", "Medina", "Herrera", "Suárez", "Aguirre", "Giménez",
-            "Molina", "Silva", "Castro", "Rojas", "Ortiz", "Núñez", "Luna", "Juárez"};
+            "Molina", "Silva", "Castro", "Rojas", "Ortiz", "Núñez", "Luna", "Juárez", "Ferreyra", "Quiroga", "Villalba", "Cabrera",
+            "Godoy", "Ledesma", "Vega", "Coronel", "Ojeda", "Bustos", "Figueroa", "Mansilla", "Peralta", "Toledo", "Lucero", "Navarro"};
+    private static final String[] NOMBRES_F = {"Ana", "Carla", "Elena", "Gabriela", "Inés", "Karina", "Micaela", "Olivia", "Rocío", "Tamara",
+            "Valentina", "Ximena", "Yamila", "Zoe", "Belén", "Daniela", "Florencia", "Agustina", "Camila", "Julieta", "Romina", "Lucía",
+            "Milagros", "Sabrina", "Natalia", "Verónica", "Silvina", "Lorena", "Antonella", "Victoria"};
+    private static final String[] NOMBRES_M = {"Bruno", "Diego", "Federico", "Hernán", "Julián", "Lucas", "Nicolás", "Pablo", "Santiago", "Ulises",
+            "Walter", "Agustín", "Camilo", "Matías", "Facundo", "Gonzalo", "Joaquín", "Emiliano", "Leandro", "Franco", "Ezequiel", "Mariano",
+            "Sebastián", "Gustavo", "Javier", "Alejandro", "Maximiliano", "Ramiro", "Tobías", "Ignacio"};
+    private static final String[] LOCALIDADES = {"Pilar", "Del Viso", "Manuel Alberti", "Villa Rosa", "Derqui", "Tortuguitas", "Garín",
+            "Escobar", "Maquinista Savio", "José C. Paz", "San Miguel", "Benavídez", "Tigre", "San Isidro", "Martínez"};
+    private static final String[] OBJETIVOS = {"Descenso de peso", "Ganancia de masa muscular", "Mejorar hábitos y rendimiento",
+            "Control de glucemia (indicación médica)", "Preparación para media maratón", "Recomposición corporal",
+            "Alimentación vegetariana equilibrada", "Recuperación post lesión de rodilla", "Mejorar energía y descanso",
+            "Preparación física para fútbol amateur"};
+    private static final String[] CALLES = {"Av. Tomás Márquez", "Chacabuco", "Rivadavia", "Belgrano", "Las Heras", "Ruta 8 km 50",
+            "Av. Caamaño", "Independencia", "Hipólito Yrigoyen", "Lisandro de la Torre", "Champagnat", "Pedro Lagrave"};
 
     private final ProfesionalDao profesionalDao;
     private final ProfesionalService profesionales;
@@ -152,15 +166,16 @@ public class DemoDataLoader implements ApplicationRunner {
         }
         log.info("Cargando datos de demostración…");
         Random rnd = new Random(2025);
+        Random datos = new Random(1810); // datos personales: separado de rnd para no alterar la historia generada
         try {
             Usuario admin = usuarioDao.findByUsername("admin").orElseThrow();
             comoUsuario(admin.getId(), "admin", EnumSet.of(Rol.ADMIN), null, null);
             List<Profesional> profs = new ArrayList<>();
-            profs.add(profesional("Laura", "López", "20111111", Profesional.Tipo.NUTRICIONISTA, "MN 1234", "Nutrición deportiva"));
-            profs.add(profesional("Sofía", "Méndez", "20222222", Profesional.Tipo.NUTRICIONISTA, "MN 5678", "Nutrición clínica"));
-            profs.add(profesional("Martín", "García", "20333333", Profesional.Tipo.ENTRENADOR, null, "Hipertrofia y fuerza"));
-            profs.add(profesional("Tomás", "Ibarra", "20444444", Profesional.Tipo.ENTRENADOR, null, "Funcional y running"));
-            profs.add(profesional("Mariana", "Gutiérrez", "20555555", Profesional.Tipo.INTEGRAL, "MN 9012", "Nutrición y entrenamiento"));
+            profs.add(profesional("Laura", "López", "28456712", Profesional.Tipo.NUTRICIONISTA, "MN 7412", "Nutrición deportiva"));
+            profs.add(profesional("Sofía", "Méndez", "31209845", Profesional.Tipo.NUTRICIONISTA, "MN 9035", "Nutrición clínica"));
+            profs.add(profesional("Martín", "García", "30117652", Profesional.Tipo.ENTRENADOR, null, "Hipertrofia y fuerza"));
+            profs.add(profesional("Tomás", "Ibarra", "33874019", Profesional.Tipo.ENTRENADOR, null, "Funcional y running"));
+            profs.add(profesional("Mariana", "Gutiérrez", "29563388", Profesional.Tipo.INTEGRAL, "MN 8127", "Nutrición y entrenamiento"));
             for (Profesional p : profs) {
                 List<FranjaDto> franjas = new ArrayList<>();
                 for (int d = 1; d <= 5; d++) {
@@ -175,9 +190,17 @@ public class DemoDataLoader implements ApplicationRunner {
             for (int i = 0; i < cantidadPacientes; i++) {
                 Profesional nut = profs.get(i % 3 == 2 ? 4 : i % 2);
                 Profesional ent = profs.get(i % 3 == 2 ? 4 : 2 + i % 2);
-                AltaResponse a = pacientes.crear(new PacienteRequest(NOMBRES[i % NOMBRES.length], APELLIDOS[(i + i / APELLIDOS.length * 7) % APELLIDOS.length], "DNI", String.valueOf(40000000 + i * 1111), LocalDate.of(1980 + i % 25, 1 + i % 12, 1 + i % 27),
-                        i % 2 == 0 ? "F" : "M", "11" + (40000000 + i * 1234), "paciente" + i + "@demo.mgnutri", "Pilar, Buenos Aires",
-                        i % 3 == 0 ? "Descenso de peso" : i % 3 == 1 ? "Ganancia de masa muscular" : "Mejorar hábitos y rendimiento", null, null,
+                boolean mujer = i % 2 == 0;
+                String nombre = mujer ? NOMBRES_F[(i * 7 + i / NOMBRES_F.length) % NOMBRES_F.length] : NOMBRES_M[(i * 11 + i / NOMBRES_M.length) % NOMBRES_M.length];
+                String apellido = APELLIDOS[(i * 13 + i / APELLIDOS.length * 5) % APELLIDOS.length];
+                LocalDate nacimiento = LocalDate.of(1972 + datos.nextInt(34), 1 + datos.nextInt(12), 1 + datos.nextInt(28));
+                // DNI aproximado según el año de nacimiento (1972 ≈ 22 M, 2005 ≈ 46 M), único por el sufijo i
+                String dni = String.valueOf(22_000_000 + (nacimiento.getYear() - 1972) * 720_000 + datos.nextInt(600) * 1000 + i);
+                String telefono = "1100" + String.format("%06d", 100_000 + i * 7919 % 900_000);
+                String email = (sinAcentos(nombre) + "." + sinAcentos(apellido)).toLowerCase().replace(' ', '.') + i + "@example.com";
+                String domicilio = CALLES[datos.nextInt(CALLES.length)] + " " + (100 + datos.nextInt(3900)) + ", " + LOCALIDADES[datos.nextInt(LOCALIDADES.length)];
+                AltaResponse a = pacientes.crear(new PacienteRequest(nombre, apellido, "DNI", dni, nacimiento,
+                        mujer ? "F" : "M", telefono, email, domicilio, OBJETIVOS[datos.nextInt(OBJETIVOS.length)], null, null,
                         List.of(new AsignacionItem(nut.getId(), Area.NUTRICION), new AsignacionItem(ent.getId(), Area.ENTRENAMIENTO)), null));
                 activarCuenta(a.username());
                 pacienteIds.add(a.id());
@@ -205,9 +228,13 @@ public class DemoDataLoader implements ApplicationRunner {
         }
     }
 
+    private static String sinAcentos(String s) {
+        return java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+    }
+
     private Profesional profesional(String nombre, String apellido, String doc, Profesional.Tipo tipo, String matricula, String esp) {
-        var r = profesionales.crear(new ProfesionalRequest(nombre, apellido, "DNI", doc, tipo, matricula, esp, "11" + doc.substring(0, 8),
-                nombre.toLowerCase() + "@demo.mgnutri", tipo == Profesional.Tipo.ENTRENADOR ? 45 : 30, null));
+        var r = profesionales.crear(new ProfesionalRequest(nombre, apellido, "DNI", doc, tipo, matricula, esp, "1100" + doc.substring(2, 8),
+                sinAcentos(nombre + "." + apellido).toLowerCase() + "@example.com", tipo == Profesional.Tipo.ENTRENADOR ? 45 : 30, null));
         return profesionalDao.findById(r.id()).orElseThrow();
     }
 

@@ -11,9 +11,14 @@ const res = h('div');
 main.append(encabezado('Profesionales', [], h('a', { class: 'btn', href: '/admin/profesional.html' }, '+ Nuevo profesional')),
   h('div', { class: 'tarjeta' }, h('div', { class: 'fila' }, buscador, tipo), h('div', { style: 'margin-top:.8rem' }, res)));
 
+// Cada carga lleva un número: si llega la respuesta de un pedido viejo (p. ej. la carga inicial después de
+// aplicar un filtro), se descarta para no pisar el resultado más reciente.
+let pedidos = 0;
 async function cargar() {
+  const n = ++pedidos;
   try {
     const r = await api.get(`/profesionales${qs({ q: buscador.value, tipo: tipo.value, page: pagina })}`);
+    if (n !== pedidos) return;
     res.replaceChildren(tabla([
       { titulo: 'Apellido y nombre', render: p => h('a', { href: `/admin/profesional.html?id=${p.id}` }, `${p.apellido}, ${p.nombre}`) },
       { titulo: 'Tipo', render: p => chip(p.tipo.toLowerCase()) },

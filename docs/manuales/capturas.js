@@ -11,9 +11,9 @@ const BASE = process.argv[2] || 'http://localhost:8091';
 const DEMO = process.env.DEMO_PASSWORD || 'Demo2025!';
 const ADMIN_PASS = process.env.MANUAL_ADMIN_PASSWORD || 'ManualMg2025';
 const SALIDA = path.join(__dirname, 'img');
-const PACIENTE = { usuario: '40000000', id: 1, plan: 1, rutina: 1 }; // Ana Gómez: nutrición con Laura López, entrenamiento con Martín García
-const NUTRI = '20111111';
-const ENTRENADOR = '20333333';
+const PACIENTE = { usuario: '36752000', id: 1, plan: 1, rutina: 1 }; // Ana Gómez: nutrición con Laura López, entrenamiento con Martín García
+const NUTRI = '28456712';
+const ENTRENADOR = '30117652';
 
 async function token(usuario, password) {
   const r = await fetch(`${BASE}/api/v1/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: usuario, password }) });

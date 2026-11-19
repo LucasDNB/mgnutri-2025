@@ -15,9 +15,14 @@ const res = h('div');
 main.append(encabezado('Base de ejercicios', [], puedeEditar ? h('button', { class: 'btn', onclick: () => editar() }, '+ Nuevo ejercicio') : null),
   h('div', { class: 'tarjeta' }, h('div', { class: 'fila' }, q, grupo, dif, activo), h('div', { style: 'margin-top:.8rem' }, res)));
 
+// Cada carga lleva un número: si llega la respuesta de un pedido viejo (p. ej. la carga inicial después de
+// aplicar un filtro), se descarta para no pisar el resultado más reciente.
+let pedidos = 0;
 async function cargar() {
+  const n = ++pedidos;
   try {
     const r = await api.get(`/ejercicios${qs({ q: q.value, grupoMuscularId: grupo.value, dificultad: dif.value, activo: activo.value, page: pagina })}`);
+    if (n !== pedidos) return;
     vaciar(res, tabla([
       { titulo: 'Ejercicio', render: e => [e.nombre, e.descripcion ? h('div', { class: 'suave' }, e.descripcion) : null] },
       { titulo: 'Grupo muscular', render: e => [e.grupoMuscular, e.gruposSecundarios.length ? h('div', { class: 'suave' }, e.gruposSecundarios.map(g => g.nombre).join(', ')) : null] },

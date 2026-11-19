@@ -14,9 +14,14 @@ const res = h('div');
 main.append(encabezado('Base de alimentos', [], puedeEditar ? h('button', { class: 'btn', onclick: () => editar() }, '+ Nuevo alimento') : null),
   h('div', { class: 'tarjeta' }, h('div', { class: 'fila' }, q, grupo, activo), h('p', { class: 'suave' }, 'Valores cada 100 g de alimento crudo o listo para consumir.'), res));
 
+// Cada carga lleva un número: si llega la respuesta de un pedido viejo (p. ej. la carga inicial después de
+// aplicar un filtro), se descarta para no pisar el resultado más reciente.
+let pedidos = 0;
 async function cargar() {
+  const n = ++pedidos;
   try {
     const r = await api.get(`/alimentos${qs({ q: q.value, grupoId: grupo.value, activo: activo.value, page: pagina })}`);
+    if (n !== pedidos) return;
     vaciar(res, tabla([
       { titulo: 'Alimento', campo: 'nombre' }, { titulo: 'Grupo', campo: 'grupo' },
       { titulo: 'kcal', campo: 'kcal', clase: 'num' }, { titulo: 'HC', campo: 'hc', clase: 'num' }, { titulo: 'Prot.', campo: 'proteinas', clase: 'num' },

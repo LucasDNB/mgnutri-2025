@@ -12,18 +12,39 @@ function corrida() {
   try { return JSON.parse(fs.readFileSync(path.join(DIR_RESULTADOS, 'corrida.json'), 'utf8')).id; } catch { return '000000'; }
 }
 
-/** Datos propios de cada proyecto (escritorio / android) para que ambos corran sobre la misma base sin chocar. */
+const NOMBRES_F = ['Valeria', 'Lucía', 'Florencia', 'Agustina', 'Camila', 'Julieta', 'Romina', 'Paula', 'Carolina', 'Milagros'];
+const NOMBRES_M = ['Rodrigo', 'Matías', 'Facundo', 'Gonzalo', 'Joaquín', 'Federico', 'Emiliano', 'Leandro', 'Franco', 'Ezequiel'];
+const APELLIDOS = ['Ferreyra', 'Quiroga', 'Villalba', 'Cabrera', 'Godoy', 'Ledesma', 'Vega', 'Paz', 'Coronel', 'Arias', 'Ojeda', 'Bustos',
+  'Maldonado', 'Figueroa', 'Mansilla', 'Correa', 'Peralta', 'Ríos', 'Toledo', 'Vera', 'Lucero', 'Navarro', 'Moreno', 'Cáceres', 'Domínguez',
+  'Aguilar', 'Ponce', 'Carrizo', 'Ibáñez', 'Escobar', 'Benavídez', 'Zalazar', 'Montenegro', 'Barrios', 'Olmos', 'Insaurralde', 'Galván'];
+
+/**
+ * Datos propios de cada proyecto (escritorio / android) para que ambos corran sobre la misma base sin chocar.
+ * Parecen reales (nombre + apellido doble, DNI acorde a la edad), pero son únicos por corrida: los guiones buscan las
+ * filas por apellido o DNI. Mails en example.com y teléfonos 11 00… (no asignados) para no escribir a terceros.
+ */
 function datos(testInfo) {
   const k = testInfo.project.name === 'chrome-android' ? 2 : 1;
   const c = corrida();
-  // Los apellidos sólo admiten letras: la corrida se codifica como letras (0→A … 9→J).
-  const letras = c.replace(/\d/g, (d) => 'ABCDEFGHIJ'[d]);
-  const sufijo = `${k === 1 ? 'Escritorio' : 'Movil'} ${letras[0]}${letras.slice(1).toLowerCase()}`;
-  return {
-    profesional: { nombre: 'Valeria', apellido: `Integral ${sufijo}`, dni: `3${k}${c}`, telefono: `11 3${k}${c}` },
-    profesional2: { nombre: 'Rodrigo', apellido: `Baja ${sufijo}`, dni: `4${k}${c}`, telefono: `11 4${k}${c}` },
-    paciente: { nombre: 'Paula', apellido: `Prueba ${sufijo}`, dni: `5${k}${c}`, telefono: `11 5${k}${c}` },
+  const n = Number(c);
+  const persona = (r, nombres) => {
+    const a = (n * 7 + r * 11 + k * 5) % APELLIDOS.length;
+    let b = (Math.floor(n / APELLIDOS.length) * 13 + r * 3 + k * 17 + 1) % APELLIDOS.length;
+    if (b === a) b = (b + 1) % APELLIDOS.length;
+    return { nombre: nombres[(n + r * 3 + k) % nombres.length], apellido: `${APELLIDOS[a]} ${APELLIDOS[b]}` };
   };
+  const conDocumento = (p, prefijo) => ({ ...p, dni: `${prefijo}${c}`, telefono: `11 00${prefijo}${c.slice(0, 4)}` });
+  return {
+    profesional: conDocumento(persona(0, NOMBRES_F), `2${5 + k}`),   // 26/27 M: nacida hacia 1978
+    profesional2: conDocumento(persona(1, NOMBRES_M), `3${1 + k}`),  // 32/33 M: nacido hacia 1987
+    paciente: conDocumento(persona(2, NOMBRES_F), `3${7 + k}`),      // 38/39 M: nacida hacia 1995
+  };
+}
+
+/** Mail de prueba con el formato habitual nombre.apellido, en el dominio reservado example.com. */
+function email(p) {
+  const s = `${p.nombre}.${p.apellido}`.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/\s+/g, '.');
+  return `${s}.${p.dni.slice(-4)}@example.com`;
 }
 
 function archivoEstado(testInfo) {
@@ -119,4 +140,4 @@ function hoyArgentina(deltaDias = 0) {
   return d.toISOString().slice(0, 10);
 }
 
-module.exports = { ADMIN, PASSWORD_E2E, datos, leerEstado, guardarEstado, capturar, ingresar, salir, primerIngreso, abrirFiltros, toast, descarga, api, hoyArgentina };
+module.exports = { ADMIN, PASSWORD_E2E, datos, email, leerEstado, guardarEstado, capturar, ingresar, salir, primerIngreso, abrirFiltros, toast, descarga, api, hoyArgentina };

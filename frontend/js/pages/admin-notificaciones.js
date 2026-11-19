@@ -22,9 +22,14 @@ main.append(encabezado('Notificaciones', [['Opciones avanzadas', '/admin/opcione
   job('recordatorio-turnos', 'Recordatorio de turnos de mañana'), job('recordatorio-deuda', 'Recordatorio de deudas'), job('despacho', 'Enviar pendientes')),
 h('div', { class: 'tarjeta' }, form), h('div', { class: 'tarjeta' }, res));
 
+// Cada carga lleva un número: si llega la respuesta de un pedido viejo (p. ej. la carga inicial después de
+// aplicar un filtro), se descarta para no pisar el resultado más reciente.
+let pedidos = 0;
 async function cargar() {
+  const n = ++pedidos;
   try {
     const r = await api.get(`/notificaciones${qs({ ...leerForm(form), page: pagina, size: 25 })}`);
+    if (n !== pedidos) return;
     vaciar(res, tabla([
       { titulo: 'Fecha', render: n => fmt.fechaHora(n.createdAt) }, { titulo: 'Tipo', render: n => n.tipo.replaceAll('_', ' ').toLowerCase() },
       { titulo: 'Destinatario', render: n => [n.destinatario, h('div', { class: 'suave' }, n.telefono || 'sin teléfono')] },

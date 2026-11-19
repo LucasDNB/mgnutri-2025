@@ -48,8 +48,8 @@ test('Guion 8 · Bajas de paciente y profesional', async ({ page, playwright, ba
     expect(alta.status, JSON.stringify(alta.cuerpo)).toBe(201);
     const profId = alta.cuerpo.id;
     const temporal = alta.cuerpo.passwordTemporal;
-    const otro = await admin.post('/pacientes', { nombre: 'Tomás', apellido: `Auxiliar ${p2.apellido}`, tipoDocumento: 'DNI', nroDocumento: `6${p2.dni.slice(1)}`,
-      fechaNacimiento: '1988-03-02', sexo: 'M', telefonoWhatsapp: `+54911${p2.dni.slice(1)}`, asignaciones: [{ profesionalId: profId, area: 'ENTRENAMIENTO' }] });
+    const otro = await admin.post('/pacientes', { nombre: 'Tomás', apellido: p2.apellido.split(' ').reverse().join(' '), tipoDocumento: 'DNI', nroDocumento: `4${p2.dni.slice(1)}`,
+      fechaNacimiento: '1988-03-02', sexo: 'M', telefonoWhatsapp: `+5491100${p2.dni.slice(2)}`, asignaciones: [{ profesionalId: profId, area: 'ENTRENAMIENTO' }] });
     expect(otro.status, JSON.stringify(otro.cuerpo)).toBe(201);
     const inicio = new Date(Math.ceil((Date.now() + 5 * 864e5) / 3600e3) * 3600e3).toISOString();
     const turno = await admin.post('/turnos', { pacienteId: otro.cuerpo.id, profesionalId: profId, inicio, area: 'ENTRENAMIENTO', forzar: true });

@@ -16,7 +16,7 @@ test('Guion 1 · Alta de profesional integral, primer ingreso y agenda', async (
     await page.locator('[name=matricula]').fill('MN 7777');
     await page.locator('[name=especialidad]').fill('Nutrición y entrenamiento');
     await page.locator('[name=telefonoWhatsapp]').fill(pr.telefono);
-    await page.locator('[name=email]').fill(`integral${pr.dni}@e2e.mgnutri`);
+    await page.locator('[name=email]').fill(u.email(pr));
     await u.capturar(page, testInfo, '01-admin-alta-profesional');
     await page.getByRole('button', { name: 'Registrar profesional' }).click();
     const dialogo = page.getByRole('dialog', { name: 'Profesional registrado correctamente' });

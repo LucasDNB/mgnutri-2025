@@ -12,9 +12,14 @@ main.append(encabezado('Deudores', [['Pagos', '/admin/pagos.html'], ['Deudores']
   h('button', { class: 'btn secundario', onclick: () => descargar(`/deudores?orden=${orden.value}&formato=xlsx`) }, 'Excel')),
 h('div', { class: 'tarjeta' }, orden, h('div', { style: 'margin-top:.8rem' }, res)));
 
+// Cada carga lleva un número: si llega la respuesta de un pedido viejo (p. ej. la carga inicial después de
+// aplicar un filtro), se descarta para no pisar el resultado más reciente.
+let pedidos = 0;
 async function cargar() {
+  const n = ++pedidos;
   try {
     const lista = await api.get(`/deudores?orden=${orden.value}`);
+    if (n !== pedidos) return;
     const total = lista.reduce((s, d) => s + Number(d.saldo), 0);
     vaciar(res, h('p', {}, `${lista.length} paciente(s) con saldo deudor · Total: `, h('strong', {}, fmt.moneda(total))), tabla([
       { titulo: 'Paciente', render: d => [h('a', { href: `/admin/pagos.html?pacienteId=${d.pacienteId}` }, d.paciente), d.baja ? chip('Baja', 'FINALIZADO') : null] },

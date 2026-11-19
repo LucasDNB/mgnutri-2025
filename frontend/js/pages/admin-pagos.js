@@ -22,11 +22,15 @@ buscador.addEventListener('input', demorar(async () => {
     `${p.apellido}, ${p.nombre} · ${p.nroDocumento}`)));
 }));
 
+// Cada carga lleva un número: si llega la respuesta de un pedido viejo, se descarta para no pisar el resultado más reciente.
+let pedidos = 0;
 async function cargar() {
+  const n = ++pedidos;
   if (!pacienteId) { vaciar(cuentaEl, h('div', { class: 'vacio' }, 'Buscá un paciente para ver su cuenta corriente.')); return; }
   history.replaceState(null, '', `?pacienteId=${pacienteId}`);
   try {
     const c = await api.get(`/pacientes/${pacienteId}/cuenta`);
+    if (n !== pedidos) return;
     const situacion = { DEUDOR: ['Saldo deudor', 'ROJO'], A_FAVOR: ['Saldo a favor', 'OK'], AL_DIA: ['Al día', 'OK'] }[c.situacion];
     vaciar(cuentaEl,
       h('div', { class: 'tarjeta' },

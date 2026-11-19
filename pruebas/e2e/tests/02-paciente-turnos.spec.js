@@ -15,7 +15,7 @@ test('Guion 2 · Alta de paciente y gestión de turnos', async ({ page, playwrig
     await page.locator('[name=fechaNacimiento]').fill('1990-05-14');
     await page.locator('[name=sexo]').selectOption('F');
     await page.locator('[name=telefonoWhatsapp]').fill(pa.telefono);
-    await page.locator('[name=email]').fill(`paciente${pa.dni}@e2e.mgnutri`);
+    await page.locator('[name=email]').fill(u.email(pa));
     await page.locator('[name=objetivo]').fill('Descenso de peso y mejora de la condición física');
     for (const area of ['Nutrición', 'Entrenamiento']) {
       await page.locator('label.check').filter({ hasText: `${pr.apellido}, ${pr.nombre} — ${area}` }).locator('input').check();

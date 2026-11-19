@@ -29,9 +29,14 @@ main.append(encabezado(esPaciente ? 'Mi evolución' : `Evolución de ${paciente.
   h('button', { class: 'btn secundario', onclick: () => descargar(esPaciente ? `/me/reportes/evolucion${qs({ ...rango(), formato: 'pdf' })}` : `/reportes/evolucion/${pacienteId}${qs({ ...rango(), formato: 'pdf' })}`, 'evolucion.pdf').catch(manejarError) }, 'Descargar PDF')),
 h('div', { class: 'tarjeta fila' }, h('label', {}, 'Período: '), periodo, desdeIn, hastaIn), cont);
 
+// Cada carga lleva un número: si llega la respuesta de un pedido viejo (p. ej. la carga inicial después de
+// aplicar un filtro), se descarta para no pisar el resultado más reciente.
+let pedidos = 0;
 async function cargar() {
+  const n = ++pedidos;
   try {
     const ev = await api.get(`${base}${qs(rango())}`);
+    if (n !== pedidos) return;
     if (ev.sinDatos) {
       vaciar(cont, h('div', { class: 'tarjeta vacio' }, 'Todavía no hay mediciones registradas'));
       return;

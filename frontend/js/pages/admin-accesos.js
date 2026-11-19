@@ -20,9 +20,14 @@ form.addEventListener('submit', (e) => { e.preventDefault(); pagina = 0; cargar(
 main.append(encabezado('Registro de accesos', [['Opciones avanzadas', '/admin/opciones.html'], ['Accesos']]),
   h('div', { class: 'tarjeta' }, form), h('div', { class: 'tarjeta' }, res));
 
+// Cada carga lleva un número: si llega la respuesta de un pedido viejo (p. ej. la carga inicial después de
+// aplicar un filtro), se descarta para no pisar el resultado más reciente.
+let pedidos = 0;
 async function cargar() {
+  const n = ++pedidos;
   try {
     const r = await api.get(`/accesos${qs({ ...leerForm(form), page: pagina, size: 25 })}`);
+    if (n !== pedidos) return;
     vaciar(res, tabla([
       { titulo: 'Fecha y hora', render: a => fmt.fechaHora(a.fechaHora) }, { titulo: 'Usuario', campo: 'usuario' }, { titulo: 'Roles', campo: 'roles' },
       { titulo: 'Acción', render: a => chip(a.accion.replaceAll('_', ' ').toLowerCase(), a.accion.includes('FALLIDO') || a.accion === 'BLOQUEO' ? 'ROJO' : 'OK') },

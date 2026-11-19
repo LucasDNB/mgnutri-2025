@@ -182,8 +182,9 @@ cd backend
 
 Abrir <http://localhost:8090> e ingresar como `admin` con la contraseña temporal `Admin2025!` (se pide cambiarla).
 Para tener datos de ejemplo usar `SPRING_PROFILES_ACTIVE=local,demo` sobre una base vacía: crea 5 profesionales
-(`20111111`, `20222222`, `20333333`, `20444444`, `20555555`) y 30 pacientes (usuario `40000000` y siguientes), todos con
-la contraseña `Demo2025!`.
+(`28456712`, `31209845`, `30117652`, `33874019`, `29563388`) y 30 pacientes (usuario: su DNI; la primera, Ana Gómez,
+`36752000`), todos con la contraseña `DEMO_PASSWORD` (`Demo2025!` por defecto). Los datos imitan la realidad (DNI
+acorde a la edad, domicilios y objetivos variados) pero los mails son `@example.com` y los teléfonos `11 00…` (no asignados).
 
 # Despliegue en Azure
 

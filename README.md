@@ -57,14 +57,15 @@ cd backend && ./mvnw spring-boot:run
 Abrir http://localhost:8090 · usuario `admin`, contraseña temporal `Admin2025!` (perfil local; se exige cambiarla).
 El backend sirve también el frontend en local. Swagger UI: http://localhost:8090/swagger-ui.html
 
-Con datos de demostración (5 profesionales y 30 pacientes con 6 meses de historia):
+Con datos de demostración realistas (5 profesionales y 30 pacientes con 6 meses de historia; `DEMO_PACIENTES` y `DEMO_MESES` lo ajustan):
 
 ```bash
 cd backend && SPRING_PROFILES_ACTIVE=local,demo ./mvnw spring-boot:run
 ```
 
-Cuentas demo (contraseña `Demo2025!`): nutricionistas `20111111`, `20222222`; entrenadores `20333333`, `20444444`;
-integral `20555555`; pacientes `40000000`, `40001111`, `40002222`, …
+Cuentas demo (contraseña `DEMO_PASSWORD`, en local `Demo2025!`): nutricionistas `28456712` (Laura López), `31209845` (Sofía Méndez); entrenadores `30117652` (Martín García),
+`33874019` (Tomás Ibarra); integral `29563388` (Mariana Gutiérrez); pacientes: su DNI (la primera, Ana Gómez, `36752000`).
+Los mails usan el dominio reservado `example.com` y los teléfonos el prefijo `11 00` (no asignado), para no escribirle a nadie real.
 
 ## Pruebas
 
@@ -82,7 +83,7 @@ La colección [`postman/mgnutri.postman_collection.json`](postman/mgnutri.postma
 | Rendimiento: k6 con 50 usuarios sobre 500 pacientes / 12 meses | [`pruebas/rendimiento`](pruebas/rendimiento/README.md) | p90 máximo 541 ms (criterio: < 5 s) |
 
 ```bash
-cd pruebas/e2e && npm install && E2E_URL=http://localhost:8092 npx playwright test   # instancia con base propia
+cd pruebas/e2e && npm install && E2E_URL=http://localhost:8092 npx playwright test   # instancia con base propia y RATE_LIMIT_AUTH=1000
 ```
 
 ## Manuales

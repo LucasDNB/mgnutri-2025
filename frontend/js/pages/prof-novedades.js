@@ -10,9 +10,14 @@ const res = h('div');
 main.append(encabezado('Novedades de pacientes'), h('div', { class: 'tarjeta' }, h('label', { class: 'check' }, todas, 'Mostrar también las leídas'), res));
 todas.addEventListener('change', cargar);
 
+// Cada carga lleva un número: si llega la respuesta de un pedido viejo (p. ej. la carga inicial después de
+// aplicar un filtro), se descarta para no pisar el resultado más reciente.
+let pedidos = 0;
 async function cargar() {
+  const n = ++pedidos;
   try {
     const lista = await api.get(`/novedades?leidas=${todas.checked}`);
+    if (n !== pedidos) return;
     vaciar(res, tabla([
       { titulo: 'Fecha', render: n => fmt.fechaHora(n.fecha) },
       { titulo: 'Tipo', render: n => [chip(n.tipo === 'MOLESTIA' ? 'Molestia' : 'Comentario', n.prioritaria ? 'prioritaria' : n.tipo === 'MOLESTIA' ? 'AUSENTE' : ''), n.prioritaria ? chip('Prioritaria', 'prioritaria') : null] },

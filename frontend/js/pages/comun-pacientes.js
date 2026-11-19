@@ -14,9 +14,14 @@ main.append(
   encabezado(esAdmin ? 'Pacientes' : 'Mis pacientes', [], esAdmin ? h('a', { class: 'btn', href: '/admin/paciente-form.html' }, '+ Nuevo paciente') : null),
   h('div', { class: 'tarjeta' }, buscador, h('div', { style: 'margin-top:.8rem' }, resultados)));
 
+// Cada carga lleva un número: si llega la respuesta de un pedido viejo (p. ej. la carga inicial después de
+// aplicar un filtro), se descarta para no pisar el resultado más reciente.
+let pedidos = 0;
 async function cargar() {
+  const n = ++pedidos;
   try {
     const r = await api.get(`/pacientes${qs({ q: buscador.value, page: pagina, size: 20 })}`);
+    if (n !== pedidos) return;
     const cols = [
       { titulo: 'Apellido y nombre', render: p => h('a', { href: `/comun/paciente.html?id=${p.id}` }, `${p.apellido}, ${p.nombre}`) },
       { titulo: 'Documento', campo: 'nroDocumento' },

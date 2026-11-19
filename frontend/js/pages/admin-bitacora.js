@@ -23,9 +23,14 @@ form.addEventListener('submit', (e) => { e.preventDefault(); pagina = 0; cargar(
 main.append(encabezado('Bitácora', [['Opciones avanzadas', '/admin/opciones.html'], ['Bitácora']]),
   h('details', { class: 'tarjeta', open: window.innerWidth > 700 }, h('summary', {}, 'Filtros'), form), h('div', { class: 'tarjeta' }, res));
 
+// Cada carga lleva un número: si llega la respuesta de un pedido viejo (p. ej. la carga inicial después de
+// aplicar un filtro), se descarta para no pisar el resultado más reciente.
+let pedidos = 0;
 async function cargar() {
+  const n = ++pedidos;
   try {
     const r = await api.get(`/bitacora${qs({ ...leerForm(form), page: pagina, size: 25 })}`);
+    if (n !== pedidos) return;
     vaciar(res, tabla([
       { titulo: 'Fecha y hora', render: e => fmt.fechaHora(e.fechaHora) }, { titulo: 'Usuario', campo: 'username' },
       { titulo: 'Módulo', campo: 'modulo' }, { titulo: 'Evento', campo: 'tipoEvento' }, { titulo: 'Entidad', render: e => `${e.entidad || ''} ${e.entidadId || ''}` },

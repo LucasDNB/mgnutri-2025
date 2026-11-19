@@ -14,6 +14,8 @@ const BASE = __ENV.BASE || 'http://localhost:8090/api/v1';
 const PASSWORD = __ENV.DEMO_PASSWORD || 'Demo2025!';
 // Pacientes con plan y rutina activos (pacientes-activos.json, exportado de la base de prueba).
 const PACIENTES = new SharedArray('pacientes', () => JSON.parse(open('./pacientes-activos.json')));
+// Cuentas del dataset de la corrida del 18/11/2026 (cargador anterior). Con el cargador actual: 28456712, 31209845,
+// 30117652, 33874019, 29563388, y volver a exportar pacientes-activos.json.
 const PROFESIONALES = ['20111111', '20222222', '20333333', '20444444', '20555555'];
 const OPERACIONES = ['login', 'mi_plan', 'mi_rutina', 'calendario_semanal', 'ficha_paciente', 'reporte_turnos_mensual'];
 
