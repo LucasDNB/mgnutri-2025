@@ -9,6 +9,7 @@ import ar.edu.usal.mgnutri.common.error.ErrorCode;
 import ar.edu.usal.mgnutri.common.security.CurrentUser;
 import ar.edu.usal.mgnutri.common.security.UsuarioPrincipal;
 import ar.edu.usal.mgnutri.config.MgnutriProperties;
+import ar.edu.usal.mgnutri.config.SecurityConfig;
 import ar.edu.usal.mgnutri.configuracion.service.ConfiguracionService;
 import ar.edu.usal.mgnutri.pacientes.dao.PacienteDao;
 import ar.edu.usal.mgnutri.profesionales.dao.ProfesionalDao;
@@ -50,6 +51,7 @@ public class AuthService {
     private final MgnutriProperties.Seguridad seg;
     private final Clock clock;
     private final TransactionTemplate tx;
+    private final String hashTiempoConstante;
 
     public AuthService(UsuarioDao usuarioDao, PasswordEncoder encoder, JwtService jwt, TokenRevocacionService revocacion,
                        RegistroAccesoService accesos, PerfilUsuarioService perfiles, PasswordPolicy policy,
@@ -69,6 +71,9 @@ public class AuthService {
         this.seg = props.seguridad();
         this.clock = clock;
         this.tx = tx;
+        // Hash de una contraseña al azar, con el costo vigente: se verifica igual cuando el usuario no existe, para no
+        // delatar por el tiempo de respuesta qué usuarios existen.
+        this.hashTiempoConstante = encoder.encode(java.util.UUID.randomUUID().toString());
     }
 
     /**
@@ -77,23 +82,34 @@ public class AuthService {
      */
     public LoginResponse login(LoginRequest req) {
         String username = req.username().trim();
-        // BCrypt (costo 12) se calcula fuera de la transacción: adentro retenía una conexión del pool durante todo el
-        // cálculo y con 50 ingresos simultáneos el pool se agotaba (prueba k6 en Azure, 19/11/2026).
+        // BCrypt se calcula fuera de la transacción: adentro retenía una conexión del pool durante todo el cálculo y con
+        // 50 ingresos simultáneos el pool se agotaba (prueba k6 en Azure, 19/11/2026).
         String hash = usuarioDao.findByUsername(username).map(Usuario::getPasswordHash).orElse(null);
-        boolean coincide = encoder.matches(req.password(), hash != null ? hash : HASH_TIEMPO_CONSTANTE) && hash != null;
+        boolean coincide = encoder.matches(req.password(), hash != null ? hash : hashTiempoConstante) && hash != null;
+        // Hash con un costo distinto del vigente (p. ej. 12, el anterior): se rehashea con la contraseña recién verificada.
+        String rehash = coincide && costo(hash) != SecurityConfig.BCRYPT_COSTO ? encoder.encode(req.password()) : null;
         // La actualización de intentos debe persistir aunque el login falle: se usa una transacción explícita.
-        Resultado r = tx.execute(status -> intentar(username, hash, coincide));
+        Resultado r = tx.execute(status -> intentar(username, hash, coincide, rehash));
         if (r.error != null) {
             throw r.error;
         }
         return r.respuesta;
     }
 
-    /** Hash de una contraseña cualquiera: se verifica igual cuando el usuario no existe, para no delatarlo por el tiempo. */
-    private static final String HASH_TIEMPO_CONSTANTE = "$2a$12$C6UzMDM.H6dfI/f/IKcEeO7FHq9aBp8.0NUIyRf4tTOR8f4CRAg8a";
+    /** Costo de un hash BCrypt ({@code $2a$10$...}); -1 si no tiene ese formato. */
+    static int costo(String hash) {
+        try {
+            return Integer.parseInt(hash.substring(4, 6));
+        } catch (RuntimeException e) {
+            return -1;
+        }
+    }
 
-    /** @param hashVerificado hash contra el que se calculó {@code coincide}; si cambió mientras tanto, cuenta como fallo. */
-    private Resultado intentar(String username, String hashVerificado, boolean coincide) {
+    /**
+     * @param hashVerificado hash contra el que se calculó {@code coincide}; si cambió mientras tanto, cuenta como fallo.
+     * @param rehash         hash nuevo con el costo vigente, o null si el actual ya lo tiene.
+     */
+    private Resultado intentar(String username, String hashVerificado, boolean coincide, String rehash) {
         Instant ahora = ahora();
         Usuario u = usuarioDao.findByUsername(username).orElse(null);
         if (u == null || u.getEstado() == Usuario.Estado.BAJA) {
@@ -119,6 +135,9 @@ public class AuthService {
                 return Resultado.error(bloqueado(u.getBloqueadoHasta()));
             }
             return Resultado.error(new BusinessException(ErrorCode.CREDENCIALES_INVALIDAS, MSJ_CREDENCIALES));
+        }
+        if (rehash != null) {
+            u.setPasswordHash(rehash);
         }
         u.setIntentosFallidos(0);
         u.setBloqueadoHasta(null);

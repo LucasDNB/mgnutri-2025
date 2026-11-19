@@ -33,9 +33,16 @@ public class SecurityConfig {
             "/api/v1/salud", "/api/v1/terminos/vigentes", "/actuator/health"
     };
 
+    /**
+     * Costo de BCrypt: 10 es el mínimo que recomienda OWASP. Con 12, cada login llevaba ~1 s de CPU en App Service B2 y
+     * 50 ingresos simultáneos daban p90 de 25 s (prueba k6, 19/11/2026). Los hashes con otro costo se rehashean en el
+     * próximo login correcto (AuthService).
+     */
+    public static final int BCRYPT_COSTO = 10;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
+        return new BCryptPasswordEncoder(BCRYPT_COSTO);
     }
 
     @Bean
