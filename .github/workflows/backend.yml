@@ -21,8 +21,19 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: maven
+      # Docker Engine del runner exige API ≥ 1.40 y el cliente de Testcontainers pide 1.32 por defecto: sin esto
+      # IntegracionIT quedaba omitida (disabledWithoutDocker) y CI pasaba igual.
+      - name: Versión de la API de Docker para Testcontainers
+        run: echo "api.version=1.44" > ~/.docker-java.properties
       - name: Compilar y probar (unitarias + Testcontainers SQL Server)
         run: ./mvnw -B verify
+        env:
+          DOCKER_API_VERSION: '1.44'
+      - name: Verificar que las pruebas de integración corrieron
+        run: |
+          f=target/failsafe-reports/TEST-ar.edu.usal.mgnutri.IntegracionIT.xml
+          grep -o 'tests="[0-9]*"[^>]*skipped="[0-9]*"\|skipped="[0-9]*"' "$f" | head -1
+          if grep -q 'skipped="[1-9]' "$f"; then echo "::error::IntegracionIT quedó omitida (¿Docker no disponible?)"; exit 1; fi
       - uses: actions/upload-artifact@v4
         with:
           name: mgnutri-jar
