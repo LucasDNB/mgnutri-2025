@@ -17,7 +17,7 @@ exportan a **Azure Blob Storage**.
 | Documentos | OpenPDF + JFreeChart (PDF), Apache POI (Excel) |
 | Frontend | HTML + CSS + JavaScript (módulos ES) · Chart.js |
 | Base de datos | SQL Server 2022 / Azure SQL Database |
-| Nube | Azure App Service (Linux), Static Web Apps, SQL Database, Blob Storage, Application Insights |
+| Nube | Azure App Service (Linux), SQL Database, Blob Storage, Application Insights |
 | Integraciones | WhatsApp Cloud API (Meta) |
 | Pruebas | JUnit 5, Mockito, Testcontainers, ArchUnit, Postman/Newman, Playwright, k6 |
 
@@ -31,7 +31,7 @@ El código fuente está en <https://github.com/LucasDNB/mgnutri-2025>. Las decis
 ```
  Navegador (PC / tablet / celular)          Azure App Service (Linux)
  HTML + CSS + JS servido     ─ HTTPS/JSON ─▶  Spring Boot 3 · Java 17
- por Azure Static Web Apps   ◀─ Bearer JWT ─  /api/v1/** · jobs
+ por el mismo App Service    ◀─ Bearer JWT ─  /api/v1/** · jobs
                                                │ JDBC         │ HTTPS
                                                ▼              ▼
                                        Azure SQL Database   WhatsApp
@@ -82,7 +82,7 @@ Componentes transversales:
 - Límite de solicitudes a `/auth/**` por IP y por minuto (`RATE_LIMIT_AUTH`, 10 por defecto).
 - Todos los ingresos, salidas e intentos fallidos se guardan en `registro_acceso` (RF-16).
 - El token vive en `sessionStorage`: se borra al cerrar la pestaña.
-- Static Web Apps agrega CSP y cabeceras de seguridad (`frontend/staticwebapp.config.json`).
+- El backend agrega CSP, HSTS, `X-Frame-Options` y `Referrer-Policy` a todas las respuestas, incluidas las páginas (`SecurityConfig`).
 
 Matriz de permisos resumida (el profesional integral tiene la unión de nutricionista y entrenador):
 
@@ -191,11 +191,10 @@ la contraseña `Demo2025!`.
 
 | Recurso | Nombre sugerido | Configuración |
 |---|---|---|
-| Resource Group | `rg-mgnutri` | Región Brazil South o East US |
+| Resource Group | `rg-mgnutri` | Región permitida por la suscripción (Azure for Students: Chile Central) |
 | Azure SQL Server + DB | `sql-mgnutri` / `mgnutri` | Basic o serverless; firewall: servicios de Azure + IP de administración |
 | App Service Plan | `asp-mgnutri` | Linux **B1** con *Always On* (necesario para los jobs) |
-| Web App | `app-mgnutri` | Java 17 SE; inicio: `java -jar /home/site/wwwroot/mgnutri.jar` |
-| Static Web App | `swa-mgnutri` | Origen: carpeta `frontend/` (sin build) |
+| Web App | `app-mgnutri` | Java 17 SE; *health check* `/api/v1/salud`; sirve la API y el frontend |
 | Storage Account | `stmgnutri` | Contenedor privado `backups` |
 | Application Insights | `appi-mgnutri` | Prueba de disponibilidad sobre `/api/v1/salud` cada 5 min (RNF 3.2) |
 
@@ -208,7 +207,8 @@ la contraseña `Demo2025!`.
 CREATE USER mgnutri_migracion WITH PASSWORD = '<secreto>';
 ALTER ROLE db_owner ADD MEMBER mgnutri_migracion;
 CREATE USER mgnutri_app_user WITH PASSWORD = '<secreto>';
--- El rol mgnutri_app lo crea la migración V2 (incluye DENY UPDATE/DELETE sobre bitácora y accesos)
+-- La migración V2 crea el rol si no existe y le da los permisos (incluye DENY UPDATE/DELETE sobre bitácora y accesos)
+CREATE ROLE mgnutri_app;
 ALTER ROLE mgnutri_app ADD MEMBER mgnutri_app_user;
 ```
 
@@ -224,20 +224,23 @@ ALTER ROLE mgnutri_app ADD MEMBER mgnutri_app_user;
    el servidor SQL (la exportación BACPAC se pide por la API de Azure Resource Manager). El acceso al contenedor de
    Storage usa la clave de la cuenta (`AZ_STORAGE_KEY`).
 3. Publicar `mgnutri.jar` (lo hace el pipeline) y verificar `GET /api/v1/salud` → `{"estado":"OK","bd":"OK"}`.
-4. En *Opciones avanzadas › Configuración*, cargar `centro.url_sistema` con la URL del frontend (se usa en los mensajes).
+4. En *Opciones avanzadas › Configuración*, cargar `centro.url_sistema` con la URL del sistema (se usa en los mensajes).
 
-## Frontend (Static Web Apps)
+## Frontend
 
-- Se publica la carpeta `frontend/` tal cual.
-- El workflow `frontend.yml` reemplaza `frontend/js/config.js` con la URL del backend (secreto `API_BASE_URL`).
-- `staticwebapp.config.json` define CSP y cabeceras de seguridad; ajustar `connect-src` si el backend usa otro dominio.
+- Maven copia la carpeta `frontend/` dentro del jar (`classpath:/static`) y Spring Boot la sirve en el mismo dominio
+  que la API: no hace falta CORS ni configurar la URL del backend (`config.js` usa rutas relativas).
+- En local, `FRONTEND_PATH` sirve los archivos desde disco para ver los cambios sin recompilar.
+- Alternativa: publicar `frontend/` en Azure Static Web Apps (workflow `frontend.yml`, secretos
+  `AZURE_STATIC_WEB_APPS_API_TOKEN` y `API_BASE_URL`, cabeceras en `staticwebapp.config.json`). Se descartó en la
+  instalación actual porque la suscripción Azure for Students no permite Static Web Apps en sus regiones.
 
 ## CI/CD (GitHub Actions)
 
 | Workflow | Disparador | Pasos |
 |---|---|---|
-| `backend.yml` | push / PR a `main` en `backend/**` | `mvn verify` (unitarias, ArchUnit, Testcontainers) → API levantada + Newman → deploy a App Service si existe el secreto `AZURE_WEBAPP_PUBLISH_PROFILE` |
-| `frontend.yml` | push a `main` en `frontend/**` | verificación de sintaxis JS → deploy a Static Web Apps si existen `AZURE_STATIC_WEB_APPS_API_TOKEN` y `API_BASE_URL` |
+| `backend.yml` | push / PR a `main` en `backend/**` o `frontend/**`, o manual | `mvn verify` (unitarias, ArchUnit, Testcontainers) → API levantada + Newman → deploy a App Service si existe el secreto `AZURE_WEBAPP_PUBLISH_PROFILE` |
+| `frontend.yml` | push a `main` en `frontend/**` | verificación de sintaxis JS → deploy a Static Web Apps sólo si existe `AZURE_STATIC_WEB_APPS_API_TOKEN` (alternativa) |
 
 Cada entrega se etiqueta `vX.Y.Z` (RNF 3.5). Mientras no estén cargados los secretos, los pasos de despliegue se omiten.
 

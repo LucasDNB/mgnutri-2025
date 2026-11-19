@@ -25,7 +25,7 @@ Desarrollado a partir del paquete de especificaciones en [`specs/`](specs/), [`d
 
 Java 17 · Spring Boot 3.3 · Hibernate/JPA (DAOs Spring Data) · SQL Server / Azure SQL · Flyway ·
 Frontend HTML + CSS + JavaScript (módulos ES, sin framework) + Chart.js · OpenPDF + JFreeChart · Apache POI ·
-WhatsApp Cloud API · Azure App Service, Static Web Apps, SQL Database y Blob Storage.
+WhatsApp Cloud API · Azure App Service, SQL Database y Blob Storage.
 
 ```
 backend/   Spring Boot (controller → service → dao por módulo), migraciones Flyway, tests
@@ -105,3 +105,4 @@ Además de las decisiones D-01…D-35 de [`docs/01-decisiones.md`](docs/01-decis
 - R-T1 (un turno por paciente y profesional cada 7 días) se evalúa en la ventana de ±7 días alrededor del turno pedido.
 - Las notificaciones se encolan con una llamada directa al outbox dentro de la misma transacción del evento (equivalente al listener `BEFORE_COMMIT` de D-35).
 - En local la API corre en el puerto 8090.
+- El frontend se empaqueta en el jar y lo sirve el mismo App Service, en lugar de Static Web Apps: la suscripción Azure for Students sólo permite regiones donde Static Web Apps no existe. El backend ya aplica la misma CSP y cabeceras de seguridad.

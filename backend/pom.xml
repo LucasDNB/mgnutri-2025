@@ -65,6 +65,19 @@
 
     <build>
         <finalName>mgnutri</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <!-- El frontend viaja dentro del jar (classpath:/static) y lo sirve el mismo App Service -->
+            <resource>
+                <directory>../frontend</directory>
+                <targetPath>static</targetPath>
+                <excludes>
+                    <exclude>staticwebapp.config.json</exclude>
+                </excludes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

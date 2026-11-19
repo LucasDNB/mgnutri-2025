@@ -9,8 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * En local/demo el backend sirve el frontend estático (FRONTEND_PATH). En Azure el frontend
- * se publica en Static Web Apps y esta configuración queda inactiva.
+ * En local/demo el backend sirve el frontend desde disco (FRONTEND_PATH) para ver los cambios sin recompilar.
+ * Sin FRONTEND_PATH (Azure) se usa la copia empaquetada en el jar (classpath:/static), que Spring Boot
+ * sirve por defecto con las mismas cabeceras de seguridad de SecurityConfig.
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {

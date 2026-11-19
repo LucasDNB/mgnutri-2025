@@ -3,9 +3,10 @@ name: backend
 on:
   push:
     branches: [main]
-    paths: ['backend/**', '.github/workflows/backend.yml']
+    paths: ['backend/**', 'frontend/**', '.github/workflows/backend.yml']
   pull_request:
-    paths: ['backend/**']
+    paths: ['backend/**', 'frontend/**']
+  workflow_dispatch:
 
 jobs:
   build:

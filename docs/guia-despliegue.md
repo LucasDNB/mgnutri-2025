@@ -4,11 +4,10 @@
 
 | Recurso | Nombre sugerido | Configuración |
 |---|---|---|
-| Resource Group | `rg-mgnutri` | Región Brazil South o East US |
+| Resource Group | `rg-mgnutri` | Región permitida por la suscripción (Azure for Students: Chile Central) |
 | Azure SQL Server + DB | `sql-mgnutri` / `mgnutri` | Basic o serverless; firewall: servicios de Azure + IP del desarrollador |
 | App Service Plan | `asp-mgnutri` | Linux **B1** con *Always On* (necesario para los jobs, D-32) |
-| Web App | `app-mgnutri` | Java 17 SE; startup: `java -jar /home/site/wwwroot/mgnutri.jar` |
-| Static Web App | `swa-mgnutri` | Origen: carpeta `frontend/` (sin build) |
+| Web App | `app-mgnutri` | Java 17 SE; health check `/api/v1/salud`; sirve la API y el frontend (empaquetado en el jar) |
 | Storage Account | `stmgnutri` | Contenedor privado `backups` |
 | Application Insights | `appi-mgnutri` | Alerta de disponibilidad sobre `/api/v1/salud` cada 5 min (RNF 3.2) |
 
@@ -21,7 +20,8 @@
 CREATE USER mgnutri_migracion WITH PASSWORD = '<secreto>';
 ALTER ROLE db_owner ADD MEMBER mgnutri_migracion;
 CREATE USER mgnutri_app_user WITH PASSWORD = '<secreto>';
--- El rol mgnutri_app lo crea la migración V2 (incluye DENY UPDATE/DELETE sobre bitácora y accesos)
+-- La migración V2 crea el rol si no existe y le da los permisos (incluye DENY UPDATE/DELETE sobre bitácora y accesos)
+CREATE ROLE mgnutri_app;
 ALTER ROLE mgnutri_app ADD MEMBER mgnutri_app_user;
 ```
 
@@ -41,25 +41,25 @@ Todas las variables de [`.env.example`](../.env.example). Mínimas para producci
 | `JWT_SECRET` | `openssl rand -base64 48` |
 | `DATA_KEY_BASE64` | `openssl rand -base64 32` (**no perderla**: cifra los datos sensibles) |
 | `ADMIN_PASSWORD_INICIAL` | contraseña temporal del primer administrador |
-| `FRONTEND_URL` | `https://<swa>.azurestaticapps.net` (CORS) |
+| `FRONTEND_URL` | `https://<app>.azurewebsites.net` (CORS; mismo dominio que la API) |
 | `WA_ENABLED`, `WA_PHONE_ID`, `WA_TOKEN` | WhatsApp Cloud API |
 | `BACKUP_PROVIDER=azure` y `AZ_*` | exportación BACPAC (identidad administrada con rol *SQL DB Contributor*) |
 
 Además, en `configuracion_sistema` (pantalla *Opciones avanzadas › Configuración*): `centro.url_sistema` con la URL del frontend.
 
-## 4. Frontend (Static Web Apps)
+## 4. Frontend
 
-- Publicar la carpeta `frontend/` tal cual (no requiere build).
-- Antes de publicar, `frontend/js/config.js` debe apuntar al backend: el workflow `frontend.yml` lo reemplaza con
-  `globalThis.MGNUTRI_API_BASE = 'https://app-mgnutri.azurewebsites.net'` mediante el secreto `API_BASE_URL`.
-- `staticwebapp.config.json` define CSP y cabeceras de seguridad. Ajustar `connect-src` si el backend usa otro dominio.
+- Maven empaqueta `frontend/` dentro del jar (`classpath:/static`) y el App Service lo sirve en el mismo dominio que la
+  API, con las cabeceras de seguridad de `SecurityConfig`. Un solo despliegue, sin CORS.
+- Alternativa (no usada con Azure for Students, que no permite Static Web Apps en sus regiones): publicar `frontend/`
+  en Static Web Apps con el workflow `frontend.yml` y los secretos `AZURE_STATIC_WEB_APPS_API_TOKEN` y `API_BASE_URL`.
 
 ## 5. CI/CD (GitHub Actions)
 
 | Workflow | Disparador | Pasos |
 |---|---|---|
-| `.github/workflows/backend.yml` | push / PR a `main` en `backend/**` | `mvn verify` (unitarias + Testcontainers) → empaquetado → deploy a App Service si existe el secreto `AZURE_WEBAPP_PUBLISH_PROFILE` |
-| `.github/workflows/frontend.yml` | push a `main` en `frontend/**` | sintaxis JS (`node --check`) → deploy a Static Web Apps si existe `AZURE_STATIC_WEB_APPS_API_TOKEN` |
+| `.github/workflows/backend.yml` | push / PR a `main` en `backend/**` o `frontend/**`, o manual | `mvn verify` (unitarias + Testcontainers) → empaquetado → deploy a App Service si existe el secreto `AZURE_WEBAPP_PUBLISH_PROFILE` |
+| `.github/workflows/frontend.yml` | push a `main` en `frontend/**` | sintaxis JS (`node --check`) → deploy a Static Web Apps si existe `AZURE_STATIC_WEB_APPS_API_TOKEN` (alternativa) |
 
 Etiquetar cada entrega con `vX.Y.Z` (RNF 3.5).
 
