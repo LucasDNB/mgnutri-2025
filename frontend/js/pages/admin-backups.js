@@ -29,7 +29,7 @@ async function cargar() {
 }
 
 async function generar() {
-  if (!(await confirmar('La operación puede tardar varios minutos. El sistema sigue disponible.', { texto: 'Generar backup' }))) return;
+  if (!(await confirmar('La copia tarda varios minutos (unos 5 en Azure) y mientras se genera el sistema puede responder más lento. Conviene generarla fuera del horario de atención.', { texto: 'Generar backup' }))) return;
   try { await api.post('/backups'); toast('Backup iniciado'); cargar(); } catch (e) { manejarError(e); }
 }
 

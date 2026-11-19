@@ -281,6 +281,9 @@ Objetivo: tiempo de recuperación de 2 horas o menos (spec 15).
 - **Automático de Azure SQL**: restauración a un punto en el tiempo (retención de 7 días en Basic); procedimiento (a).
 - **BACPAC del sistema**: *Backups › Generar backup* exporta `mgnutri-AAAAMMDD-HHmmss.bacpac` al contenedor `backups`;
   la descarga usa un enlace temporal de 15 minutos. Para restaurar: procedimiento (b).
+- En el plan Basic (5 DTU) la exportación lleva la base al 100 % durante ~5 minutos y el sistema casi no responde:
+  generar las copias manuales fuera del horario de atención y programar las automáticas de noche (si hiciera falta,
+  subir la base a S0 mientras dura la exportación).
 - **Local (Docker)**: `BACKUP DATABASE` a `/var/opt/mssql/backup`; restaurar con
   `RESTORE DATABASE mgnutri FROM DISK = '/var/opt/mssql/backup/<archivo>.bak' WITH REPLACE`.
 - Los backups programados se borran automáticamente al vencer la retención configurada. Un backup fallido genera una

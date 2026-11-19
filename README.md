@@ -79,7 +79,7 @@ La colección [`postman/mgnutri.postman_collection.json`](postman/mgnutri.postma
 
 | Prueba | Dónde | Último resultado |
 |---|---|---|
-| E2E: los 8 guiones de la spec 16 con Playwright en Chrome de escritorio y Chrome Android | [`pruebas/e2e`](pruebas/e2e/RESULTADOS.md) | 16/16 aprobados |
+| E2E: los 8 guiones de la spec 16 con Playwright en Chrome de escritorio y Chrome Android | [`pruebas/e2e`](pruebas/e2e/RESULTADOS.md) | 16/16 aprobados en Azure (staging) con datos realistas |
 | Rendimiento: k6 con 50 usuarios sobre 500 pacientes / 12 meses | [`pruebas/rendimiento`](pruebas/rendimiento/README.md) | p90 máximo 541 ms (criterio: < 5 s) |
 
 ```bash
