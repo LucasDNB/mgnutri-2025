@@ -63,13 +63,22 @@ public class WhatsAppCloudAdapter implements MensajeriaPort {
         }
     }
 
+    /**
+     * Celulares argentinos (+54 9 …) se envían sin el 9: Meta los resuelve al mismo WhatsApp (devuelve wa_id 549…), y
+     * con el 9 rechaza a los destinatarios verificados del número de prueba con #131030 (verificado el 22/11/2026).
+     */
+    static String destino(String telefonoE164) {
+        String d = Textos.digitos(telefonoE164);
+        return d != null && d.length() == 13 && d.startsWith("549") ? "54" + d.substring(3) : d;
+    }
+
     static Map<String, Object> cuerpo(String plantilla, String telefonoE164, List<String> parametros, String idioma) {
         List<Map<String, Object>> params = parametros.stream()
                 .map(p -> Map.<String, Object>of("type", "text", "text", p == null || p.isBlank() ? "-" : p))
                 .toList();
         return Map.of(
                 "messaging_product", "whatsapp",
-                "to", Textos.digitos(telefonoE164),
+                "to", destino(telefonoE164),
                 "type", "template",
                 "template", Map.of(
                         "name", plantilla,
