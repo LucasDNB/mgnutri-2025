@@ -43,8 +43,8 @@ automatizados de [`pruebas/e2e`](../pruebas/e2e/RESULTADOS.md), ejecutados en Ch
 | CU-34 | Reporte de planes | RF-14 | 12 | 4 | 12 · R-5 | OK · Newman 12-reportes · E2E guion 7 |
 | CU-35 | Registrar evento en bitácora | RF-17 | 14 | 1 | 14 · US-14.1 | OK · IntegracionIT (eventos ALTA), ArquitecturaTest · E2E guion 7 |
 | CU-36 | Consultar bitácora | RF-17 | 14 | 1 | 14 · US-14.2 | OK · Newman 14-bitacora, IntegracionIT (inmutable) · E2E guion 7 |
-| CU-37 | Notificación de alta (WhatsApp) | RF-13 | 11 (+1.3, 2.3) | 4 (puerto en 1) | 11 · US-11.1 | OK · IntegracionIT (outbox CREDENCIALES) · E2E guion 1 |
-| CU-38 | Recordatorio de turno (WhatsApp) | RF-07 / RF-13 | 11 (+3.3) | 4 | 11 · US-11.2 | OK · job recordatorio-turnos (ejecución manual) · E2E guion 6 |
+| CU-37 | Notificación de alta (WhatsApp) | RF-13 | 11 (+1.3, 2.3) | 4 (puerto en 1) | 11 · US-11.1 | OK · IntegracionIT (outbox CREDENCIALES) · E2E guion 1 · envío real en producción 22/11/2026 (mensaje con enlace de activación recibido y enlace usado) |
+| CU-38 | Recordatorio de turno (WhatsApp) | RF-07 / RF-13 | 11 (+3.3) | 4 | 11 · US-11.2 | OK · job recordatorio-turnos (ejecución manual) · E2E guion 6 · plantilla aprobada por Meta 22/11/2026 (primer envío real: job de las 9:00 del 23/11) |
 | CU-39 | Notificación de deuda (WhatsApp) | RF-07 / RF-13 | 11 (+7.2) | 4 | 11 · US-11.3 | OK · job recordatorio-deuda · E2E guion 6 |
 | CU-40 | Comentario sobre rutina | RF-15 | 9 | 3 | 09 · US-09.5 | OK · comentarios de rutina |
 | CU-41 | Comentario sobre plan | RF-15 | 8 | 3 | 08 · US-08.4 | OK · comentarios de plan · E2E guion 3 |

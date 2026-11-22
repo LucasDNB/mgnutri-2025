@@ -83,7 +83,10 @@ Etiquetar cada entrega con `vX.Y.Z` (RNF 3.5).
 7. Producción real: agregar un número propio (no puede estar usando la app de WhatsApp al mismo tiempo), verificarlo
    por SMS y cargar un medio de pago en la cuenta de WhatsApp; Meta cobra cada mensaje de plantilla *Utility* enviado
    fuera de una conversación abierta por el paciente.
-8. Con `WA_ENABLED=false` los mensajes se registran en el log y quedan `ENVIADA` con id `LOCAL-…`. Al activarlo no se
+8. Número de prueba: los celulares argentinos se envían como `54…` sin el 9 (`WhatsAppCloudAdapter.destino`); con el 9
+   Meta los rechaza con #131030 aunque estén verificados. Revisar que `centro.url_sistema` tenga la URL pública: los
+   enlaces de activación y recupero se arman con ese valor.
+9. Con `WA_ENABLED=false` los mensajes se registran en el log y quedan `ENVIADA` con id `LOCAL-…`. Al activarlo no se
    reenvían.
 
 ## 7. Jobs programados (zona America/Argentina/Buenos_Aires)

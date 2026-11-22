@@ -16,10 +16,11 @@ demostración realistas, monitoreo de disponibilidad y backups probados.
   - Rendimiento: p90 máximo de 2,39 s con 50 usuarios y 500 pacientes, contra un límite de 5 s.
   - Restauración: 8 a 15 minutos, contra un objetivo de 2 horas.
   - Disponibilidad: monitoreada cada 5 minutos, con alerta por mail.
-- **Pendiente:** solo queda el envío real por WhatsApp a pacientes. El código, la cuenta de Meta y las plantillas están
-  listos, y las plantillas esperan la aprobación de Meta.
+- **WhatsApp:** verificado en producción el 22/11/2026, con las 8 plantillas aprobadas por Meta. Al dar de alta un
+  usuario llega el mensaje con el enlace de activación, y el enlace permite elegir la contraseña. Mientras se use el
+  número de prueba de Meta, solo se puede escribir a números verificados (hasta 5).
 
-Durante las pruebas finales en Azure aparecieron **10 defectos** que no se veían en el entorno local. Todos se
+Durante las pruebas finales en Azure aparecieron **11 defectos** que no se veían en el entorno local. Todos se
 corrigieron y volvieron a probarse (sección «Defectos»).
 
 | Entregable (SDP) | Estado | Dónde |
@@ -38,7 +39,7 @@ corrigieron y volvieron a probarse (sección «Defectos»).
 | Módulo Entrenamiento: rutinas, registro de cargas, progreso, molestias | Cumplido: rutinas por día, registro de series y cargas, molestias prioritarias, alternativas | CU-21 a CU-28 · guion 4 |
 | Seguimiento de la evolución | Cumplido: antropometría, gráficos y reporte de evolución | CU-19, 20, 32 · guion 5 |
 | Pagos: cuenta corriente, comprobantes, deudores | Cumplido: cargos, pagos con saldo FIFO, comprobante PDF, deudores y recordatorios | CU-44 a CU-46 · guion 6 |
-| Comunicación por WhatsApp | Implementado y conectado a Meta; envío real a la espera de la aprobación de plantillas | CU-37 a CU-39 · sección «Pendientes» |
+| Comunicación por WhatsApp | Cumplido: 8 plantillas aprobadas; envío real verificado (credenciales con enlace de activación, confirmación de turno) | CU-37 a CU-39 · prueba en producción del 22/11/2026 |
 | Reportes en pantalla, PDF y Excel | Cumplido: 5 reportes | CU-30 a CU-34 · guion 7 |
 | Seguridad, registro de accesos y bitácora | Cumplido: roles, bloqueo por intentos, recupero, cifrado de datos sensibles, bitácora inmutable | CU-35, 36, 47 a 50 · guiones 1 y 7 |
 | Backups y restauración (RTO ≤ 2 h) | Cumplido: manual, programado y restauración ensayada | CU-51, 52 · ensayo del 19/11/2026 |
@@ -101,6 +102,7 @@ pruebas manuales.
 | 8 | BCrypt dentro de la transacción agotaba el pool de conexiones | Crítica | k6 en Azure (esperas de 30 s) | Cálculo antes de la transacción |
 | 9 | BCrypt con costo 12: ~1 s de CPU por login | Mayor | k6 en Azure (login p90 25,7 s) | Costo 10 con rehash automático |
 | 10 | Las pruebas de integración quedaban omitidas en CI sin que el build fallara | Mayor | Revisión de los reportes de CI para este informe | Versión de la API de Docker y control que falla si se omiten |
+| 11 | Los celulares argentinos se enviaban como 549…: Meta los rechazaba como destinatarios no verificados (#131030) y fallaron los 52 primeros envíos | Mayor | Panel de notificaciones en producción | Se envían como 54… sin el 9; Meta los resuelve al mismo WhatsApp |
 
 Los defectos 7 a 9 no aparecían en local: la notebook de desarrollo tiene mucha más CPU que el plan B2 y la base S2.
 Sin la prueba de carga en Azure habrían llegado a producción.
@@ -126,7 +128,7 @@ Trabajo que no estaba en el plan de 124 h y se agregó en el sprint 6:
 - Ajustes por las restricciones de la suscripción de Azure.
 - Ensayo de restauración.
 - Monitoreo y alertas.
-- Corrección de los 10 defectos.
+- Corrección de los 11 defectos.
 - Carga de datos realistas.
 
 # Riesgos
@@ -160,12 +162,15 @@ Trabajo que no estaba en el plan de 124 h y se agregó en el sprint 6:
    permite evita rediseños tardíos.
 6. **Ensayar la restauración.** El ensayo mostró que el BACPAC pierde las contraseñas de los usuarios de la base. Eso
    no está en ninguna guía y en una emergencia real habría costado tiempo.
+7. **Revisar también la configuración guardada en la base.** La URL del sistema (`centro.url_sistema`) seguía
+   apuntando a `localhost` en producción: los enlaces de activación no habrían funcionado. Apareció recién al probar
+   el alta con WhatsApp real.
 
 # Pendientes
 
 | Pendiente | Responsable | Estado |
 |---|---|---|
-| Primer envío real por WhatsApp | Equipo (automático al aprobarse) | 8 plantillas en revisión en Meta; la aplicación ya tiene WhatsApp habilitado |
+| Reintentar o descartar los 52 envíos fallidos previos a la corrección del número | Equipo | Quedaron como fallidos en *Opciones avanzadas › Notificaciones*; son de los pacientes demo y no conviene reenviarlos |
 | Número propio de WhatsApp (hoy es el número de prueba de Meta) | Centro | Requiere un número dedicado y un medio de pago en Meta |
 | Completar el burndown real | Equipo | Columnas marcadas «a completar» |
 | Rotar el token de WhatsApp | Equipo | El token actual circuló por un canal no seguro |
