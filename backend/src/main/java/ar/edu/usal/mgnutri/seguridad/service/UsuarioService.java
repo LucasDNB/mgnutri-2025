@@ -84,6 +84,14 @@ public class UsuarioService {
         return new Credenciales(u.getId(), u.getUsername(), temporal);
     }
 
+    /** Reactivación de un usuario dado de baja: vuelve a ACTIVO con una contraseña temporal nueva. */
+    @Transactional
+    public Credenciales reactivar(Long usuarioId) {
+        Usuario u = obtener(usuarioId);
+        u.setEstado(Usuario.Estado.ACTIVO);
+        return regenerarCredenciales(usuarioId);
+    }
+
     /** Baja: usuario BAJA, contraseña invalidada y sesiones revocadas (CA-01.3.2). */
     @Transactional
     public void darDeBaja(Long usuarioId) {

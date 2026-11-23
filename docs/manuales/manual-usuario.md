@@ -371,7 +371,11 @@ de baja con pacientes asignados. Tocá **Marcar leída** una vez resuelta cada u
 
 Desde la ficha (pestaña **Datos**) podés **Modificar datos**, **Reenviar credenciales** (genera una nueva contraseña
 temporal), **+ Asignar profesional**, **Desasignar** y **Dar de baja**. La baja quita el acceso, cancela los turnos
-futuros (opcionalmente avisando por WhatsApp) y **conserva todo el historial**. No se puede deshacer.
+futuros (opcionalmente avisando por WhatsApp), quita sus profesionales asignados y **conserva todo el historial**.
+
+Para ver a los pacientes dados de baja, marcá **Mostrar pacientes dados de baja** en el listado: aparecen con
+«(Dado de baja)» junto al nombre. Desde su ficha, **Reactivar paciente** le devuelve el acceso con una contraseña temporal
+nueva (se envía por WhatsApp). Después asignale de nuevo sus profesionales; los turnos cancelados no se restauran.
 
 ## Profesionales
 

@@ -15,7 +15,7 @@ public interface PacienteDao extends JpaRepository<Paciente, Long> {
     Optional<Paciente> findByNroDocumento(String nroDocumento);
     List<Paciente> findByEstado(Paciente.Estado estado);
     /** Búsqueda parcial sin distinguir mayúsculas ni acentos (CA-01.2.1). */
-    @Query(value = "SELECT p.* FROM paciente p WHERE p.estado = :estado AND (:q IS NULL "
+    @Query(value = "SELECT p.* FROM paciente p WHERE (:estado IS NULL OR p.estado = :estado) AND (:q IS NULL "
             + "OR p.apellido COLLATE Latin1_General_CI_AI LIKE '%' + :q + '%' "
             + "OR p.nombre COLLATE Latin1_General_CI_AI LIKE '%' + :q + '%' "
             + "OR (p.nombre + ' ' + p.apellido) COLLATE Latin1_General_CI_AI LIKE '%' + :q + '%' "
@@ -23,7 +23,7 @@ public interface PacienteDao extends JpaRepository<Paciente, Long> {
             + "OR p.nro_documento LIKE '%' + :q + '%') "
             + "AND (:profesionalId IS NULL OR EXISTS (SELECT 1 FROM paciente_profesional pp WHERE pp.paciente_id = p.id "
             + "AND pp.profesional_id = :profesionalId AND pp.activo = 1))",
-            countQuery = "SELECT COUNT(*) FROM paciente p WHERE p.estado = :estado AND (:q IS NULL "
+            countQuery = "SELECT COUNT(*) FROM paciente p WHERE (:estado IS NULL OR p.estado = :estado) AND (:q IS NULL "
             + "OR p.apellido COLLATE Latin1_General_CI_AI LIKE '%' + :q + '%' "
             + "OR p.nombre COLLATE Latin1_General_CI_AI LIKE '%' + :q + '%' "
             + "OR (p.nombre + ' ' + p.apellido) COLLATE Latin1_General_CI_AI LIKE '%' + :q + '%' "

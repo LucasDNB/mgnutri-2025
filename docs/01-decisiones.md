@@ -99,3 +99,8 @@ Cada decisión resuelve una inconsistencia (I-xx) o un vacío (V-xx) de [`00-ana
   - Los catálogos y los reportes siguen en el menú.
 - **Bloques de rutina (migración V17):** cada ejercicio puede llevar un bloque («Entrada en calor», «WOD») y, dentro de él, un esquema («3 rondas», «21-15-9»). Los ejercicios seguidos con el mismo bloque y esquema se muestran agrupados en el editor, en la vista del paciente y en el PDF. Dentro de un bloque, series y repeticiones son opcionales («5 min», «30»); fuera de un bloque siguen siendo obligatorias. Se eligieron dos columnas de texto en `ejercicio_rutina` en lugar de tablas nuevas, para no tocar los registros ni las variantes, que siguen siendo por ejercicio.
 - **PDF de la rutina:** omite las columnas que no tienen datos en ningún ejercicio del día.
+
+**D-37 · Reactivación de pacientes (23/11/2026).**
+- El administrador puede reactivar un paciente dado de baja desde su ficha (`POST /pacientes/{id}/reactivar`): vuelve a estar activo, se borran la fecha y el motivo de baja y se le generan credenciales temporales nuevas, que se envían por WhatsApp como en el reenvío de credenciales. Queda en la bitácora como alta («Reactivación de paciente»).
+- Conserva todo su historial. No se restauran las asignaciones a profesionales (el admin lo vuelve a asignar, porque puede cambiar de profesional) ni los turnos cancelados por la baja.
+- Listado de pacientes: sólo el administrador puede incluir a los dados de baja (casilla «Mostrar pacientes dados de baja», parámetro `incluirBajas`); aparecen con «(Dado de baja)» junto al nombre. Para los profesionales el parámetro se ignora.
