@@ -197,13 +197,16 @@ public class ProfesionalService {
     /** Profesionales con agenda del área; para el paciente, primero los asignados (CA-03.1.1). */
     @Transactional(readOnly = true)
     public List<ProfesionalDisponible> disponibles(Area area) {
+        if (area == Area.ENTRENAMIENTO) {
+            return List.of();
+        }
         UsuarioPrincipal u = CurrentUser.get();
         Set<Long> asignados = u.pacienteId() == null ? Set.of()
                 : asignacionDao.findByPacienteIdAndActivoTrue(u.pacienteId()).stream()
                 .filter(a -> area == null || a.getArea() == area)
                 .map(PacienteProfesional::getProfesionalId).collect(Collectors.toSet());
         return dao.findByEstado(Profesional.Estado.ACTIVO).stream()
-                .filter(p -> area == null || p.getTipo().atiende(area))
+                .filter(p -> p.getTipo().usaAgenda() && (area == null || p.getTipo().atiende(area)))
                 .filter(p -> disponibilidadDao.existsByProfesionalIdAndActivoTrue(p.getId()))
                 .map(p -> new ProfesionalDisponible(p.getId(), p.nombreVisible() + " (" + p.nombreCompleto() + ")",
                         p.getEspecialidad(), p.getTipo(), asignados.contains(p.getId()), p.getDuracionTurnoMin()))
@@ -216,7 +219,7 @@ public class ProfesionalService {
         return new ProfesionalResponse(p.getId(), p.getUsuarioId(), username, p.getNombre(), p.getApellido(), p.nombreVisible(),
                 p.getTipoDocumento(), p.getNroDocumento(), p.getMatricula(), p.getTipo(), p.getEspecialidad(),
                 p.getTelefonoWhatsapp(), p.getEmail(), p.getDuracionTurnoMin(), p.getEstado().name(), p.getFechaBaja(),
-                disponibilidadDao.existsByProfesionalIdAndActivoTrue(p.getId()),
+                p.getTipo().usaAgenda() && disponibilidadDao.existsByProfesionalIdAndActivoTrue(p.getId()),
                 asignacionDao.findByProfesionalIdAndActivoTrue(p.getId()).size(), p.getVersion());
     }
 

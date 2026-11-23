@@ -54,6 +54,16 @@ public class AlertaService {
         a.setLeidaAt(ahora());
     }
 
+    /** Marca como leídos todos los avisos pendientes del usuario (para el admin, también los generales). */
+    @Transactional
+    public int marcarTodasLeidas() {
+        UsuarioPrincipal u = CurrentUser.get();
+        List<Alerta> pendientes = dao.paraUsuario(u.id(), u.esAdmin(), true);
+        java.time.Instant ahora = ahora();
+        pendientes.forEach(a -> a.setLeidaAt(ahora));
+        return pendientes.size();
+    }
+
     private java.time.Instant ahora() {
         return clock.instant().truncatedTo(ChronoUnit.SECONDS);
     }

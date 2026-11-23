@@ -130,6 +130,9 @@ public class ActividadNutricionalService {
     public RegistroComidaResponse registrar(RegistroComidaRequest req) {
         Long pacienteId = CurrentUser.pacienteId();
         validarFechaRegistro(req.fecha());
+        if (req.realizada() && req.conCambios()) {
+            throw new BusinessException(ErrorCode.REGLA_NEGOCIO, "Elegí una sola opción: como estaba propuesta o con cambios.");
+        }
         ComidaPlan c = comidaDao.findById(req.comidaPlanId()).orElseThrow(() -> BusinessException.noEncontrado("Comida"));
         PlanAlimentario plan = c.getPlan();
         if (!plan.getPacienteId().equals(pacienteId) || plan.getEstado() != PlanAlimentario.Estado.ACTIVO || !c.isActivo()) {
@@ -138,6 +141,7 @@ public class ActividadNutricionalService {
         RegistroComida r = registroDao.findByPacienteIdAndComidaPlanIdAndFecha(pacienteId, c.getId(), req.fecha())
                 .orElseGet(() -> new RegistroComida(pacienteId, c.getId(), req.fecha(), clock.instant().truncatedTo(ChronoUnit.SECONDS)));
         r.setRealizada(req.realizada());
+        r.setConCambios(req.conCambios());
         r.setNoLeGusto(req.noLeGusto());
         r.setLeCayoMal(req.leCayoMal());
         registroDao.save(r);
@@ -261,7 +265,7 @@ public class ActividadNutricionalService {
     }
 
     static RegistroComidaResponse aDto(RegistroComida r) {
-        return new RegistroComidaResponse(r.getComidaPlanId(), r.getFecha(), r.isRealizada(), r.isNoLeGusto(), r.isLeCayoMal());
+        return new RegistroComidaResponse(r.getComidaPlanId(), r.getFecha(), r.isRealizada(), r.isConCambios(), r.isNoLeGusto(), r.isLeCayoMal());
     }
 
     static ObservacionResponse aDto(ObservacionDiaria o) {

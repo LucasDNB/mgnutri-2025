@@ -1,6 +1,6 @@
 // US-02.4 Disponibilidad semanal y bloqueos (profesional: la propia; admin: ?id=).
 import { api } from '../core/api.js';
-import { iniciarPagina, encabezado } from '../core/pagina.js';
+import { iniciarPagina, encabezado, usaAgenda } from '../core/pagina.js';
 import { h, tabla, toast, confirmar, manejarError, vaciar, campo, modal } from '../core/ui.js';
 import { fmt, DIAS, aIsoArgentina, hoyISO } from '../core/format.js';
 import { ApiError } from '../core/api.js';
@@ -8,6 +8,11 @@ import { ApiError } from '../core/api.js';
 const { usuario, main } = await iniciarPagina({ roles: ['ADMIN', 'NUTRICIONISTA', 'ENTRENADOR'], titulo: 'Agenda' });
 const id = Number(new URLSearchParams(location.search).get('id')) || usuario.profesionalId;
 const prof = await api.get(`/profesionales/${id}`);
+if (!usaAgenda(usuario) || prof.tipo === 'ENTRENADOR') {
+  // Los turnos son sólo de nutrición: el entrenador no tiene agenda (v1.1)
+  main.append(encabezado(`Agenda de ${prof.nombreVisible}`), h('div', { class: 'aviso' }, 'Los entrenadores no tienen agenda: los turnos son sólo de nutrición.'));
+  throw new Error('sin agenda');
+}
 let franjas = await api.get(`/profesionales/${id}/disponibilidad`);
 
 const editor = h('div');

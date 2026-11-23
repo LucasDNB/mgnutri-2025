@@ -24,10 +24,14 @@ public class EjercicioRutina {
     private Long ejercicioId;
     @Column(nullable = false)
     private int orden;
-    @Column(nullable = false)
-    private int series;
-    @Column(nullable = false, length = 20)
+    private Integer series;
+    @Column(length = 20)
     private String repeticiones;
+    /** Bloque opcional («Entrada en calor», «WOD») y esquema dentro del bloque («3 rondas», «21-15-9»). */
+    @Column(length = 60)
+    private String bloque;
+    @Column(length = 60)
+    private String esquema;
     @Column(name = "descanso_seg")
     private Integer descansoSeg;
     @Column(name = "carga_sugerida", length = 30)
@@ -52,8 +56,12 @@ public class EjercicioRutina {
     public void setEjercicioId(Long v) { this.ejercicioId = v; }
     public int getOrden() { return orden; }
     public void setOrden(int v) { this.orden = v; }
-    public int getSeries() { return series; }
-    public void setSeries(int v) { this.series = v; }
+    public Integer getSeries() { return series; }
+    public void setSeries(Integer v) { this.series = v; }
+    public String getBloque() { return bloque; }
+    public void setBloque(String v) { this.bloque = v; }
+    public String getEsquema() { return esquema; }
+    public void setEsquema(String v) { this.esquema = v; }
     public String getRepeticiones() { return repeticiones; }
     public void setRepeticiones(String v) { this.repeticiones = v; }
     public Integer getDescansoSeg() { return descansoSeg; }

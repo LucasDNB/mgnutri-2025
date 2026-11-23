@@ -1,6 +1,6 @@
 // Ficha del paciente (specs 01, 04, 05, 06, 08, 09): pestañas según rol.
 import { api, qs, descargar } from '../core/api.js';
-import { iniciarPagina, encabezado } from '../core/pagina.js';
+import { iniciarPagina, encabezado, usaAgenda } from '../core/pagina.js';
 import { h, tabla, chip, toast, modal, confirmar, pedirTexto, campo, leerForm, manejarError, param, vaciar, cargando } from '../core/ui.js';
 import { fmt, etiquetaEstado, hoyISO, sumarDias, DIAS } from '../core/format.js';
 
@@ -16,16 +16,16 @@ const puedeEntr = esEntr && asignadoEn('ENTRENAMIENTO');
 
 const PESTANAS = [
   ['datos', 'Datos', datos],
-  ['turnos', 'Turnos', turnos],
+  usaAgenda(usuario) ? ['turnos', 'Turnos', turnos] : null,
   ['planes', 'Planes', planes],
   ['rutinas', 'Rutinas', rutinas],
   ['evolucion', 'Evolución', evolucion],
   ['registros', 'Registros', registros],
-];
+].filter(Boolean);
 if (esAdmin) PESTANAS.push(['cuenta', 'Cuenta', () => { location.href = `/admin/pagos.html?pacienteId=${id}`; }]);
 
 const contenido = h('div');
-const barra = h('div', { class: 'pestanas', role: 'tablist' });
+const barra = h('div', { class: 'pestanas envolver', role: 'tablist' });
 function abrir(clave) {
   barra.querySelectorAll('button').forEach(b => b.classList.toggle('activa', b.dataset.clave === clave));
   history.replaceState(null, '', `?id=${id}&tab=${clave}`);
@@ -36,7 +36,7 @@ PESTANAS.forEach(([clave, texto]) => barra.append(h('button', { role: 'tab', dat
 
 main.append(encabezado(`${p.apellido}, ${p.nombre}`, [['Pacientes', '/comun/pacientes.html'], [`${p.apellido}, ${p.nombre}`]]),
   h('p', { class: 'suave' }, `${p.edad} años · DNI ${p.nroDocumento}${p.objetivo ? ' · Objetivo: ' + p.objetivo : ''}`), barra, contenido);
-abrir(param('tab') || 'datos');
+abrir(PESTANAS.some(x => x[0] === param('tab')) ? param('tab') : 'datos');
 
 // ------------------------------------------------------------------ Datos
 async function datos() {
@@ -303,9 +303,10 @@ async function registros() {
         h('div', { class: 'barra' }, h('span', { style: `width:${Math.min(100, nut.cumplimientoPct)}%` })),
         h('h3', { style: 'margin-top:1rem' }, 'Hambre y saciedad'), h('div', { class: 'grafico' }, canvas),
         h('h3', {}, 'Comidas con marcas'), tabla([
-          { titulo: 'Fecha', render: r => fmt.fecha(r.fecha) }, { titulo: 'Realizada', render: r => (r.realizada ? '✔' : '—') },
+          { titulo: 'Fecha', render: r => fmt.fecha(r.fecha) },
+          { titulo: 'Realizada', render: r => (r.realizada ? '✔' : r.conCambios ? 'Con cambios' : '—') },
           { titulo: 'No le gustó', render: r => (r.noLeGusto ? '✔' : '') }, { titulo: 'Le cayó mal', render: r => (r.leCayoMal ? '✔' : '') },
-        ], nut.registros.filter(r => r.noLeGusto || r.leCayoMal), { vacio: 'Sin marcas' }),
+        ], nut.registros.filter(r => r.conCambios || r.noLeGusto || r.leCayoMal), { vacio: 'Sin marcas' }),
         h('h3', {}, 'Reemplazos aplicados'), tabla([
           { titulo: 'Comida', render: r => `${DIAS[r.diaSemana]} · ${r.tipoComida}` }, { titulo: 'Original', campo: 'original' },
           { titulo: 'Reemplazo', render: r => `${r.reemplazo} (${fmt.numero(r.gramos)} g)` }, { titulo: 'Desde', render: r => fmt.fecha(r.desde) },

@@ -1,23 +1,22 @@
 // CU-07 Solicitar turno: 1) profesional (habituales primero) 2) horario 3) confirmación. Regla de 7 días.
 import { api, qs, ApiError } from '../core/api.js';
 import { iniciarPagina, encabezado } from '../core/pagina.js';
-import { h, toast, manejarError, vaciar, chip, param, modal } from '../core/ui.js';
+import { h, toast, manejarError, vaciar, chip, modal } from '../core/ui.js';
 import { fmt } from '../core/format.js';
 import { selectorHuecos } from '../components/huecos.js';
 
 const { main } = await iniciarPagina({ roles: ['PACIENTE'], titulo: 'Nuevo turno' });
-let area = param('area') || 'NUTRICION';
+// Los turnos son sólo de nutrición (v1.1)
+const area = 'NUTRICION';
 const paso = h('div');
-const selArea = h('div', { class: 'pestanas' }, [['NUTRICION', 'Nutrición'], ['ENTRENAMIENTO', 'Entrenamiento']].map(([a, t]) =>
-  h('button', { class: a === area ? 'activa' : '', onclick: (e) => { area = a; e.currentTarget.parentElement.querySelectorAll('button').forEach(b => b.classList.toggle('activa', b === e.currentTarget)); paso1(); } }, t)));
-main.append(encabezado('Nuevo turno', [['Turnos', '/paciente/turnos.html'], ['Nuevo']]), selArea, paso);
+main.append(encabezado('Nuevo turno de nutrición', [['Turnos', '/paciente/turnos.html'], ['Nuevo']]), paso);
 
 async function paso1() {
   const profs = await api.get(`/profesionales/disponibles${qs({ area })}`);
   vaciar(paso, h('div', { class: 'tarjeta' }, h('h2', {}, '1. Elegí el profesional'),
     profs.length ? profs.map(p => h('button', { class: 'btn secundario bloque', style: 'justify-content:space-between;margin-bottom:.5rem', onclick: () => paso2(p) },
       h('span', {}, p.nombre, p.especialidad ? h('small', { class: 'suave' }, ` · ${p.especialidad}`) : null), p.asignado ? chip('Tu profesional', 'OK') : null))
-      : h('div', { class: 'vacio' }, 'No hay profesionales con agenda disponible en esta área.')));
+      : h('div', { class: 'vacio' }, 'No hay nutricionistas con agenda disponible.')));
 }
 
 function paso2(p) {

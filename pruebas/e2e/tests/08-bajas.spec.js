@@ -44,15 +44,15 @@ test('Guion 8 · Bajas de paciente y profesional', async ({ page, playwright, ba
   await test.step('Baja de un profesional con turnos futuros', async () => {
     // Profesional y paciente auxiliares creados por API: el foco del paso es el efecto de la baja.
     const alta = await admin.post('/profesionales', { nombre: p2.nombre, apellido: p2.apellido, tipoDocumento: 'DNI', nroDocumento: p2.dni,
-      tipo: 'ENTRENADOR', especialidad: 'Funcional', telefonoWhatsapp: null, email: null, duracionTurnoMin: 45 });
+      tipo: 'NUTRICIONISTA', especialidad: 'Deportiva', telefonoWhatsapp: null, email: null, duracionTurnoMin: 45 });
     expect(alta.status, JSON.stringify(alta.cuerpo)).toBe(201);
     const profId = alta.cuerpo.id;
     const temporal = alta.cuerpo.passwordTemporal;
     const otro = await admin.post('/pacientes', { nombre: 'Tomás', apellido: p2.apellido.split(' ').reverse().join(' '), tipoDocumento: 'DNI', nroDocumento: `4${p2.dni.slice(1)}`,
-      fechaNacimiento: '1988-03-02', sexo: 'M', telefonoWhatsapp: `+5491100${p2.dni.slice(2)}`, asignaciones: [{ profesionalId: profId, area: 'ENTRENAMIENTO' }] });
+      fechaNacimiento: '1988-03-02', sexo: 'M', telefonoWhatsapp: `+5491100${p2.dni.slice(2)}`, asignaciones: [{ profesionalId: profId, area: 'NUTRICION' }] });
     expect(otro.status, JSON.stringify(otro.cuerpo)).toBe(201);
     const inicio = new Date(Math.ceil((Date.now() + 5 * 864e5) / 3600e3) * 3600e3).toISOString();
-    const turno = await admin.post('/turnos', { pacienteId: otro.cuerpo.id, profesionalId: profId, inicio, area: 'ENTRENAMIENTO', forzar: true });
+    const turno = await admin.post('/turnos', { pacienteId: otro.cuerpo.id, profesionalId: profId, inicio, area: 'NUTRICION', forzar: true });
     expect(turno.status, JSON.stringify(turno.cuerpo)).toBe(201);
 
     await u.ingresar(page, u.ADMIN, u.PASSWORD_E2E);

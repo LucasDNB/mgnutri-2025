@@ -40,20 +40,23 @@ async function cargar() {
   const pct = programadas ? Math.round(hechas * 100 / programadas) : 0;
   vaciar(barra, h('div', { class: 'tarjeta' }, h('div', { class: 'fila entre' }, h('strong', {}, 'Cumplimiento de la semana'), `${pct} %`), h('div', { class: 'barra' }, h('span', { style: `width:${pct}%` }))));
   vaciar(cont, h('h2', {}, `${DIAS[dia]} ${fmt.fecha(fecha)}`), comidas.length ? comidas.map(c => {
-    const r = porClave[`${c.id}-${fecha}`] || { realizada: false, noLeGusto: false, leCayoMal: false };
+    const r = porClave[`${c.id}-${fecha}`] || { realizada: false, conCambios: false, noLeGusto: false, leCayoMal: false };
     const estado = { ...r };
     const check = (campo, texto) => h('label', { class: 'check' }, h('input', { type: 'checkbox', checked: !!estado[campo], onchange: async (e) => {
       estado[campo] = e.target.checked;
+      // «Como estaba propuesta» y «con cambios» son excluyentes
+      if (e.target.checked && campo === 'realizada') estado.conCambios = false;
+      if (e.target.checked && campo === 'conCambios') estado.realizada = false;
       await guardar(c.id, estado);
     } }), texto);
-    return h('div', { class: `ejercicio-card ${estado.realizada ? 'hecho' : ''}` }, h('strong', {}, c.tipoEtiqueta),
+    return h('div', { class: `ejercicio-card ${estado.realizada || estado.conCambios ? 'hecho' : ''}` }, h('strong', {}, c.tipoEtiqueta),
       h('p', { style: 'margin:.3rem 0' }, c.descripcion || c.items.map(i => i.reemplazo ? `${i.reemplazo.alimento} ${i.reemplazo.gramos} g` : `${i.alimento} ${i.gramos} g`).join(' + ')),
-      check('realizada', 'La hice como estaba propuesta'), h('div', { class: 'fila' }, check('noLeGusto', 'No me gustó'), check('leCayoMal', 'Me cayó mal')));
+      check('realizada', 'La hice como estaba propuesta'), check('conCambios', 'La hice con cambios.'), h('div', { class: 'fila' }, check('noLeGusto', 'No me gustó'), check('leCayoMal', 'Me cayó mal')));
   }) : h('div', { class: 'vacio' }, 'Tu plan no tiene comidas para este día.'));
 }
 
 async function guardar(comidaPlanId, estado) {
-  const cuerpo = { comidaPlanId, fecha, realizada: !!estado.realizada, noLeGusto: !!estado.noLeGusto, leCayoMal: !!estado.leCayoMal };
+  const cuerpo = { comidaPlanId, fecha, realizada: !!estado.realizada, conCambios: !!estado.conCambios, noLeGusto: !!estado.noLeGusto, leCayoMal: !!estado.leCayoMal };
   try {
     await api.put('/me/registro-comidas', cuerpo);
     toast('Guardado ✔', 'ok', 1500);

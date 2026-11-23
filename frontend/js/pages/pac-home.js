@@ -1,4 +1,4 @@
-// CA-08.0.1 Home del paciente: NUTRICIÓN · ENTRENAMIENTO · CONTACTO + próximo turno y accesos.
+// CA-08.0.1 Home del paciente: NUTRICIÓN · ENTRENAMIENTO · CONTACTO + próximo turno (el resto, desde el menú).
 import { api } from '../core/api.js';
 import { iniciarPagina } from '../core/pagina.js';
 import { h } from '../core/ui.js';
@@ -14,9 +14,4 @@ main.append(
   h('div', { class: 'botones-home' },
     h('a', { class: 'boton-home', href: '/paciente/nutricion.html' }, 'Nutrición'),
     h('a', { class: 'boton-home', href: '/paciente/entrenamiento.html' }, 'Entrenamiento'),
-    h('a', { class: 'boton-home secundario', href: '/paciente/contacto.html' }, 'Contacto')),
-  h('div', { class: 'fila', style: 'justify-content:center' },
-    h('a', { class: 'btn secundario', href: '/paciente/turnos.html' }, 'Mis turnos'),
-    h('a', { class: 'btn secundario', href: '/comun/evolucion.html' }, 'Mi evolución'),
-    h('a', { class: 'btn secundario', href: '/paciente/cuenta.html' }, 'Mi cuenta'),
-    h('a', { class: 'btn secundario', href: '/paciente/perfil.html' }, 'Perfil')));
+    h('a', { class: 'boton-home secundario', href: '/paciente/contacto.html' }, 'Contacto')));

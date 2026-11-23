@@ -87,3 +87,15 @@ Cada decisión resuelve una inconsistencia (I-xx) o un vacío (V-xx) de [`00-ana
 **D-34 · Migraciones.** Flyway versiona el esquema (cumple "formato de datos estable" y "gestión de versiones" de RNF 3.5).
 
 **D-35 · Envío confiable de notificaciones.** Patrón *outbox*: cada notificación se inserta en `notificacion` dentro de la misma transacción del evento de negocio y un job la despacha (reintentos: 3, backoff 1/5/15 min). Si falla definitivamente o el destinatario no tiene teléfono, queda `FALLIDA`/`OMITIDA` y se genera alerta para el administrador (CU-37/38/39 flujo alterno).
+
+**D-36 · Ajustes de interfaz v1.1 (23/11/2026).**
+- **Turnos:** son sólo de nutrición. El entrenador no tiene agenda, calendario ni turnos; el profesional integral los conserva para nutrición.
+- **Migración V16:** desactiva las franjas de los entrenadores. Los turnos de entrenamiento ya existentes quedan como historial.
+- **Registro de comidas:** se suma «La hice con cambios», excluyente con «La hice como estaba propuesta». El cumplimiento del plan sólo cuenta las comidas hechas como estaban propuestas; las hechas con cambios se le muestran al nutricionista en «Comidas con marcas».
+- **Menús e inicios:** se quita «Cambiar contraseña» del menú, porque la contraseña se puede seguir cambiando desde el perfil del paciente, en el primer ingreso y con el recupero.
+  - Paciente: Nutrición, Entrenamiento y Contacto.
+  - Nutricionista e integral: Calendario, Pacientes y Novedades.
+  - Entrenador: Pacientes y Novedades.
+  - Los catálogos y los reportes siguen en el menú.
+- **Bloques de rutina (migración V17):** cada ejercicio puede llevar un bloque («Entrada en calor», «WOD») y, dentro de él, un esquema («3 rondas», «21-15-9»). Los ejercicios seguidos con el mismo bloque y esquema se muestran agrupados en el editor, en la vista del paciente y en el PDF. Dentro de un bloque, series y repeticiones son opcionales («5 min», «30»); fuera de un bloque siguen siendo obligatorias. Se eligieron dos columnas de texto en `ejercicio_rutina` en lugar de tablas nuevas, para no tocar los registros ni las variantes, que siguen siendo por ejercicio.
+- **PDF de la rutina:** omite las columnas que no tienen datos en ningún ejercicio del día.

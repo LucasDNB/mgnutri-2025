@@ -196,11 +196,9 @@ public class NovedadesService {
         boolean agendaE = false;
         boolean agendaN = false;
         for (PacienteProfesional a : asignaciones.findByPacienteIdAndActivoTrue(pacienteId)) {
-            boolean ag = disponibilidadDao.existsByProfesionalIdAndActivoTrue(a.getProfesionalId());
-            if (a.getArea() == Area.ENTRENAMIENTO) {
-                agendaE |= ag;
-            } else {
-                agendaN |= ag;
+            // Los turnos son sólo de nutrición: agendaE queda en false (v1.1)
+            if (a.getArea() == Area.NUTRICION) {
+                agendaN |= disponibilidadDao.existsByProfesionalIdAndActivoTrue(a.getProfesionalId());
             }
         }
         return new HomePaciente(p.getNombre(), turnos.proximoDelPaciente(pacienteId).orElse(null),

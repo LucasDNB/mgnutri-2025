@@ -36,6 +36,11 @@ public class Profesional extends EntidadAuditada {
             };
         }
 
+        /** Los turnos son sólo de nutrición: el entrenador no tiene agenda ni calendario (v1.1). */
+        public boolean usaAgenda() {
+            return this != ENTRENADOR;
+        }
+
         public boolean atiende(Area area) {
             return this == INTEGRAL || (area == Area.NUTRICION ? this == NUTRICIONISTA : this == ENTRENADOR);
         }
