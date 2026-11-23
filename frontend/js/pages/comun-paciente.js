@@ -42,11 +42,15 @@ abrir(PESTANAS.some(x => x[0] === param('tab')) ? param('tab') : 'datos');
 async function datos() {
   p = await api.get(`/pacientes/${id}`);
   const fila = (k, v) => h('tr', {}, h('th', { style: 'width:35%' }, k), h('td', {}, v ?? '—'));
-  const acciones = esAdmin ? h('div', { class: 'acciones' },
+  const deBaja = p.estado === 'BAJA';
+  const acciones = esAdmin && deBaja ? h('div', { class: 'acciones' }, h('button', { class: 'btn', onclick: reactivar }, 'Reactivar paciente'))
+    : esAdmin ? h('div', { class: 'acciones' },
     h('a', { class: 'btn secundario', href: `/admin/paciente-form.html?id=${id}` }, 'Modificar datos'),
     h('button', { class: 'btn secundario', onclick: reenviar }, 'Reenviar credenciales'),
     h('button', { class: 'btn peligro', onclick: baja }, 'Dar de baja')) : null;
   vaciar(contenido,
+    deBaja ? h('div', { class: 'aviso advertencia' }, h('strong', {}, 'Paciente dado de baja'),
+      ` el ${fmt.fecha(p.fechaBaja)}${p.motivoBaja ? ' · Motivo: ' + p.motivoBaja : ''}. No tiene acceso al sistema.`) : null,
     h('div', { class: 'grilla g2' },
       h('div', { class: 'tarjeta' }, h('h2', {}, 'Datos personales'), h('table', {}, h('tbody', {},
         fila('Usuario', p.username), fila('Documento', `${p.tipoDocumento} ${p.nroDocumento}`), fila('Fecha de nacimiento', fmt.fecha(p.fechaNacimiento)),
@@ -58,13 +62,13 @@ async function datos() {
         h('p', {}, h('strong', {}, 'Observaciones: '), p.observaciones || '—'),
         h('p', { class: 'suave' }, 'Información aportada por el paciente; no constituye diagnóstico.'))),
     h('div', { class: 'tarjeta' }, h('div', { class: 'fila entre' }, h('h2', {}, 'Profesionales asignados'),
-      esAdmin ? h('button', { class: 'btn chico', onclick: asignar }, '+ Asignar profesional') : null),
+      esAdmin && !deBaja ? h('button', { class: 'btn chico', onclick: asignar }, '+ Asignar profesional') : null),
     tabla([
       { titulo: 'Profesional', campo: 'profesional' },
       { titulo: 'Área', render: a => a.area === 'NUTRICION' ? 'Nutrición' : 'Entrenamiento' },
       { titulo: 'Desde', render: a => fmt.fecha(a.fechaAsignacion) },
-      { titulo: '', render: a => esAdmin ? h('button', { class: 'btn chico peligro secundario', onclick: () => desasignar(a) }, 'Desasignar') : '' },
-    ], p.asignaciones, { vacio: 'Sin profesionales asignados' })),
+      { titulo: '', render: a => esAdmin && !deBaja ? h('button', { class: 'btn chico peligro secundario', onclick: () => desasignar(a) }, 'Desasignar') : '' },
+    ], p.asignaciones, { vacio: deBaja ? 'Al reactivarlo, asignale de nuevo sus profesionales' : 'Sin profesionales asignados' })),
     acciones);
 }
 
@@ -78,12 +82,24 @@ async function reenviar() {
   } catch (e) { manejarError(e); }
 }
 
+async function reactivar() {
+  if (!(await confirmar('El paciente vuelve a tener acceso con una contraseña temporal nueva, que se envía por WhatsApp. Conserva su historial; '
+    + 'después asignale sus profesionales. Los turnos cancelados no se restauran.', { texto: 'Reactivar', titulo: 'Reactivar paciente' }))) return;
+  try {
+    const r = await api.post(`/pacientes/${id}/reactivar`);
+    await modal({ titulo: 'Paciente reactivado', cuerpo: r.passwordTemporal
+      ? h('div', { class: 'aviso advertencia' }, 'No se pudo enviar por WhatsApp. Usuario: ', h('strong', {}, r.username), ' · Contraseña temporal: ', h('strong', {}, r.passwordTemporal))
+      : h('p', {}, 'Se le enviaron las credenciales por WhatsApp. Ahora asignale sus profesionales.') });
+    datos();
+  } catch (e) { manejarError(e); }
+}
+
 async function baja() {
   const notificar = h('input', { type: 'checkbox' });
   const motivo = h('textarea', { maxLength: 300 });
   const ok = await modal({
     titulo: 'Dar de baja al paciente',
-    cuerpo: h('div', {}, h('div', { class: 'aviso error' }, 'El paciente perderá el acceso al sistema. Sus turnos futuros se cancelarán. Esta acción no se puede deshacer.'),
+    cuerpo: h('div', {}, h('div', { class: 'aviso error' }, 'El paciente perderá el acceso al sistema. Sus turnos futuros se cancelarán y se quitarán sus profesionales asignados. Podés reactivarlo más adelante.'),
       h('div', { class: 'campo' }, h('label', {}, 'Motivo (opcional)'), motivo),
       h('label', { class: 'check', style: 'margin-top:.6rem' }, notificar, 'Avisar por WhatsApp la cancelación de sus turnos')),
     botones: [{ texto: 'Cancelar', valor: false, clase: 'secundario' }, { texto: 'Dar de baja', valor: true, clase: 'peligro' }],

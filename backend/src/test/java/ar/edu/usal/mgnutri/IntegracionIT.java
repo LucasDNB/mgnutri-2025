@@ -135,6 +135,23 @@ class IntegracionIT {
         assertThat(eventos).isGreaterThanOrEqualTo(1);
         Integer notif = jdbc.queryForObject("SELECT COUNT(*) FROM notificacion WHERE tipo = 'CREDENCIALES'", Integer.class);
         assertThat(notif).isGreaterThanOrEqualTo(2);
+
+        // D-37: baja → sólo el admin lo ve con incluirBajas → reactivación con credenciales nuevas
+        long pacId = pac.get("id").asLong();
+        mvc.perform(post("/api/v1/pacientes/" + pacId + "/baja").header("Authorization", "Bearer " + admin).contentType(MediaType.APPLICATION_JSON)
+                .content(json(Map.of("motivo", "prueba")))).andExpect(status().isNoContent());
+        mvc.perform(get("/api/v1/pacientes?q=40123456").header("Authorization", "Bearer " + admin))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.content.length()").value(0));
+        mvc.perform(get("/api/v1/pacientes?q=40123456&incluirBajas=true").header("Authorization", "Bearer " + admin))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.content[0].estado").value("BAJA"));
+        mvc.perform(post("/api/v1/pacientes/" + pacId + "/reactivar").header("Authorization", "Bearer " + nutri)).andExpect(status().isForbidden());
+        mvc.perform(post("/api/v1/pacientes/" + pacId + "/reactivar").header("Authorization", "Bearer " + admin))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.username").value("40123456"));
+        assertThat(jdbc.queryForObject("SELECT p.estado + '/' + u.estado + '/' + CAST(u.debe_cambiar_password AS VARCHAR) FROM paciente p "
+                + "JOIN usuario u ON u.id = p.usuario_id WHERE p.id = ?", String.class, pacId)).isEqualTo("ACTIVO/ACTIVO/1");
+        assertThat(jdbc.queryForObject("SELECT fecha_baja FROM paciente WHERE id = ?", Object.class, pacId)).isNull();
+        mvc.perform(post("/api/v1/pacientes/" + pacId + "/reactivar").header("Authorization", "Bearer " + admin))
+                .andExpect(jsonPath("$.code").value("REGLA_NEGOCIO"));
     }
 
     @Test

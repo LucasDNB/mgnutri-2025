@@ -47,9 +47,10 @@ public class PacienteController {
     @PreAuthorize("hasAnyRole('ADMIN','NUTRICIONISTA','ENTRENADOR')")
     public PageResponse<PacienteListItem> listar(@RequestParam(required = false) String q,
                                                  @RequestParam(required = false) Long profesionalId,
+                                                 @RequestParam(defaultValue = "false") boolean incluirBajas,
                                                  @RequestParam(required = false) Integer page,
                                                  @RequestParam(required = false) Integer size) {
-        return service.buscar(q, profesionalId, PageResponse.pageable(page, size, Sort.by("apellido", "nombre")));
+        return service.buscar(q, profesionalId, incluirBajas, PageResponse.pageable(page, size, Sort.by("apellido", "nombre")));
     }
 
     @GetMapping("/pacientes/{id}")
@@ -83,6 +84,12 @@ public class PacienteController {
     public ResponseEntity<Void> bajaPost(@PathVariable Long id, @RequestBody(required = false) BajaRequest req) {
         service.darDeBaja(id, req);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/pacientes/{id}/reactivar")
+    @PreAuthorize("hasRole('ADMIN')")
+    public CredencialesResponse reactivar(@PathVariable Long id) {
+        return service.reactivar(id);
     }
 
     @PostMapping("/pacientes/{id}/reenviar-credenciales")

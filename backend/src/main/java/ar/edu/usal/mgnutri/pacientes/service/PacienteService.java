@@ -129,6 +129,27 @@ public class PacienteService {
         eventos.publishEvent(new Eventos.PacienteDadoDeBaja(id, p.getMotivoBaja(), notificar));
     }
 
+    /**
+     * Reactivación (D-37): vuelve a ACTIVO con credenciales nuevas enviadas por WhatsApp. Conserva el historial;
+     * no restaura asignaciones ni turnos cancelados (el admin lo vuelve a asignar).
+     */
+    @Transactional
+    @Auditable(modulo = Modulo.PACIENTES, tipo = TipoEvento.ALTA, entidad = "Paciente", entidadId = "#id",
+            descripcion = "Reactivación de paciente #{#id}")
+    public CredencialesResponse reactivar(Long id) {
+        Paciente p = dao.findById(id).orElseThrow(() -> BusinessException.noEncontrado("Paciente"));
+        if (p.activo()) {
+            throw new BusinessException(ErrorCode.REGLA_NEGOCIO, "El paciente ya está activo.");
+        }
+        p.setEstado(Paciente.Estado.ACTIVO);
+        p.setFechaBaja(null);
+        p.setMotivoBaja(null);
+        Credenciales c = usuarios.reactivar(p.getUsuarioId());
+        EnvioCredencialesService.Resultado envio = credenciales.enviar(c, p.getNombre(), p.getTelefonoWhatsapp());
+        return new CredencialesResponse(c.username(), new NotificacionInfo(envio.notificacionId(), envio.estado()),
+                envio.passwordVisible());
+    }
+
     @Transactional
     @Auditable(modulo = Modulo.SEGURIDAD, tipo = TipoEvento.CAMBIO_PASSWORD, entidad = "Usuario",
             descripcion = "Reenvío de credenciales al paciente #{#id}")
@@ -142,8 +163,10 @@ public class PacienteService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<PacienteListItem> buscar(String q, Long profesionalId, Pageable pageable) {
+    public PageResponse<PacienteListItem> buscar(String q, Long profesionalId, boolean incluirBajas, Pageable pageable) {
         UsuarioPrincipal u = CurrentUser.get();
+        // Sólo el admin puede ver los pacientes dados de baja
+        String estado = incluirBajas && u.esAdmin() ? null : Paciente.Estado.ACTIVO.name();
         Long filtroProf = profesionalId;
         if (!u.esAdmin()) {
             filtroProf = u.profesionalId(); // CA-01.5.2: sólo asignados
@@ -152,7 +175,7 @@ public class PacienteService {
             }
         }
         String texto = q == null || q.isBlank() ? null : q.trim();
-        Page<Paciente> pagina = dao.buscar(texto, Paciente.Estado.ACTIVO.name(), filtroProf, pageable);
+        Page<Paciente> pagina = dao.buscar(texto, estado, filtroProf, pageable);
         Map<Long, BigDecimal> saldoMap = u.esAdmin() ? saldos.saldos(pagina.getContent().stream().map(Paciente::getId).toList()) : Map.of();
         LocalDate hoy = LocalDate.now(clock);
         return PageResponse.de(pagina, p -> new PacienteListItem(p.getId(), p.getApellido(), p.getNombre(), p.getNroDocumento(),
