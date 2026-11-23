@@ -177,6 +177,9 @@ public class DemoDataLoader implements ApplicationRunner {
             profs.add(profesional("Tomás", "Ibarra", "33874019", Profesional.Tipo.ENTRENADOR, null, "Funcional y running"));
             profs.add(profesional("Mariana", "Gutiérrez", "29563388", Profesional.Tipo.INTEGRAL, "MN 8127", "Nutrición y entrenamiento"));
             for (Profesional p : profs) {
+                if (!p.getTipo().usaAgenda()) {
+                    continue; // los turnos son sólo de nutrición (v1.1)
+                }
                 List<FranjaDto> franjas = new ArrayList<>();
                 for (int d = 1; d <= 5; d++) {
                     franjas.add(new FranjaDto(d, LocalTime.of(9, 0), LocalTime.of(13, 0), "Consultorio " + (profs.indexOf(p) + 1)));
@@ -264,13 +267,13 @@ public class DemoDataLoader implements ApplicationRunner {
     private void historialTurnos(Long pid, Profesional nut, Profesional ent, Random rnd) {
         LocalDate hoy = LocalDate.now(clock);
         for (int s = meses * 4; s >= 1; s -= 3) {
-            for (Profesional p : List.of(nut, ent)) {
+            for (Profesional p : List.of(nut)) { // los turnos son sólo de nutrición (v1.1)
                 LocalDate dia = hoy.minusWeeks(s).with(java.time.DayOfWeek.MONDAY).plusDays(rnd.nextInt(5));
                 Instant inicio = Fechas.instante(dia, LocalTime.of(9 + rnd.nextInt(4), rnd.nextBoolean() ? 0 : 30));
                 Turno t = new Turno();
                 t.setPacienteId(pid);
                 t.setProfesionalId(p.getId());
-                t.setArea(p.getTipo() == Profesional.Tipo.ENTRENADOR || (p.getTipo() == Profesional.Tipo.INTEGRAL && p == ent && nut != ent) ? Area.ENTRENAMIENTO : Area.NUTRICION);
+                t.setArea(Area.NUTRICION);
                 t.setInicio(inicio);
                 t.setFin(inicio.plus(Duration.ofMinutes(p.getDuracionTurnoMin())));
                 t.setUbicacion("Consultorio");
@@ -357,7 +360,7 @@ public class DemoDataLoader implements ApplicationRunner {
             List<EjercicioItemDto> ejs = new ArrayList<>();
             for (int j = 0; j < 5; j++) {
                 Ejercicio e = todos.get(rnd.nextInt(todos.size()));
-                ejs.add(new EjercicioItemDto(null, e.getId(), 3 + rnd.nextInt(2), j % 2 == 0 ? "10" : "8-12", 60 + 30 * rnd.nextInt(3), null, null));
+                ejs.add(new EjercicioItemDto(null, e.getId(), 3 + rnd.nextInt(2), j % 2 == 0 ? "10" : "8-12", 60 + 30 * rnd.nextInt(3), null, null, null, null));
             }
             dias.add(new DiaDto(diasSemana[k], nombres[k], ejs));
         }

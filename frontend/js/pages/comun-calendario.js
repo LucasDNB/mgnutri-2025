@@ -1,6 +1,6 @@
 // CU-10 Calendario de turnos (profesional: propios; admin: todos con filtros) + gestión RF-03.
 import { api, qs } from '../core/api.js';
-import { iniciarPagina, encabezado } from '../core/pagina.js';
+import { iniciarPagina, encabezado, usaAgenda } from '../core/pagina.js';
 import { h, modal, toast, confirmar, pedirTexto, manejarError, vaciar, chip, tabla, param, campo, demorar } from '../core/ui.js';
 import { fmt, hoyISO, etiquetaEstado, aIsoArgentina } from '../core/format.js';
 import { renderCalendario, rangoVista, moverReferencia, tituloVista } from '../components/calendar.js';
@@ -8,6 +8,8 @@ import { selectorHuecos } from '../components/huecos.js';
 
 const { usuario, main } = await iniciarPagina({ roles: ['ADMIN', 'NUTRICIONISTA', 'ENTRENADOR'], titulo: 'Calendario' });
 const esAdmin = usuario.roles.includes('ADMIN');
+// Los turnos son sólo de nutrición: el entrenador no tiene calendario (v1.1)
+if (!usaAgenda(usuario)) { location.href = usuario.home; throw new Error('sin calendario'); }
 let vista = 'dia';
 let ref = hoyISO();
 let modo = 'calendario';
@@ -18,7 +20,7 @@ const filtroArea = h('select', { 'aria-label': 'Área' }, h('option', { value: '
 const verCancelados = h('input', { type: 'checkbox' });
 let profesionales = [];
 if (esAdmin) {
-  profesionales = (await api.get('/profesionales?size=100')).content;
+  profesionales = (await api.get('/profesionales?size=100')).content.filter(p => p.tipo !== 'ENTRENADOR');
   profesionales.forEach(p => filtroProf.append(h('option', { value: p.id }, `${p.apellido}, ${p.nombre}`)));
 }
 [filtroProf, filtroArea, verCancelados].forEach(x => x.addEventListener('change', cargar));

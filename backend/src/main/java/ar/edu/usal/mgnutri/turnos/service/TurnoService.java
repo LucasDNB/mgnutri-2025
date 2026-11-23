@@ -440,19 +440,12 @@ public class TurnoService {
         return respuesta(t);
     }
 
+    /** Los turnos son sólo de nutrición (v1.1): el entrenamiento no usa turnos ni calendario. */
     private Area resolverArea(Profesional prof, Area pedida, Long pacienteId) {
-        if (pedida != null) {
-            if (!prof.getTipo().atiende(pedida)) {
-                throw BusinessException.validacion("area", prof.nombreVisible() + " no atiende esa área.");
-            }
-            return pedida;
+        if (pedida == Area.ENTRENAMIENTO || !prof.getTipo().atiende(Area.NUTRICION)) {
+            throw new BusinessException(ErrorCode.REGLA_NEGOCIO, "Los turnos son sólo de nutrición.");
         }
-        return switch (prof.getTipo()) {
-            case NUTRICIONISTA -> Area.NUTRICION;
-            case ENTRENADOR -> Area.ENTRENAMIENTO;
-            case INTEGRAL -> asignaciones.existsByPacienteIdAndProfesionalIdAndAreaAndActivoTrue(pacienteId, prof.getId(), Area.NUTRICION)
-                    ? Area.NUTRICION : Area.ENTRENAMIENTO;
-        };
+        return Area.NUTRICION;
     }
 
     private Paciente pacienteActual() {

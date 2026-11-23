@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 /** Panel de notificaciones (US-11.6), alertas internas y ejecución manual de jobs. */
 @RestController
@@ -81,6 +82,11 @@ public class NotificacionController {
     @GetMapping("/alertas")
     public List<AlertaResponse> alertas(@RequestParam(defaultValue = "false") boolean leidas) {
         return alertas.mias(!leidas);
+    }
+
+    @PostMapping("/alertas/leer-todas")
+    public Map<String, Integer> leerTodas() {
+        return Map.of("marcadas", alertas.marcarTodasLeidas());
     }
 
     @PostMapping("/alertas/{id}/leer")

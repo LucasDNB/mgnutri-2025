@@ -31,6 +31,9 @@ public class RegistroComida {
     @Column(nullable = false)
     private boolean realizada;
 
+    @Column(name = "con_cambios", nullable = false)
+    private boolean conCambios;
+
     @Column(name = "no_le_gusto", nullable = false)
     private boolean noLeGusto;
 
@@ -56,6 +59,8 @@ public class RegistroComida {
     public LocalDate getFecha() { return fecha; }
     public boolean isRealizada() { return realizada; }
     public void setRealizada(boolean realizada) { this.realizada = realizada; }
+    public boolean isConCambios() { return conCambios; }
+    public void setConCambios(boolean conCambios) { this.conCambios = conCambios; }
     public boolean isNoLeGusto() { return noLeGusto; }
     public void setNoLeGusto(boolean noLeGusto) { this.noLeGusto = noLeGusto; }
     public boolean isLeCayoMal() { return leCayoMal; }

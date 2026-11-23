@@ -10,5 +10,4 @@ main.append(encabezado('Entrenamiento', [['Inicio', '/paciente/home.html'], ['En
   h('div', { class: 'botones-home' },
     home.tieneRutina ? h('a', { class: 'boton-home', href: '/paciente/mi-rutina.html' }, 'Mi rutina')
       : h('div', { class: 'boton-home', style: 'opacity:.5;cursor:not-allowed', 'aria-disabled': 'true' }, 'Mi rutina'),
-    h('a', { class: 'boton-home secundario', href: '/paciente/molestia.html' }, 'Registrar molestia'),
-    home.entrenadorConAgenda ? h('a', { class: 'boton-home secundario', href: '/paciente/turnos.html?area=ENTRENAMIENTO' }, 'Turnos de entrenamiento') : null));
+    h('a', { class: 'boton-home secundario', href: '/paciente/molestia.html' }, 'Registrar molestia')));

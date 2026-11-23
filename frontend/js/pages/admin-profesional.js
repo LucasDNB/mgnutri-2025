@@ -22,7 +22,7 @@ const form = h('form', { novalidate: true }, h('div', { class: 'tarjeta' }, h('d
   campo({ nombre: 'email', etiqueta: 'Email', tipo: 'email', valor: p.email }),
   campo({ nombre: 'duracionTurnoMin', etiqueta: 'Duración del turno (min)', tipo: 'number', min: 15, max: 120, step: 5, valor: p.duracionTurnoMin || 30 }))),
 h('div', { class: 'acciones' },
-  id ? h('a', { class: 'btn secundario', href: `/profesional/agenda.html?id=${id}` }, 'Agenda y bloqueos') : null,
+  id && p.tipo !== 'ENTRENADOR' ? h('a', { class: 'btn secundario', href: `/profesional/agenda.html?id=${id}` }, 'Agenda y bloqueos') : null,
   id ? h('button', { type: 'button', class: 'btn secundario', onclick: reenviar }, 'Reenviar credenciales') : null,
   id ? h('button', { type: 'button', class: 'btn peligro', onclick: baja }, 'Dar de baja') : null,
   h('a', { class: 'btn secundario', href: '/admin/profesionales.html' }, 'Volver'),
@@ -50,7 +50,7 @@ form.addEventListener('submit', async (e) => {
       const r = await api.post('/profesionales', d);
       await modal({ titulo: 'Profesional registrado correctamente', cuerpo: h('div', {}, h('p', {}, `Usuario: ${r.username}`),
         r.passwordTemporal ? h('div', { class: 'aviso advertencia' }, 'No se pudo enviar por WhatsApp. Entregá esta contraseña temporal: ', h('strong', {}, r.passwordTemporal))
-          : h('p', {}, 'Las credenciales se enviarán por WhatsApp.'), h('p', {}, 'Recordá cargar su agenda para que pueda recibir turnos.')) });
+          : h('p', {}, 'Las credenciales se enviarán por WhatsApp.'), d.tipo === 'ENTRENADOR' ? null : h('p', {}, 'Recordá cargar su agenda para que pueda recibir turnos.')) });
       location.href = `/admin/profesional.html?id=${r.id}`;
     }
   } catch (err) { manejarError(err, form); }
@@ -70,4 +70,4 @@ async function baja() {
 }
 
 main.append(encabezado(id ? `${p.apellido}, ${p.nombre}` : 'Nuevo profesional', [['Profesionales', '/admin/profesionales.html'], [id ? p.apellido : 'Nuevo']]),
-  id ? h('p', { class: 'suave' }, `Usuario: ${p.username} · ${p.pacientesAsignados} paciente(s) asignado(s) · ${p.tieneAgenda ? 'con agenda' : 'sin agenda cargada'}`) : null, form);
+  id ? h('p', { class: 'suave' }, `Usuario: ${p.username} · ${p.pacientesAsignados} paciente(s) asignado(s) · ${p.tipo === 'ENTRENADOR' ? 'sin turnos (entrenador)' : p.tieneAgenda ? 'con agenda' : 'sin agenda cargada'}`) : null, form);

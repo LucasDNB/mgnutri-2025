@@ -77,7 +77,7 @@ test('Guion 2 · Alta de paciente y gestión de turnos', async ({ page, playwrig
     const { pacienteId, profesionalId } = u.leerEstado(testInfo);
     const admin = await u.api(playwright, baseURL, u.ADMIN);
     const inicio = new Date(Math.ceil((Date.now() + 3 * 3600e3) / 1800e3) * 1800e3).toISOString();
-    const t = await admin.post('/turnos', { pacienteId, profesionalId, inicio, area: 'ENTRENAMIENTO', forzar: true });
+    const t = await admin.post('/turnos', { pacienteId, profesionalId, inicio, area: 'NUTRICION', forzar: true });
     expect(t.status, JSON.stringify(t.cuerpo)).toBe(201);
     await admin.dispose();
 

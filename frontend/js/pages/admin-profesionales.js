@@ -25,7 +25,7 @@ async function cargar() {
       { titulo: 'Matrícula', campo: 'matricula' },
       { titulo: 'Especialidad', campo: 'especialidad' },
       { titulo: 'Teléfono', campo: 'telefono' },
-      { titulo: 'Agenda', render: p => (p.tieneAgenda ? chip('Cargada', 'OK') : chip('Sin agenda', 'AUSENTE')) },
+      { titulo: 'Agenda', render: p => (p.tipo === 'ENTRENADOR' ? '—' : p.tieneAgenda ? chip('Cargada', 'OK') : chip('Sin agenda', 'AUSENTE')) },
       { titulo: 'Pacientes', campo: 'pacientesAsignados', clase: 'num' },
     ], r.content, { vacio: 'No se encontraron profesionales' }), paginador(r, (p) => { pagina = p; cargar(); }));
   } catch (e) { manejarError(e); }

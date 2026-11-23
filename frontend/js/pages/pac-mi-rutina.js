@@ -3,6 +3,7 @@ import { api, qs, descargar, ApiError } from '../core/api.js';
 import { iniciarPagina, encabezado } from '../core/pagina.js';
 import { h, toast, modal, manejarError, vaciar, chip } from '../core/ui.js';
 import { fmt, hoyISO, sumarDias, diaSemana, DIAS } from '../core/format.js';
+import { dibujarBloques, prescripcion } from '../components/bloques.js';
 
 const { main } = await iniciarPagina({ roles: ['PACIENTE'], titulo: 'Mi rutina' });
 let rutina;
@@ -25,7 +26,7 @@ h('div', { class: 'pestanas' }, [['dia', 'Día'], ['semana', 'Semana'], ['mes', 
 
 async function dibujar() {
   if (vista === 'semana') {
-    vaciar(cont, rutina.dias.map(d => h('div', { class: 'tarjeta' }, h('h2', {}, `${DIAS[d.diaSemana]}${d.nombre ? ' – ' + d.nombre : ''}`), d.ejercicios.map(e => tarjeta(e, null, null)))));
+    vaciar(cont, rutina.dias.map(d => h('div', { class: 'tarjeta' }, h('h2', {}, `${DIAS[d.diaSemana]}${d.nombre ? ' – ' + d.nombre : ''}`), dibujarBloques(d.ejercicios, e => tarjeta(e, null, null)))));
     return;
   }
   if (vista === 'mes') {
@@ -57,7 +58,7 @@ async function dibujar() {
   dia ? h('div', {}, h('h2', {}, `${DIAS[dia.diaSemana]} ${fmt.fecha(f)}${dia.nombre ? ' – ' + dia.nombre : ''}`),
     f !== fecha ? h('div', { class: 'aviso' }, 'Hoy no tenés entrenamiento: te mostramos tu próxima sesión.') : null,
     completos ? h('div', { class: 'aviso' }, '¡Sesión completa! 💪') : null,
-    dia.ejercicios.map(e => tarjeta(e, editable ? f : null, porEr[e.id]))) : h('div', { class: 'vacio' }, 'No hay sesiones programadas.'));
+    dibujarBloques(dia.ejercicios, e => tarjeta(e, editable ? f : null, porEr[e.id]))) : h('div', { class: 'vacio' }, 'No hay sesiones programadas.'));
 }
 
 function tarjeta(e, fechaRegistro, reg) {
@@ -78,7 +79,7 @@ function tarjeta(e, fechaRegistro, reg) {
   return h('div', { class: `ejercicio-card ${estado.completado ? 'hecho' : ''}` },
     h('div', { class: 'fila entre' }, h('strong', {}, nombre), h('span', { class: 'suave' }, e.grupoMuscular)),
     e.reemplazo ? h('div', { class: 'reemplazo' }, `variante de ${e.nombre}`) : null,
-    h('div', {}, `${e.series} × ${e.repeticiones}${e.descansoSeg ? ` · descanso ${e.descansoSeg} s` : ''}${e.cargaSugerida ? ` · carga sugerida ${e.cargaSugerida}` : ''}`),
+    h('div', {}, [prescripcion(e), e.descansoSeg ? `descanso ${e.descansoSeg} s` : '', e.cargaSugerida ? `carga sugerida ${e.cargaSugerida}` : ''].filter(Boolean).join(' · ')),
     e.notas ? h('small', { class: 'suave' }, e.notas) : null,
     e.ultimaCarga ? h('div', {}, h('small', {}, `Última carga registrada: ${fmt.numero(e.ultimaCarga)} kg`)) : null,
     fechaRegistro ? h('div', { class: 'fila', style: 'margin-top:.5rem' },

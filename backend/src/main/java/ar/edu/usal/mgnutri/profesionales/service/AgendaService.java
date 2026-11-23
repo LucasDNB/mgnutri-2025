@@ -58,6 +58,9 @@ public class AgendaService {
             entidadId = "#profesionalId", descripcion = "Actualización de agenda semanal del profesional #{#profesionalId}")
     public List<FranjaResponse> reemplazarFranjas(Long profesionalId, List<FranjaDto> franjas) {
         Profesional p = autorizar(profesionalId);
+        if (!p.getTipo().usaAgenda() && !franjas.isEmpty()) {
+            throw new BusinessException(ErrorCode.REGLA_NEGOCIO, "Los entrenadores no tienen agenda: los turnos son sólo de nutrición.");
+        }
         validarFranjas(franjas, p.getDuracionTurnoMin());
         disponibilidadDao.findByProfesionalIdAndActivoTrueOrderByDiaSemanaAscHoraDesdeAsc(profesionalId).forEach(d -> d.setActivo(false));
         disponibilidadDao.flush();

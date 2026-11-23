@@ -65,7 +65,7 @@ public class PerfilUsuarioService {
             nombre = prof.get().nombreVisible();
             profesionalId = prof.get().getId();
             tipo = prof.get().getTipo().name();
-            agenda = disponibilidadDao.existsByProfesionalIdAndActivoTrue(profesionalId);
+            agenda = prof.get().getTipo().usaAgenda() && disponibilidadDao.existsByProfesionalIdAndActivoTrue(profesionalId);
         } else {
             nombre = administradorDao.findByUsuarioId(u.getId()).map(a -> a.getNombre() + " " + a.getApellido()).orElse("Administrador");
         }

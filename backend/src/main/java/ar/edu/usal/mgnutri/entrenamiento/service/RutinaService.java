@@ -210,6 +210,13 @@ public class RutinaService implements PlanesActivosConsulta {
                 throw BusinessException.validacion("dias", "El día " + nombreDia(d.diaSemana()) + " no tiene ejercicios.");
             }
             for (EjercicioItemDto e : d.ejercicios()) {
+                if (Textos.vacioANull(e.bloque()) == null && (e.series() == null || Textos.vacioANull(e.repeticiones()) == null)) {
+                    throw BusinessException.validacion("dias", "Indicá series y repeticiones de cada ejercicio fuera de un bloque ("
+                            + nombreDia(d.diaSemana()) + ").");
+                }
+                if (Textos.vacioANull(e.bloque()) == null && Textos.vacioANull(e.esquema()) != null) {
+                    throw BusinessException.validacion("dias", "El esquema («3 rondas», «21-15-9») va dentro de un bloque.");
+                }
                 Ejercicio ej = ejercicioDao.findById(e.ejercicioId())
                         .orElseThrow(() -> BusinessException.validacion("dias", "Ejercicio inexistente."));
                 if (!ej.isActivo() && e.id() == null) {
@@ -258,7 +265,9 @@ public class RutinaService implements PlanesActivosConsulta {
                 }
                 er.setOrden(orden++);
                 er.setSeries(e.series());
-                er.setRepeticiones(e.repeticiones().trim());
+                er.setRepeticiones(Textos.vacioANull(e.repeticiones()));
+                er.setBloque(Textos.vacioANull(e.bloque()));
+                er.setEsquema(er.getBloque() == null ? null : Textos.vacioANull(e.esquema()));
                 er.setDescansoSeg(e.descansoSeg());
                 er.setCargaSugerida(Textos.vacioANull(e.cargaSugerida()));
                 er.setNotas(Textos.vacioANull(e.notas()));
@@ -290,7 +299,7 @@ public class RutinaService implements PlanesActivosConsulta {
     List<DiaDto> aDtos(Rutina r) {
         return r.diasActivos().stream().map(d -> new DiaDto(d.getDiaSemana(), d.getNombre(), d.ejerciciosActivos().stream()
                 .map(e -> new EjercicioItemDto(null, e.getEjercicioId(), e.getSeries(), e.getRepeticiones(), e.getDescansoSeg(),
-                        e.getCargaSugerida(), e.getNotas())).toList())).toList();
+                        e.getCargaSugerida(), e.getNotas(), e.getBloque(), e.getEsquema())).toList())).toList();
     }
 
     public static String nombreDia(int d) {
@@ -317,7 +326,8 @@ public class RutinaService implements PlanesActivosConsulta {
                 items.add(new EjercicioItemResponse(e.getId(), e.getEjercicioId(), orig == null ? "" : orig.getNombre(),
                         orig == null ? "" : orig.getGrupoPrincipal().getNombre(), orig == null ? "" : orig.getDificultad().name(),
                         orig == null ? null : orig.getEquipamiento(), orig == null ? null : orig.getVideoUrl(), e.getOrden(),
-                        e.getSeries(), e.getRepeticiones(), e.getDescansoSeg(), e.getCargaSugerida(), e.getNotas(), info, ultima));
+                        e.getSeries(), e.getRepeticiones(), e.getDescansoSeg(), e.getCargaSugerida(), e.getNotas(), info, ultima,
+                        e.getBloque(), e.getEsquema()));
             }
             dias.add(new DiaResponse(d.getId(), d.getDiaSemana(), d.getNombre(), items));
         }

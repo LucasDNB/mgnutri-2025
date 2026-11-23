@@ -11,7 +11,7 @@ const MENUS = {
   ],
   PROFESIONAL: [
     ['Inicio', '/profesional/home.html'], ['Calendario', '/comun/calendario.html', 'agenda'], ['Pacientes', '/comun/pacientes.html'],
-    ['Novedades', '/profesional/novedades.html', 'novedades'], ['Mi agenda', '/profesional/agenda.html'],
+    ['Novedades', '/profesional/novedades.html', 'novedades'], ['Mi agenda', '/profesional/agenda.html', 'usaAgenda'],
     ['Alimentos', '/comun/alimentos.html', 'nutri'], ['Ejercicios', '/comun/ejercicios.html', 'entr'], ['Reportes', '/comun/reportes.html'],
   ],
   PACIENTE: [
@@ -20,6 +20,11 @@ const MENUS = {
     ['Contacto', '/paciente/contacto.html'], ['Perfil', '/paciente/perfil.html'],
   ],
 };
+
+/** Los turnos son sólo de nutrición: el entrenador (no integral) no tiene agenda ni calendario. */
+export function usaAgenda(u) {
+  return u.roles.includes('ADMIN') || u.roles.includes('NUTRICIONISTA');
+}
 
 function grupo(u) {
   if (u.roles.includes('ADMIN')) return 'ADMIN';
@@ -62,13 +67,13 @@ export async function iniciarPagina({ roles, titulo }) {
   const ruta = location.pathname;
   for (const [texto, href, cond] of MENUS[g]) {
     if (cond === 'agenda' && !u.tieneAgenda) continue;
+    if (cond === 'usaAgenda' && !usaAgenda(u)) continue;
     if (cond === 'nutri' && !u.roles.includes('NUTRICIONISTA')) continue;
     if (cond === 'entr' && !u.roles.includes('ENTRENADOR')) continue;
     const a = h('a', { href, class: ruta === href ? 'activo' : '' }, texto);
     if (cond === 'novedades') a.id = 'nav-novedades';
     nav.appendChild(a);
   }
-  nav.appendChild(h('a', { href: '/cambiar-password.html' }, 'Cambiar contraseña'));
   nav.appendChild(h('a', { href: '#', onclick: (e) => { e.preventDefault(); salir(); } }, 'Cerrar sesión'));
   const cabecera = h('header', { class: 'cabecera' },
     h('button', { class: 'btn-menu', 'aria-label': 'Abrir menú', 'aria-controls': 'menu', onclick: () => nav.classList.toggle('abierto') }, '☰'),
