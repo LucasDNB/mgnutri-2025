@@ -12,10 +12,10 @@ const R = [
     filtros: () => [selArea(), sel('estado', 'Estado', ['', 'RESERVADO', 'ATENDIDO', 'AUSENTE', 'CANCELADO'])] },
   { tipo: 'pagos', titulo: 'Pagos y deudas', desc: 'Recaudación por medio y deudas pendientes.', roles: ['ADMIN'],
     filtros: () => [sel('estado', 'Estado', ['', 'VIGENTE', 'ANULADO']), sel('medio', 'Medio', ['', 'EFECTIVO', 'TRANSFERENCIA', 'DEBITO', 'CREDITO', 'MERCADO_PAGO', 'OTRO'])] },
-  { tipo: 'evolucion', titulo: 'Evolución del paciente', desc: 'Mediciones, gráficos comparativos y desempeño.', roles: ['ADMIN', 'NUTRICIONISTA', 'ENTRENADOR'], requierePaciente: true, filtros: () => [] },
-  { tipo: 'rutinas', titulo: 'Rutinas', desc: 'Cumplimiento, reemplazos, comentarios y molestias.', roles: ['ADMIN', 'ENTRENADOR'],
+  { tipo: 'evolucion', titulo: 'Evolución del paciente', desc: 'Mediciones, gráficos comparativos y desempeño.', roles: ['NUTRICIONISTA', 'ENTRENADOR'], requierePaciente: true, filtros: () => [] },
+  { tipo: 'rutinas', titulo: 'Rutinas', desc: 'Cumplimiento, reemplazos, comentarios y molestias.', roles: ['ENTRENADOR'],
     filtros: () => [sel('estado', 'Estado', ['', 'ACTIVA', 'FINALIZADA', 'ELIMINADA']), sel('agrupar', 'Comparar por', ['MES', 'SEMANA'])] },
-  { tipo: 'planes', titulo: 'Planes alimentarios', desc: 'Comidas realizadas, reemplazos y hambre/saciedad.', roles: ['ADMIN', 'NUTRICIONISTA'],
+  { tipo: 'planes', titulo: 'Planes alimentarios', desc: 'Comidas realizadas, reemplazos y hambre/saciedad.', roles: ['NUTRICIONISTA'],
     filtros: () => [sel('estado', 'Estado', ['', 'ACTIVO', 'BORRADOR', 'FINALIZADO', 'ELIMINADO']), sel('modo', 'Modo', ['', 'MANUAL', 'AUTOMATICO'])] },
 ].filter(r => r.roles.some(x => usuario.roles.includes(x)));
 

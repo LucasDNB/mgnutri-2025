@@ -302,7 +302,7 @@ y reactivar alimentos, y definir **equivalencias manuales** (tienen prioridad so
 ## Reportes
 
 En **Reportes** podés generar el reporte de turnos, de evolución de un paciente y de planes alimentarios, en pantalla,
-PDF o Excel (ver [Reportes](#reportes) en el capítulo del administrador).
+PDF o Excel (el contenido de cada uno está en [Reportes](#reportes-1), en el capítulo del administrador).
 
 # Entrenador
 
@@ -431,12 +431,18 @@ En **Pagos** buscá al paciente para ver su **cuenta corriente**: saldo, movimie
 
 ## Reportes
 
-**Reportes** ofrece cinco reportes con filtros de fechas, profesional y paciente, en pantalla (con gráficos), PDF o Excel:
+**Reportes** ofrece dos reportes con filtros de fechas, profesional y paciente, en pantalla (con gráficos), PDF o Excel:
 
 | Reporte | Contenido |
 |---|---|
 | Turnos | Atendidos, ausentes y cancelados; tasas por profesional |
 | Pagos y deudas | Recaudación por medio de pago y deudas pendientes |
+
+Los reportes de evolución del paciente, rutinas y planes alimentarios son de los profesionales: el nutricionista ve
+evolución y planes, y el entrenador, evolución y rutinas.
+
+| Reporte (profesionales) | Contenido |
+|---|---|
 | Evolución del paciente | Mediciones, gráficos comparativos y desempeño |
 | Rutinas | Cumplimiento, variantes, comentarios y molestias |
 | Planes alimentarios | Comidas realizadas, reemplazos y hambre/saciedad |
