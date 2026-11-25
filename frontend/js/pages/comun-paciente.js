@@ -320,9 +320,9 @@ async function registros() {
         h('h3', { style: 'margin-top:1rem' }, 'Hambre y saciedad'), h('div', { class: 'grafico' }, canvas),
         h('h3', {}, 'Comidas con marcas'), tabla([
           { titulo: 'Fecha', render: r => fmt.fecha(r.fecha) },
-          { titulo: 'Realizada', render: r => (r.realizada ? '✔' : r.conCambios ? 'Con cambios' : '—') },
+          { titulo: 'Realizada', render: r => (r.realizada ? '✔' : r.conCambios ? 'Con cambios' : r.omitida ? 'No completada' : '—') },
           { titulo: 'No le gustó', render: r => (r.noLeGusto ? '✔' : '') }, { titulo: 'Le cayó mal', render: r => (r.leCayoMal ? '✔' : '') },
-        ], nut.registros.filter(r => r.conCambios || r.noLeGusto || r.leCayoMal), { vacio: 'Sin marcas' }),
+        ], nut.registros.filter(r => r.conCambios || r.omitida || r.noLeGusto || r.leCayoMal), { vacio: 'Sin marcas' }),
         h('h3', {}, 'Reemplazos aplicados'), tabla([
           { titulo: 'Comida', render: r => `${DIAS[r.diaSemana]} · ${r.tipoComida}` }, { titulo: 'Original', campo: 'original' },
           { titulo: 'Reemplazo', render: r => `${r.reemplazo} (${fmt.numero(r.gramos)} g)` }, { titulo: 'Desde', render: r => fmt.fecha(r.desde) },

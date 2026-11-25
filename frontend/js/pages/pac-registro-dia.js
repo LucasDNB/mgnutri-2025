@@ -1,8 +1,10 @@
-// CU-17 Registrar comidas realizadas: guardado inmediato, hoy y hasta 2 días antes, barra semanal.
+// CU-17 Registro del día: % de cumplimiento semanal y las marcas de cada comida (hoy y hasta 2 días antes).
+// Las mismas marcas se cargan desde «Mi plan alimentario» (D-38).
 import { api, qs, ApiError } from '../core/api.js';
 import { iniciarPagina, encabezado } from '../core/pagina.js';
-import { h, toast, manejarError, vaciar } from '../core/ui.js';
+import { h, manejarError, vaciar } from '../core/ui.js';
 import { hoyISO, sumarDias, diaSemana, DIAS, fmt } from '../core/format.js';
+import { marcasComida, completada } from '../components/marcas-comida.js';
 
 const { main } = await iniciarPagina({ roles: ['PACIENTE'], titulo: 'Registro del día' });
 let plan;
@@ -11,7 +13,6 @@ try { plan = await api.get('/me/plan-alimentario'); } catch (e) {
   throw e;
 }
 let fecha = hoyISO();
-const pendientes = [];
 const cont = h('div');
 const barra = h('div');
 main.append(encabezado('Registro del día', [['Nutrición', '/paciente/nutricion.html'], ['Registro']]),
@@ -40,37 +41,10 @@ async function cargar() {
   const pct = programadas ? Math.round(hechas * 100 / programadas) : 0;
   vaciar(barra, h('div', { class: 'tarjeta' }, h('div', { class: 'fila entre' }, h('strong', {}, 'Cumplimiento de la semana'), `${pct} %`), h('div', { class: 'barra' }, h('span', { style: `width:${pct}%` }))));
   vaciar(cont, h('h2', {}, `${DIAS[dia]} ${fmt.fecha(fecha)}`), comidas.length ? comidas.map(c => {
-    const r = porClave[`${c.id}-${fecha}`] || { realizada: false, conCambios: false, noLeGusto: false, leCayoMal: false };
-    const estado = { ...r };
-    const check = (campo, texto) => h('label', { class: 'check' }, h('input', { type: 'checkbox', checked: !!estado[campo], onchange: async (e) => {
-      estado[campo] = e.target.checked;
-      // «Como estaba propuesta» y «con cambios» son excluyentes
-      if (e.target.checked && campo === 'realizada') estado.conCambios = false;
-      if (e.target.checked && campo === 'conCambios') estado.realizada = false;
-      await guardar(c.id, estado);
-    } }), texto);
-    return h('div', { class: `ejercicio-card ${estado.realizada || estado.conCambios ? 'hecho' : ''}` }, h('strong', {}, c.tipoEtiqueta),
+    const r = porClave[`${c.id}-${fecha}`];
+    return h('div', { class: `ejercicio-card ${completada(r) ? 'hecho' : ''}` }, h('strong', {}, c.tipoEtiqueta),
       h('p', { style: 'margin:.3rem 0' }, c.descripcion || c.items.map(i => i.reemplazo ? `${i.reemplazo.alimento} ${i.reemplazo.gramos} g` : `${i.alimento} ${i.gramos} g`).join(' + ')),
-      check('realizada', 'La hice como estaba propuesta'), check('conCambios', 'La hice con cambios.'), h('div', { class: 'fila' }, check('noLeGusto', 'No me gustó'), check('leCayoMal', 'Me cayó mal')));
+      marcasComida(c, { fecha, registro: r, editable: fecha >= plan.fechaInicio, aviso: 'El plan todavía no había empezado ese día.', alGuardar: () => cargar().catch(manejarError) }));
   }) : h('div', { class: 'vacio' }, 'Tu plan no tiene comidas para este día.'));
-}
-
-async function guardar(comidaPlanId, estado) {
-  const cuerpo = { comidaPlanId, fecha, realizada: !!estado.realizada, conCambios: !!estado.conCambios, noLeGusto: !!estado.noLeGusto, leCayoMal: !!estado.leCayoMal };
-  try {
-    await api.put('/me/registro-comidas', cuerpo);
-    toast('Guardado ✔', 'ok', 1500);
-    cargar();
-  } catch (e) {
-    if (e.code === 'SIN_CONEXION') { pendientes.push(cuerpo); toast('Sin conexión: se reintentará', 'advertencia'); setTimeout(reintentar, 5000); } else manejarError(e);
-  }
-}
-
-async function reintentar() {
-  while (pendientes.length) {
-    try { await api.put('/me/registro-comidas', pendientes[0]); pendientes.shift(); } catch { setTimeout(reintentar, 10000); return; }
-  }
-  toast('Registros sincronizados');
-  cargar();
 }
 cargar().catch(manejarError);

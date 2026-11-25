@@ -1,8 +1,11 @@
-// CU-15 Consultar plan · CU-16 PDF · CU-18 alternativas · CU-41 comentarios.
+// CU-15 Consultar plan · CU-16 PDF · CU-18 alternativas · CU-41 comentarios · CU-17 marcas de cada comida y
+// CU-43 observaciones del día, sin pasar por el registro (D-38).
 import { api, descargar, ApiError } from '../core/api.js';
 import { iniciarPagina, encabezado } from '../core/pagina.js';
-import { h, toast, modal, manejarError, vaciar, chip } from '../core/ui.js';
-import { fmt, hoyISO, diaSemana, DIAS } from '../core/format.js';
+import { h, toast, modal, manejarError, vaciar } from '../core/ui.js';
+import { fmt, hoyISO, sumarDias, diaSemana, DIAS } from '../core/format.js';
+import { marcasComida, completada } from '../components/marcas-comida.js';
+import { observacionDelDia } from '../components/observacion-dia.js';
 
 const { main } = await iniciarPagina({ roles: ['PACIENTE'], titulo: 'Mi plan alimentario' });
 let plan;
@@ -15,9 +18,28 @@ try {
   }
   throw e;
 }
-let dia = diaSemana(hoyISO());
-const ancho = window.matchMedia('(min-width: 900px)');
+const HOY = hoyISO();
+let dia = diaSemana(HOY);
+// Registros y observaciones de los días que todavía se pueden marcar (hoy y hasta 2 días antes)
+let registros = {};
+let observaciones = {};
 const cont = h('div');
+
+/** Fecha en que se marca el día de la semana d: la última vez que cayó ese día (hoy incluido). */
+function fechaDe(d) {
+  const atras = (diaSemana(HOY) - d + 7) % 7;
+  const fecha = sumarDias(HOY, -atras);
+  return { fecha, editable: atras <= 2 && fecha >= plan.fechaInicio && fecha <= plan.fechaFin,
+    cuando: atras === 0 ? 'hoy' : atras === 1 ? 'ayer' : atras === 2 ? 'anteayer' : null };
+}
+
+async function cargarMarcas() {
+  const [regs, obs] = await Promise.all([
+    api.get(`/me/registro-comidas?desde=${sumarDias(HOY, -2)}&hasta=${HOY}`),
+    api.get(`/me/observaciones-diarias?desde=${sumarDias(HOY, -2)}&hasta=${HOY}`)]);
+  registros = Object.fromEntries(regs.map(r => [`${r.comidaPlanId}-${r.fecha}`, r]));
+  observaciones = Object.fromEntries(obs.map(o => [o.fecha, o]));
+}
 
 main.append(encabezado('Mi plan alimentario', [['Nutrición', '/paciente/nutricion.html'], ['Mi plan']],
   h('button', { class: 'btn secundario', onclick: () => descargar('/me/plan-alimentario/pdf', 'mi-plan.pdf').catch(manejarError) }, 'Descargar PDF')),
@@ -27,8 +49,9 @@ h('div', { class: 'tarjeta' }, h('h2', {}, plan.nombre),
   h('button', { class: 'btn chico secundario', onclick: () => comentar(null) }, 'Comentar sobre el plan')),
 cont);
 
-function comidaCard(c) {
-  return h('div', { class: 'ejercicio-card' },
+function comidaCard(c, f) {
+  const reg = registros[`${c.id}-${f.fecha}`];
+  return h('div', { class: `ejercicio-card ${completada(reg) ? 'hecho' : ''}` },
     h('div', { class: 'fila entre' }, h('strong', {}, c.tipoEtiqueta), c.totales?.kcal ? h('small', { class: 'suave' }, `≈ ${Math.round(c.totales.kcal)} kcal`) : null),
     c.descripcion ? h('p', { style: 'margin:.3rem 0' }, c.descripcion) : null,
     c.items.map(i => h('div', { class: 'item-alimento' },
@@ -38,24 +61,30 @@ function comidaCard(c) {
         i.reemplazo ? h('button', { class: 'btn chico secundario', onclick: () => volver(i) }, 'Volver al original')
           : h('button', { class: 'btn chico secundario', onclick: () => alternativas(i) }, 'Ver alternativa')))),
     !c.items.length ? h('small', { class: 'suave' }, 'Para cambiar algún alimento, consultá con tu nutricionista.') : null,
+    marcasComida(c, { fecha: f.fecha, registro: reg, editable: f.editable, aviso: 'Podés marcar las comidas de hoy y de hasta 2 días antes.',
+      alGuardar: (r) => { registros[`${c.id}-${f.fecha}`] = r; dibujar(); } }),
     h('div', { style: 'margin-top:.4rem' }, h('button', { class: 'btn link', onclick: () => comentar(c) }, 'Comentar esta comida')));
 }
 
 function dibujar() {
-  if (ancho.matches) {
-    const tipos = [...new Map(plan.comidas.map(c => [c.tipo, c.tipoEtiqueta])).entries()];
-    vaciar(cont, h('div', { class: 'tarjeta tabla-scroll' }, h('table', { class: 'plan-grilla' },
-      h('thead', {}, h('tr', {}, h('th', {}, 'Comida'), DIAS.slice(1).map((d, i) => h('th', { style: i + 1 === diaSemana(hoyISO()) ? 'background:var(--verde-2)' : '' }, d)))),
-      h('tbody', {}, tipos.map(([t, et]) => h('tr', {}, h('td', { class: 'tipo' }, et), [1, 2, 3, 4, 5, 6, 7].map(d => {
-        const c = plan.comidas.find(x => x.diaSemana === d && x.tipo === t);
-        return h('td', {}, c ? comidaCard(c) : '');
-      })))))));
-  } else {
-    vaciar(cont, h('div', { class: 'pestanas', role: 'tablist' }, [1, 2, 3, 4, 5, 6, 7].map(d => h('button', { class: d === dia ? 'activa' : '', onclick: () => { dia = d; dibujar(); } }, DIAS[d].substring(0, 3)))),
-      h('h2', {}, DIAS[dia]), plan.comidas.filter(c => c.diaSemana === dia).map(comidaCard));
-  }
+  const f = fechaDe(dia);
+  const comidas = plan.comidas.filter(c => c.diaSemana === dia);
+  const obs = observaciones[f.fecha];
+  // Los 7 días en dos filas (4 + 3), sin barra de desplazamiento
+  vaciar(cont, h('div', { class: 'pestanas dias-plan', role: 'tablist' }, [1, 2, 3, 4, 5, 6, 7].map(d => h('button', {
+    role: 'tab', class: d === dia ? 'activa' : '', 'aria-selected': String(d === dia), onclick: () => { dia = d; dibujar(); } }, h('span', { class: 'largo' }, DIAS[d]), h('span', { class: 'corto' }, DIAS[d].substring(0, 3))))),
+  h('div', { class: 'fila entre' }, h('h2', { style: 'margin:0' }, DIAS[dia]),
+    h('span', { class: 'suave' }, f.editable ? `Marcás las comidas de ${f.cuando} (${fmt.fecha(f.fecha)})` : '')),
+  comidas.length ? h('div', { class: 'grilla g2', style: 'margin-top:.6rem' }, comidas.map(c => comidaCard(c, f)))
+    : h('div', { class: 'tarjeta vacio' }, 'Tu plan no tiene comidas para este día.'),
+  h('div', { class: 'tarjeta fila entre' },
+    h('div', {}, h('strong', {}, 'Observaciones del día'), h('div', { class: 'suave' }, !f.editable ? 'Se cargan el mismo día o hasta 2 días después.'
+      : obs ? `Hambre ${obs.nivelHambre}/5 · Saciedad ${obs.nivelSaciedad}/5${obs.comentario ? ' · ' + obs.comentario : ''}` : 'Contanos cómo te sentiste con las comidas del día.')),
+    h('button', { class: `btn ${obs ? 'secundario' : ''}`, disabled: !f.editable, onclick: async () => {
+      const o = await observacionDelDia(f.fecha, obs);
+      if (o) { observaciones[f.fecha] = o; dibujar(); }
+    } }, obs ? '✔ Observaciones del día' : 'Observaciones del día')));
 }
-ancho.addEventListener('change', dibujar);
 
 async function alternativas(i) {
   try {
@@ -90,4 +119,5 @@ async function comentar(c) {
       toast('Comentario enviado a tu nutricionista');
     } }] });
 }
+await cargarMarcas().catch(manejarError);
 dibujar();

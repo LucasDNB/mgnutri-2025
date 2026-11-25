@@ -34,6 +34,9 @@ public class RegistroComida {
     @Column(name = "con_cambios", nullable = false)
     private boolean conCambios;
 
+    @Column(nullable = false)
+    private boolean omitida;
+
     @Column(name = "no_le_gusto", nullable = false)
     private boolean noLeGusto;
 
@@ -61,6 +64,8 @@ public class RegistroComida {
     public void setRealizada(boolean realizada) { this.realizada = realizada; }
     public boolean isConCambios() { return conCambios; }
     public void setConCambios(boolean conCambios) { this.conCambios = conCambios; }
+    public boolean isOmitida() { return omitida; }
+    public void setOmitida(boolean omitida) { this.omitida = omitida; }
     public boolean isNoLeGusto() { return noLeGusto; }
     public void setNoLeGusto(boolean noLeGusto) { this.noLeGusto = noLeGusto; }
     public boolean isLeCayoMal() { return leCayoMal; }

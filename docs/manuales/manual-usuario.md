@@ -107,18 +107,29 @@ alimento reemplazado se marca y podés **Volver al original** cuando quieras. Tu
 
 ![Alternativas equivalentes](img/paciente-alternativas.jpg){.celular}
 
+### Marcar las comidas
+
+Los días del plan se eligen arriba (dos filas). Cada comida tiene:
+
+- **Completada**: queda registrada como *La hice como estaba propuesta*; si reemplazaste algún alimento de esa comida,
+  como *La hice con cambios*.
+- **Saltada / reemplazada**: queda registrada como *No completada*.
+- **No me gustó** y **Me cayó mal**.
+
+Tocar de nuevo un botón marcado lo desmarca. Se pueden marcar las comidas de hoy, ayer y anteayer.
+
+### Observaciones del día
+
+Al final de cada día del plan, **Observaciones del día** abre una ventana para indicar tu nivel de **hambre** y de
+**saciedad** del 1 (nada) al 5 (mucha), opcionalmente tu estado de ánimo y un comentario. Desde la ventana podés ver el
+historial con el gráfico de los últimos 30 días.
+
 ### Registro del día
 
-Marcá cada comida que hiciste con **La hice como estaba propuesta**, y si corresponde **No me gustó** o **Me cayó mal**.
-Podés completar hoy, ayer o anteayer. Arriba se ve el cumplimiento de la semana. Si te quedás sin conexión, los registros
-se guardan y se envían solos cuando vuelve.
+Muestra el **cumplimiento de la semana** (comidas hechas como estaban propuestas) y las marcas de hoy, ayer y anteayer,
+que también se pueden cambiar desde ahí.
 
 ![Registro del día](img/paciente-registro-dia.jpg){.celular}
-
-### Observaciones diarias
-
-Indicá tu nivel de **hambre** y de **saciedad** del 1 (nada) al 5 (mucha), opcionalmente tu estado de ánimo y un
-comentario, y tocá **Guardar**. Abajo ves el gráfico de los últimos 30 días.
 
 ![Observaciones de hambre y saciedad](img/paciente-observaciones.jpg){.celular}
 
