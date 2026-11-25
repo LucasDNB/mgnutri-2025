@@ -111,3 +111,7 @@ Cada decisión resuelve una inconsistencia (I-xx) o un vacío (V-xx) de [`00-ana
 - Los 7 días se muestran en dos filas (4 + 3) en todos los tamaños de pantalla; se quita la grilla semanal de escritorio, que necesitaba barra de desplazamiento.
 - Las observaciones diarias (hambre, saciedad, ánimo) se cargan con el botón **Observaciones del día** al final de cada día del plan; se quita el botón del menú *Nutrición*. La página de historial sigue disponible desde la ventana.
 - El *Registro del día* queda sobre todo para ver el % de cumplimiento (sólo cuenta «como estaba propuesta»), y usa las mismas marcas. Se quita el reintento automático sin conexión del registro.
+
+**D-39 · Reportes del administrador (25/11/2026).**
+- La pantalla *Reportes* del administrador muestra sólo **Turnos** y **Pagos y deudas**. Los reportes de evolución del paciente, rutinas y planes alimentarios quedan para los profesionales (nutricionista: evolución y planes; entrenador: evolución y rutinas; integral: los tres).
+- Es un cambio de pantalla: los endpoints siguen admitiendo al administrador (los usa la colección de Newman y la descarga del PDF de evolución desde la ficha).
