@@ -233,6 +233,11 @@ tr.tachado td { text-decoration: line-through; color: var(--texto-suave); }
 /* Ficha del paciente: sin barra de desplazamiento, las pestañas pasan a 2 o 3 filas según el ancho */
 .pestanas.envolver { flex-wrap: wrap; overflow-x: visible; }
 .pestanas.envolver button { flex: 1 1 105px; }
+.pestanas.dias-plan { display: grid; grid-template-columns: repeat(4, 1fr); overflow-x: visible; }
+.pestanas.dias-plan button { padding-left: .3rem; padding-right: .3rem; }
+.pestanas.dias-plan .corto { display: none; }
+@media (max-width: 520px) { .pestanas.dias-plan .largo { display: none; } .pestanas.dias-plan .corto { display: inline; } }
+.marcas-comida { margin-top: .6rem; padding-top: .5rem; border-top: 1px solid var(--crema-2); display: flex; flex-direction: column; gap: .4rem; }
 .item-alimento { display: flex; justify-content: space-between; gap: .5rem; align-items: center; padding: .3rem 0; border-bottom: 1px dashed var(--crema-2); }
 .reemplazo { color: var(--azul); font-size: .82rem; }
 .barra { height: 12px; background: var(--crema-2); border-radius: 999px; overflow: hidden; }

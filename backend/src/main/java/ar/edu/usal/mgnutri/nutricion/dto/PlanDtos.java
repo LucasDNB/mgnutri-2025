@@ -104,12 +104,15 @@ public final class PlanDtos {
 
     // ---- Paciente (spec 08)
 
-    /** realizada: «La hice como estaba propuesta»; conCambios: «La hice con cambios» (excluyentes). */
+    /**
+     * realizada: «La hice como estaba propuesta»; conCambios: «La hice con cambios»; omitida: «No completada»
+     * (saltada o reemplazada). Las tres son excluyentes; sin ninguna, la comida queda pendiente.
+     */
     public record RegistroComidaRequest(@NotNull Long comidaPlanId, @NotNull LocalDate fecha, boolean realizada,
-                                        boolean conCambios, boolean noLeGusto, boolean leCayoMal) {}
+                                        boolean conCambios, boolean noLeGusto, boolean leCayoMal, boolean omitida) {}
 
     public record RegistroComidaResponse(Long comidaPlanId, LocalDate fecha, boolean realizada, boolean conCambios,
-                                         boolean noLeGusto, boolean leCayoMal) {}
+                                         boolean noLeGusto, boolean leCayoMal, boolean omitida) {}
 
     public record ObservacionRequest(@NotNull LocalDate fecha,
                                      @NotNull(message = "Indicá tu nivel de hambre") @Min(1) @Max(5) Integer nivelHambre,

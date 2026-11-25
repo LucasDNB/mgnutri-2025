@@ -104,3 +104,10 @@ Cada decisión resuelve una inconsistencia (I-xx) o un vacío (V-xx) de [`00-ana
 - El administrador puede reactivar un paciente dado de baja desde su ficha (`POST /pacientes/{id}/reactivar`): vuelve a estar activo, se borran la fecha y el motivo de baja y se le generan credenciales temporales nuevas, que se envían por WhatsApp como en el reenvío de credenciales. Queda en la bitácora como alta («Reactivación de paciente»).
 - Conserva todo su historial. No se restauran las asignaciones a profesionales (el admin lo vuelve a asignar, porque puede cambiar de profesional) ni los turnos cancelados por la baja.
 - Listado de pacientes: sólo el administrador puede incluir a los dados de baja (casilla «Mostrar pacientes dados de baja», parámetro `incluirBajas`); aparecen con «(Dado de baja)» junto al nombre. Para los profesionales el parámetro se ignora.
+
+**D-38 · Marcas de comidas desde el plan alimentario (24/11/2026).**
+- El paciente marca cada comida desde *Mi plan alimentario*, sin pasar por el registro: **Completada** se registra como «La hice como estaba propuesta», o como «La hice con cambios» si la comida tiene algún alimento reemplazado; **Saltada / reemplazada** se registra como «No completada» (columna `omitida`, migración V18, excluyente con las otras dos). «No me gustó» y «Me cayó mal» se guardan igual que antes.
+- El plan es semanal: cada día de la semana se marca en la última fecha en que cayó (hoy, ayer o anteayer, como el registro); los demás días se ven sin poder marcarlos.
+- Los 7 días se muestran en dos filas (4 + 3) en todos los tamaños de pantalla; se quita la grilla semanal de escritorio, que necesitaba barra de desplazamiento.
+- Las observaciones diarias (hambre, saciedad, ánimo) se cargan con el botón **Observaciones del día** al final de cada día del plan; se quita el botón del menú *Nutrición*. La página de historial sigue disponible desde la ventana.
+- El *Registro del día* queda sobre todo para ver el % de cumplimiento (sólo cuenta «como estaba propuesta»), y usa las mismas marcas. Se quita el reintento automático sin conexión del registro.

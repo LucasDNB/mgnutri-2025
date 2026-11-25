@@ -11,5 +11,4 @@ main.append(encabezado('Nutrición', [['Inicio', '/paciente/home.html'], ['Nutri
   h('div', { class: 'botones-home' },
     home.tienePlan ? h('a', { class: 'boton-home', href: '/paciente/mi-plan.html' }, 'Mi plan alimentario') : bloqueado('Mi plan alimentario'),
     home.tienePlan ? h('a', { class: 'boton-home', href: '/paciente/registro-dia.html' }, 'Registro del día') : bloqueado('Registro del día'),
-    h('a', { class: 'boton-home secundario', href: '/paciente/observaciones.html' }, 'Observaciones diarias'),
     h('a', { class: 'boton-home secundario', href: '/paciente/turnos.html?area=NUTRICION' }, 'Turnos de nutrición')));
