@@ -23,6 +23,7 @@ import ar.edu.usal.mgnutri.reportes.service.ReporteExporterFactory;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import ar.edu.usal.mgnutri.notificaciones.service.RecordatoriosService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,15 +49,17 @@ public class PagoController {
     private final ArancelService aranceles;
     private final ReporteExporterFactory exportadores;
     private final BitacoraService bitacora;
+    private final RecordatoriosService recordatorios;
 
     public PagoController(CuentaCorrienteService cuentas, PagoService pagos, CargoService cargos, ArancelService aranceles,
-                          ReporteExporterFactory exportadores, BitacoraService bitacora) {
+                          ReporteExporterFactory exportadores, BitacoraService bitacora, RecordatoriosService recordatorios) {
         this.cuentas = cuentas;
         this.pagos = pagos;
         this.cargos = cargos;
         this.aranceles = aranceles;
         this.exportadores = exportadores;
         this.bitacora = bitacora;
+        this.recordatorios = recordatorios;
     }
 
     @GetMapping("/pacientes/{pid}/cuenta")
@@ -151,19 +154,30 @@ public class PagoController {
     @GetMapping("/deudores")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deudores(@RequestParam(defaultValue = "monto") String orden,
+                                      @RequestParam(defaultValue = "0") long diasMinimos,
                                       @RequestParam(defaultValue = "json") String formato) {
-        List<DeudorResponse> lista = cuentas.deudores(orden);
+        List<DeudorResponse> lista = cuentas.deudores(orden, diasMinimos);
         if ("json".equalsIgnoreCase(formato)) {
             return ResponseEntity.ok(lista);
         }
         ReporteDto r = ReporteDto.nuevo("deudores", "Listado de deudores");
         r.filtros().put("Orden", orden);
+        if (diasMinimos > 0) {
+            r.filtros().put("Días de atraso (mínimo)", String.valueOf(diasMinimos));
+        }
         r.tabla().con("Paciente", "Documento", "Teléfono", "Saldo", "Fecha de deuda", "Días de atraso");
         lista.forEach(d -> r.tabla().fila(d.paciente(), d.documento(), d.telefono(), d.saldo(), d.fechaDeuda(), d.diasAtraso()));
         r.resumen().put("Pacientes deudores", lista.size());
         r.resumen().put("Total adeudado", lista.stream().map(DeudorResponse::saldo).reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add));
         bitacora.ok(Modulo.REPORTES, TipoEvento.REPORTE, "Deudores", null, "Listado de deudores (" + formato + ")");
         return exportadores.descargar(r, formato, "deudores");
+    }
+
+    /** Envía el recordatorio de deuda a los deudores con al menos {@code diasMinimos} días de atraso (D-40). */
+    @PostMapping("/deudores/recordatorios")
+    @PreAuthorize("hasRole('ADMIN')")
+    public RecordatoriosService.EnvioDeudas recordarDeudores(@RequestParam(defaultValue = "0") long diasMinimos) {
+        return recordatorios.recordarDeudas(diasMinimos);
     }
 
     @GetMapping("/aranceles")

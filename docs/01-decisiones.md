@@ -115,3 +115,7 @@ Cada decisión resuelve una inconsistencia (I-xx) o un vacío (V-xx) de [`00-ana
 **D-39 · Reportes del administrador (25/11/2026).**
 - La pantalla *Reportes* del administrador muestra sólo **Turnos** y **Pagos y deudas**. Los reportes de evolución del paciente, rutinas y planes alimentarios quedan para los profesionales (nutricionista: evolución y planes; entrenador: evolución y rutinas; integral: los tres).
 - Es un cambio de pantalla: los endpoints siguen admitiendo al administrador (los usa la colección de Newman y la descarga del PDF de evolución desde la ficha).
+
+**D-40 · Recordatorio de deuda por días de atraso (26/11/2026).**
+- En *Pagos › Deudores* el administrador filtra por un mínimo de días de atraso (el listado y el PDF/Excel respetan el filtro, parámetro `diasMinimos`) y con **Enviar recordatorio de deuda** encola el mensaje `mg_recordatorio_deuda` sólo a esos pacientes (`POST /deudores/recordatorios?diasMinimos=`).
+- Se aplican las mismas reglas que el envío semanal (D-12, CA-11.3.3): sólo pacientes activos con teléfono y sin recordatorio de deuda en los últimos 6 días; el resultado informa cuántos se enviaron y cuántos se omitieron. Queda en la bitácora con el filtro usado.
