@@ -107,6 +107,12 @@ public class CuentaCorrienteService {
     /** Listado de deudores (US-07.6) con saldo > 0. */
     @Transactional(readOnly = true)
     public List<DeudorResponse> deudores(String orden) {
+        return deudores(orden, 0);
+    }
+
+    /** Deudores con al menos {@code diasMinimos} días de atraso (0 = todos). */
+    @Transactional(readOnly = true)
+    public List<DeudorResponse> deudores(String orden, long diasMinimos) {
         Map<Long, BigDecimal> saldos = saldoDao.deudores();
         LocalDate hoy = LocalDate.now(clock);
         List<DeudorResponse> lista = new ArrayList<>();
@@ -121,6 +127,7 @@ public class CuentaCorrienteService {
         Comparator<DeudorResponse> cmp = "antiguedad".equalsIgnoreCase(orden)
                 ? Comparator.comparing(DeudorResponse::diasAtraso).reversed()
                 : Comparator.comparing(DeudorResponse::saldo).reversed();
+        lista.removeIf(d -> d.diasAtraso() < diasMinimos);
         lista.sort(cmp);
         return lista;
     }

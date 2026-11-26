@@ -425,6 +425,9 @@ En **Pagos** buscá al paciente para ver su **cuenta corriente**: saldo, movimie
 ![Cuenta corriente](img/admin-pagos.jpg)
 
 **Deudores** lista a los pacientes con saldo pendiente, días de atraso y teléfono, ordenable y exportable a PDF o Excel.
+Con **Con al menos … días de atraso** filtrás el listado (y la exportación); **Enviar recordatorio de deuda** manda
+el recordatorio por WhatsApp a los pacientes filtrados. Se omiten los dados de baja, los que no tienen teléfono y los
+que ya recibieron un recordatorio de deuda en los últimos 6 días; al terminar se informa cuántos se enviaron.
 **Aranceles** define los conceptos y montos que se cobran.
 
 ![Deudores](img/admin-deudores.jpg)

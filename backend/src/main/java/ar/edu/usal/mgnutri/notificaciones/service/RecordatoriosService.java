@@ -7,7 +7,9 @@ import ar.edu.usal.mgnutri.common.Fechas;
 import ar.edu.usal.mgnutri.pacientes.dao.PacienteDao;
 import ar.edu.usal.mgnutri.pacientes.domain.Paciente;
 import ar.edu.usal.mgnutri.pagos.dao.SaldoDao;
+import ar.edu.usal.mgnutri.pagos.dto.PagoDtos.DeudorResponse;
 import ar.edu.usal.mgnutri.pagos.service.CargoService;
+import ar.edu.usal.mgnutri.pagos.service.CuentaCorrienteService;
 import ar.edu.usal.mgnutri.profesionales.dao.ProfesionalDao;
 import ar.edu.usal.mgnutri.profesionales.domain.Profesional;
 import ar.edu.usal.mgnutri.turnos.dao.TurnoDao;
@@ -19,6 +21,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 /** Recordatorios automáticos de turnos (CU-38, D-11) y de deuda (CU-39, D-12). */
 @Service
@@ -29,17 +32,19 @@ public class RecordatoriosService {
     private final ProfesionalDao profesionalDao;
     private final SaldoDao saldoDao;
     private final CargoService cargos;
+    private final CuentaCorrienteService cuentas;
     private final Notificador notificador;
     private final BitacoraService bitacora;
     private final Clock clock;
 
     public RecordatoriosService(TurnoDao turnoDao, PacienteDao pacienteDao, ProfesionalDao profesionalDao, SaldoDao saldoDao,
-                                CargoService cargos, Notificador notificador, BitacoraService bitacora, Clock clock) {
+                                CargoService cargos, CuentaCorrienteService cuentas, Notificador notificador, BitacoraService bitacora, Clock clock) {
         this.turnoDao = turnoDao;
         this.pacienteDao = pacienteDao;
         this.profesionalDao = profesionalDao;
         this.saldoDao = saldoDao;
         this.cargos = cargos;
+        this.cuentas = cuentas;
         this.notificador = notificador;
         this.bitacora = bitacora;
         this.clock = clock;
@@ -77,5 +82,23 @@ public class RecordatoriosService {
         }
         bitacora.ok(Modulo.NOTIFICACIONES, TipoEvento.NOTIFICACION, "Paciente", null, "Recordatorio de deudas: " + n + " encolados");
         return n;
+    }
+
+    /** Resultado del envío manual: candidatos filtrados, encolados y omitidos (baja, sin teléfono o recordatorio en los últimos 6 días). */
+    public record EnvioDeudas(long diasMinimos, int candidatos, int encolados, int omitidos) {}
+
+    /** Envío manual desde Deudores a los pacientes con al menos {@code diasMinimos} días de atraso (D-40). Respeta CA-11.3.3. */
+    @Transactional
+    public EnvioDeudas recordarDeudas(long diasMinimos) {
+        List<DeudorResponse> lista = cuentas.deudores("antiguedad", Math.max(0, diasMinimos));
+        int n = 0;
+        for (Paciente p : pacienteDao.findAllById(lista.stream().map(DeudorResponse::pacienteId).toList())) {
+            if (p.activo() && p.getTelefonoWhatsapp() != null && cargos.recordarDeuda(p)) {
+                n++;
+            }
+        }
+        bitacora.ok(Modulo.NOTIFICACIONES, TipoEvento.NOTIFICACION, "Paciente", null,
+                "Recordatorio de deudas (atraso >= " + diasMinimos + " días): " + n + " encolados de " + lista.size());
+        return new EnvioDeudas(diasMinimos, lista.size(), n, lista.size() - n);
     }
 }

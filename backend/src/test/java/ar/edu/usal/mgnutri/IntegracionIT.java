@@ -127,6 +127,10 @@ class IntegracionIT {
         // matriz de permisos: nutricionista no accede a bitácora, pagos ni backups
         mvc.perform(get("/api/v1/bitacora").header("Authorization", "Bearer " + nutri)).andExpect(status().isForbidden());
         mvc.perform(get("/api/v1/deudores").header("Authorization", "Bearer " + nutri)).andExpect(status().isForbidden());
+        // D-40: envío de recordatorios de deuda filtrado por días de atraso, sólo admin
+        mvc.perform(post("/api/v1/deudores/recordatorios?diasMinimos=30").header("Authorization", "Bearer " + nutri)).andExpect(status().isForbidden());
+        mvc.perform(post("/api/v1/deudores/recordatorios?diasMinimos=30").header("Authorization", "Bearer " + admin))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.diasMinimos").value(30)).andExpect(jsonPath("$.encolados").isNumber());
         mvc.perform(get("/api/v1/backups").header("Authorization", "Bearer " + nutri)).andExpect(status().isForbidden());
         // sin token → 401
         mvc.perform(get("/api/v1/pacientes")).andExpect(status().isUnauthorized());
